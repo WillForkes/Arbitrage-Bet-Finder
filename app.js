@@ -8,7 +8,10 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const { auth } = require('express-openid-connect'); // * Auth0
 const { requiresAuth } = require('express-openid-connect');
+const { PrismaClient } = require('@prisma/client')
+let { userExist } = require('./middleware/userExist');
 
+const prisma = new PrismaClient()
 var app = express();
 
 // * Setup libaries for express
@@ -38,8 +41,13 @@ app.get('/', (req, res) => {
     res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
 });
 
-app.get('/profile', requiresAuth(), (req, res) => {
-    res.send(JSON.stringify(req.oidc.user));
+app.get('/profile', [requiresAuth(), userExist], async (req, res) => {
+    const dbuser = await prisma.user.findUnique({
+        where: {
+            authid: req.oidc.user.sub
+        }
+    })
+    res.json({"auth0": req.oidc.user, "dbuser": dbuser})
 });
 
 // catch 404 and forward to error handler

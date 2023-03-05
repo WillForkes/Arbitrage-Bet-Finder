@@ -108,6 +108,7 @@ async function getArbitrageOpportunities(region, cutoff) {
     if(DEMO) {
         let demo_data = fs.readFileSync(path.join(__dirname, "output", "demo_data.json"))
         demo_data = JSON.parse(demo_data)
+        demo_data.data.sort((a, b) => a.hours_to_start - b.hours_to_start);
         return demo_data;
     }
 
@@ -133,9 +134,12 @@ async function getArbitrageOpportunities(region, cutoff) {
     // filter opportunities
     const arbitrageOpportunities = Array.from(results).filter(x => 0 < x.total_implied_odds && x.total_implied_odds < 1 - cutoff);
 
+    // sort array by hours_to_start in ascending order
+    arbitrageOpportunities.sort((a, b) => a.hours_to_start - b.hours_to_start);
+
     // save data to json file if SAVE_DATA is true
+    const file_data = {"created": Date.now(), "region": region, "data": arbitrageOpportunities}
     if (SAVE_JSON) {
-        const file_data = {"created": Date.now(), "data": arbitrageOpportunities}
         const data = JSON.stringify(file_data, null, 2);
 
         const filename = `data_${Date.now()}.json`;
@@ -147,7 +151,7 @@ async function getArbitrageOpportunities(region, cutoff) {
         })
     }
 
-    return arbitrageOpportunities;
+    return file_data
 }
 
 module.exports = {getArbitrageOpportunities}

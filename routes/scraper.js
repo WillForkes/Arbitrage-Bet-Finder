@@ -9,16 +9,16 @@ let { checkUser } = require('../middleware/checkUser');
 router.get('/', checkUser ,async function(req, res, next) {
     // required querys params: sport
     // check for required paramets
-    if (!req.query.region || !req.query.apikey) {
+    if (!req.query.region) {
         res.status(400).json({"error": "Missing required parameters"});
         return;
     }
 
     // variables
     const validRegions = ['eu', 'uk', 'au', 'us'];
-    const cutoff = (req.query.cutoff) ? req.query.cutoff : 0.01; // in percentage
+    const cutoff = (req.query.cutoff) ? req.query.cutoff : 0.005; // in percentage
     const region = (req.query.region) ? req.query.region.toLowerCase() : "uk";
-    const apikey = req.query.apikey
+
 
     // check for valid region
     if (!validRegions.includes(region)) {

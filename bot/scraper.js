@@ -1,16 +1,15 @@
-// Get latest arbitrage data
-// If data is outdated by more than 10 minutes, get new data
+const { getArbitrageOpportunities } = require('./brains.js');
 
-async function getArbitrageData() {
+async function returnArbitrageData(region, cutoff) {
     return new Promise((resolve, reject) => {
         // get current time
         const now = new Date();
-        const lastUpdated = new Date(); // ! UPDATE
+        const lastUpdated = new Date() - 600001; // ! UPDATE
 
         // if data is outdated, get new data
         if (now - lastUpdated > 600000) {
             console.log("Data is outdated. Getting new data...");
-            getArbitrageDataFromAPI().then((arb_data) => {
+            getArbitrageOpportunities(region, cutoff).then((arb_data) => {
                 resolve(arb_data);
             }).catch((err) => {
                 console.log(err);
@@ -23,12 +22,4 @@ async function getArbitrageData() {
     });
 }
 
-async function getArbitrageDataFromAPI() {
-    return new Promise((resolve, reject) => {
-        // get data from API
-        // ! UPDATE
-        resolve({"data": "TEST_DATA"})
-    });
-}
-
-module.exports = {getArbitrageData}
+module.exports = {returnArbitrageData}

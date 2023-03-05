@@ -8,7 +8,6 @@ const {
 } = require('lodash');
 const {
     BASE_URL,
-    PROTOCOL,
     API_KEY,
     DEMO,
     SAVE_JSON
@@ -20,7 +19,7 @@ function handleFaultyResponse(response) {
 
 async function getSports() {
     const url = `${BASE_URL}/sports/`;
-    const escapedUrl = PROTOCOL + encodeURI(url);
+    const escapedUrl = encodeURI(url);
     const querystring = {
         apiKey: API_KEY
     };
@@ -37,7 +36,7 @@ async function getSports() {
 
 async function getData(sport, region='eu', limiter=null) {
     const url = `${BASE_URL}/sports/${sport}/odds/`;
-    const escapedUrl = PROTOCOL + encodeURI(url);
+    const escapedUrl = encodeURI(url);
     let querystring = {
         apiKey: API_KEY,
         regions: region,

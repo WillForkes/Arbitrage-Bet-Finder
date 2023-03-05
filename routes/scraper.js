@@ -3,10 +3,11 @@ const { returnArbitrageData } = require('../bot/scraper.js');
 
 var express = require('express');
 var router = express.Router();
+let { checkUser } = require('../middleware/checkUser');
 
 /* GET home page. */
-router.get('/', async function(req, res, next) {
-    // required querys params: sport, apikey
+router.get('/', checkUser ,async function(req, res, next) {
+    // required querys params: sport
     // check for required paramets
     if (!req.query.region || !req.query.apikey) {
         res.status(400).json({"error": "Missing required parameters"});

@@ -108,8 +108,7 @@ async function getArbitrageOpportunities(region, cutoff) {
     if(DEMO) {
         let demo_data = fs.readFileSync(path.join(__dirname, "output", "demo_data.json"))
         demo_data = JSON.parse(demo_data)
-        const demoarbitrageOpportunities = Array.from(demo_data.data).filter(x => 0 < x.total_implied_odds && x.total_implied_odds < 1 - cutoff);
-        return demoarbitrageOpportunities;
+        return demo_data;
     }
 
     // create rate limiter axios object for getting match data from API

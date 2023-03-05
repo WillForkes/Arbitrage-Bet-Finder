@@ -6,10 +6,9 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const { auth } = require('express-openid-connect'); // * Auth0
-const { requiresAuth } = require('express-openid-connect');
 const { PrismaClient } = require('@prisma/client')
-let { userExist } = require('./middleware/userExist');
+const { auth } = require('express-openid-connect'); // * Auth0
+let { checkUser } = require('./middleware/checkUser');
 
 const prisma = new PrismaClient()
 var app = express();
@@ -41,7 +40,7 @@ app.get('/', (req, res) => {
     res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
 });
 
-app.get('/profile', [requiresAuth(), userExist], async (req, res) => {
+app.get('/profile', checkUser, async (req, res) => {
     const dbuser = await prisma.user.findUnique({
         where: {
             authid: req.oidc.user.sub

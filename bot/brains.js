@@ -109,12 +109,12 @@ async function getArbitrageOpportunities(region, cutoff) {
     if(DEMO) {
         let demo_data = fs.readFileSync(path.join(__dirname, "output", "demo_data.json"))
         demo_data = JSON.parse(demo_data)
-        const demoarbitrageOpportunities = Array.from(demo_data).filter(x => 0 < x.total_implied_odds && x.total_implied_odds < 1 - cutoff);
+        const demoarbitrageOpportunities = Array.from(demo_data.data).filter(x => 0 < x.total_implied_odds && x.total_implied_odds < 1 - cutoff);
         return demoarbitrageOpportunities;
     }
 
     // create rate limiter axios object for getting match data from API
-    const limiter = rateLimit(axios.create(), { maxRequests: 30, perMilliseconds: 1000, maxRPS: 30 })
+    const limiter = rateLimit(axios.create(), { maxRequests: 25, perMilliseconds: 800, maxRPS: 25 })
 
     // get array of sports
     // TODO: Just add sports to array as they dont change
@@ -137,7 +137,9 @@ async function getArbitrageOpportunities(region, cutoff) {
 
     // save data to json file if SAVE_DATA is true
     if (SAVE_JSON) {
-        const data = JSON.stringify(arbitrageOpportunities, null, 2);
+        const file_data = {"created": Date.now(), "data": arbitrageOpportunities}
+        const data = JSON.stringify(file_data, null, 2);
+
         const filename = `data_${Date.now()}.json`;
         const filepath = path.join(__dirname, "output", filename);
         fs.writeFile(filepath, data, (err) => {

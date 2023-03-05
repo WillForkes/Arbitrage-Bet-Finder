@@ -25,12 +25,6 @@ router.get('/', async function(req, res, next) {
         return;
     }
 
-    console.log({
-        "region": region,
-        "cutoff": cutoff,
-        "apikey": apikey
-    })
-
     returnArbitrageData(region, cutoff).then((data) => {
         res.json(data);
     });

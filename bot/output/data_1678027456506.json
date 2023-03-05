@@ -1,0 +1,346 @@
+{
+  "created": 1678027456506,
+  "data": [
+    {
+      "match_name": "Wofford Terriers v. Chattanooga Mocs",
+      "match_start_time": 1678059000,
+      "hours_to_start": 8.762087222205269,
+      "league": "basketball_ncaab",
+      "best_outcome_odds": {
+        "Chattanooga Mocs": [
+          "MyBookie.ag",
+          1.65
+        ],
+        "Wofford Terriers": [
+          "BetOnline.ag",
+          2.7
+        ]
+      },
+      "total_implied_odds": 0.9764
+    },
+    {
+      "match_name": "Houston Baptist Huskies v. New Orleans Privateers",
+      "match_start_time": 1678066200,
+      "hours_to_start": 10.762087222205269,
+      "league": "basketball_ncaab",
+      "best_outcome_odds": {
+        "Houston Baptist Huskies": [
+          "BetOnline.ag",
+          2.4
+        ],
+        "New Orleans Privateers": [
+          "MyBookie.ag",
+          1.75
+        ]
+      },
+      "total_implied_odds": 0.9881
+    },
+    {
+      "match_name": "Montana St Bobcats v. N Colorado Bears",
+      "match_start_time": 1678071600,
+      "hours_to_start": 12.262087222205269,
+      "league": "basketball_ncaab",
+      "best_outcome_odds": {
+        "Montana St Bobcats": [
+          "MyBookie.ag",
+          1.4
+        ],
+        "N Colorado Bears": [
+          "Nordic Bet",
+          3.75
+        ]
+      },
+      "total_implied_odds": 0.981
+    },
+    {
+      "match_name": "Alexander Volkov v. Alexander Romanov",
+      "match_start_time": 1678575600,
+      "hours_to_start": 152.2620863888661,
+      "league": "mma_mixed_martial_arts",
+      "best_outcome_odds": {
+        "Alexander Romanov": [
+          "Marathon Bet",
+          2.11
+        ],
+        "Alexander Volkov": [
+          "Betfair",
+          1.99
+        ]
+      },
+      "total_implied_odds": 0.9764
+    },
+    {
+      "match_name": "Bournemouth v. Liverpool",
+      "match_start_time": 1678537800,
+      "hours_to_start": 141.76208444443014,
+      "league": "soccer_epl",
+      "best_outcome_odds": {
+        "Bournemouth": [
+          "Betfair",
+          7.2
+        ],
+        "Liverpool": [
+          "Betfair",
+          1.53
+        ],
+        "Draw": [
+          "Suprabets",
+          5.1
+        ]
+      },
+      "total_implied_odds": 0.9886
+    },
+    {
+      "match_name": "West Ham United v. Aston Villa",
+      "match_start_time": 1678629600,
+      "hours_to_start": 167.26208444443014,
+      "league": "soccer_epl",
+      "best_outcome_odds": {
+        "Aston Villa": [
+          "Suprabets",
+          3.61
+        ],
+        "West Ham United": [
+          "Betsson",
+          2.28
+        ],
+        "Draw": [
+          "Unibet",
+          3.7
+        ]
+      },
+      "total_implied_odds": 0.9859
+    },
+    {
+      "match_name": "Manchester United v. Southampton",
+      "match_start_time": 1678629600,
+      "hours_to_start": 167.26208444443014,
+      "league": "soccer_epl",
+      "best_outcome_odds": {
+        "Manchester United": [
+          "1xBet",
+          1.42
+        ],
+        "Southampton": [
+          "William Hill",
+          9
+        ],
+        "Draw": [
+          "Betfair",
+          5.8
+        ]
+      },
+      "total_implied_odds": 0.9878
+    },
+    {
+      "match_name": "Newcastle United v. Wolverhampton Wanderers",
+      "match_start_time": 1678638600,
+      "hours_to_start": 169.76208444443014,
+      "league": "soccer_epl",
+      "best_outcome_odds": {
+        "Newcastle United": [
+          "Suprabets",
+          1.84
+        ],
+        "Wolverhampton Wanderers": [
+          "Betfair",
+          5.2
+        ],
+        "Draw": [
+          "Suprabets",
+          3.99
+        ]
+      },
+      "total_implied_odds": 0.9864
+    },
+    {
+      "match_name": "Sheffield United v. Blackburn Rovers",
+      "match_start_time": 1679227200,
+      "hours_to_start": 333.2620844444301,
+      "league": "soccer_fa_cup",
+      "best_outcome_odds": {
+        "Blackburn Rovers": [
+          "1xBet",
+          5.1
+        ],
+        "Sheffield United": [
+          "1xBet",
+          1.75
+        ],
+        "Draw": [
+          "Betfair",
+          4.6
+        ]
+      },
+      "total_implied_odds": 0.9849
+    },
+    {
+      "match_name": "Bayern Munich v. Augsburg",
+      "match_start_time": 1678545000,
+      "hours_to_start": 143.7620841666725,
+      "league": "soccer_germany_bundesliga",
+      "best_outcome_odds": {
+        "Augsburg": [
+          "Betsson",
+          23
+        ],
+        "Bayern Munich": [
+          "Betfair",
+          1.17
+        ],
+        "Draw": [
+          "1xBet",
+          11.5
+        ]
+      },
+      "total_implied_odds": 0.9851
+    },
+    {
+      "match_name": "Inter Milan v. Lecce",
+      "match_start_time": 1678035600,
+      "hours_to_start": 2.2620838889148502,
+      "league": "soccer_italy_serie_a",
+      "best_outcome_odds": {
+        "Inter Milan": [
+          "Betfair",
+          1.43
+        ],
+        "Lecce": [
+          "Nordic Bet",
+          11
+        ],
+        "Draw": [
+          "1xBet",
+          5.35
+        ]
+      },
+      "total_implied_odds": 0.9771
+    },
+    {
+      "match_name": "AS Roma v. Juventus",
+      "match_start_time": 1678045500,
+      "hours_to_start": 5.01208388891485,
+      "league": "soccer_italy_serie_a",
+      "best_outcome_odds": {
+        "AS Roma": [
+          "Betfair",
+          2.72
+        ],
+        "Juventus": [
+          "Matchbook",
+          3.3
+        ],
+        "Draw": [
+          "1xBet",
+          3.18
+        ]
+      },
+      "total_implied_odds": 0.9851
+    },
+    {
+      "match_name": "Sparta Rotterdam v. Vitesse Arnhem",
+      "match_start_time": 1678564800,
+      "hours_to_start": 149.2620830555757,
+      "league": "soccer_netherlands_eredivisie",
+      "best_outcome_odds": {
+        "Sparta Rotterdam": [
+          "Suprabets",
+          2.58
+        ],
+        "Vitesse Arnhem": [
+          "Unibet",
+          3.15
+        ],
+        "Draw": [
+          "Unibet",
+          3.55
+        ]
+      },
+      "total_implied_odds": 0.9867
+    },
+    {
+      "match_name": "Aalesund v. Vålerenga",
+      "match_start_time": 1681138800,
+      "hours_to_start": 864.2620830555757,
+      "league": "soccer_norway_eliteserien",
+      "best_outcome_odds": {
+        "Aalesund": [
+          "Betsson",
+          3.35
+        ],
+        "Vålerenga": [
+          "Suprabets",
+          2.38
+        ],
+        "Draw": [
+          "Betsson",
+          3.75
+        ]
+      },
+      "total_implied_odds": 0.9853
+    },
+    {
+      "match_name": "Lechia Gdańsk v. Miedź Legnica",
+      "match_start_time": 1678467600,
+      "hours_to_start": 122.26208305557569,
+      "league": "soccer_poland_ekstraklasa",
+      "best_outcome_odds": {
+        "Lechia Gdańsk": [
+          "1xBet",
+          2.4
+        ],
+        "Miedź Legnica": [
+          "Nordic Bet",
+          3.4
+        ],
+        "Draw": [
+          "Suprabets",
+          3.62
+        ]
+      },
+      "total_implied_odds": 0.987
+    },
+    {
+      "match_name": "Bayern München v. Paris Saint Germain",
+      "match_start_time": 1678305600,
+      "hours_to_start": 77.26208194441266,
+      "league": "soccer_uefa_champs_league",
+      "best_outcome_odds": {
+        "Bayern München": [
+          "Betfair",
+          1.89
+        ],
+        "Paris Saint Germain": [
+          "Marathon Bet",
+          4.15
+        ],
+        "Draw": [
+          "Betfair",
+          4.6
+        ]
+      },
+      "total_implied_odds": 0.9875
+    },
+    {
+      "match_name": "Real Madrid v. Liverpool",
+      "match_start_time": 1678910400,
+      "hours_to_start": 245.26208194441264,
+      "league": "soccer_uefa_champs_league",
+      "best_outcome_odds": {
+        "Liverpool": [
+          "Unibet",
+          3.4
+        ],
+        "Real Madrid": [
+          "1xBet",
+          2.14
+        ],
+        "Draw": [
+          "Suprabets",
+          4.4
+        ]
+      },
+      "total_implied_odds": 0.9887
+    }
+  ]
+}

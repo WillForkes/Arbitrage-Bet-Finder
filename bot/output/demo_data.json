@@ -1,163 +1,166 @@
-[{
-	"match_name": "Sheffield United v. Blackburn Rovers",
-	"match_start_time": 1679151600,
-	"hours_to_start": 379.80109168416925,
-	"league": "soccer_fa_cup",
-	"best_outcome_odds": {
-		"Blackburn Rovers": ["Pinnacle", 5.34],
-		"Sheffield United": ["William Hill", 1.83],
-		"Draw": ["Nordic Bet", 4.0]
-	},
-	"total_implied_odds": 0.98371
-}, {
-	"match_name": "Union Berlin v. Union Saint-Gilloise",
-	"match_start_time": 1678383900,
-	"hours_to_start": 166.54987376305792,
-	"league": "soccer_uefa_europa_league",
-	"best_outcome_odds": {
-		"Union Berlin": ["1xBet", 1.69],
-		"Union Saint-Gilloise": ["Unibet", 6.25],
-		"Draw": ["Suprabets", 4.2]
-	},
-	"total_implied_odds": 0.98981
-}, {
-	"match_name": "Shakhtar Donetsk v. Feyenoord",
-	"match_start_time": 1678392000,
-	"hours_to_start": 168.799873708619,
-	"league": "soccer_uefa_europa_league",
-	"best_outcome_odds": {
-		"Feyenoord": ["Unibet", 2.65],
-		"Shakhtar Donetsk": ["1xBet", 2.96],
-		"Draw": ["1xBet", 3.66]
-	},
-	"total_implied_odds": 0.98842
-}, {
-	"match_name": "Bayern M\u00fcnchen v. Paris Saint Germain",
-	"match_start_time": 1678305600,
-	"hours_to_start": 144.79953915278116,
-	"league": "soccer_uefa_champs_league",
-	"best_outcome_odds": {
-		"Bayern M\u00fcnchen": ["Suprabets", 1.95],
-		"Paris Saint Germain": ["Marathon Bet", 3.98],
-		"Draw": ["Suprabets", 4.6]
-	},
-	"total_implied_odds": 0.98147
-}, {
-	"match_name": "Real Madrid v. Liverpool",
-	"match_start_time": 1678910400,
-	"hours_to_start": 312.7995390563541,
-	"league": "soccer_uefa_champs_league",
-	"best_outcome_odds": {
-		"Liverpool": ["1xBet", 3.58],
-		"Real Madrid": ["Unibet", 2.08],
-		"Draw": ["Suprabets", 4.4]
-	},
-	"total_implied_odds": 0.98737
-}, {
-	"match_name": "Skellefte\u00e5 AIK v. Lule\u00e5 HF",
-	"match_start_time": 1677780000,
-	"hours_to_start": -1.20067886253198,
-	"league": "icehockey_sweden_hockey_league",
-	"best_outcome_odds": {
-		"Lule\u00e5 HF": ["Unibet", 16.0],
-		"Skellefte\u00e5 AIK": ["Betclic", 2.3],
-		"Draw": ["Unibet", 4.6]
-	},
-	"total_implied_odds": 0.71467
-}, {
-	"match_name": "Aalesund v. V\u00e5lerenga",
-	"match_start_time": 1681138800,
-	"hours_to_start": 931.7988837847445,
-	"league": "soccer_norway_eliteserien",
-	"best_outcome_odds": {
-		"Aalesund": ["Betsson", 3.35],
-		"V\u00e5lerenga": ["Suprabets", 2.38],
-		"Draw": ["Betsson", 3.75]
-	},
-	"total_implied_odds": 0.98534
-}, {
-	"match_name": "Liverpool v. Manchester United",
-	"match_start_time": 1678033800,
-	"hours_to_start": 69.29876876109176,
-	"league": "soccer_epl",
-	"best_outcome_odds": {
-		"Liverpool": ["Matchbook", 2.5],
-		"Manchester United": ["Unibet", 3.0],
-		"Draw": ["Marathon Bet", 3.9]
-	},
-	"total_implied_odds": 0.98974
-}, {
-	"match_name": "Atalanta BC v. Udinese",
-	"match_start_time": 1677949200,
-	"hours_to_start": 45.798407422502834,
-	"league": "soccer_italy_serie_a",
-	"best_outcome_odds": {
-		"Atalanta BC": ["1xBet", 1.73],
-		"Udinese": ["Matchbook", 5.8],
-		"Draw": ["Nordic Bet", 4.2]
-	},
-	"total_implied_odds": 0.98854
-}, {
-	"match_name": "Empoli v. Udinese",
-	"match_start_time": 1678543200,
-	"hours_to_start": 210.79840712222787,
-	"league": "soccer_italy_serie_a",
-	"best_outcome_odds": {
-		"Empoli": ["1xBet", 3.14],
-		"Udinese": ["Suprabets", 2.63],
-		"Draw": ["Unibet", 3.5]
-	},
-	"total_implied_odds": 0.98441
-}, {
-	"match_name": "South Alabama Jaguars v. Appalachian St Mountaineers",
-	"match_start_time": 1677778200,
-	"hours_to_start": -1.7033740230401357,
-	"league": "basketball_ncaab",
-	"best_outcome_odds": {
-		"Appalachian St Mountaineers": ["Nordic Bet", 12.0],
-		"South Alabama Jaguars": ["MyBookie.ag", 1.52]
-	},
-	"total_implied_odds": 0.74123
-}, {
-	"match_name": "Northern Iowa Panthers v. Illinois St Redbirds",
-	"match_start_time": 1677780453,
-	"hours_to_start": -1.0775407150056626,
-	"league": "basketball_ncaab",
-	"best_outcome_odds": {
-		"Illinois St Redbirds": ["Pinnacle", 14.29],
-		"Northern Iowa Panthers": ["MyBookie.ag", 1.53]
-	},
-	"total_implied_odds": 0.72357
-}, {
-	"match_name": "Celta Vigo v. Rayo Vallecano",
-	"match_start_time": 1678555800,
-	"hours_to_start": 214.2965038941966,
-	"league": "soccer_spain_la_liga",
-	"best_outcome_odds": {
-		"Celta Vigo": ["Betfair", 2.22],
-		"Rayo Vallecano": ["Suprabets", 4.1],
-		"Draw": ["1xBet", 3.4]
-	},
-	"total_implied_odds": 0.98847
-}, {
-	"match_name": "Amanda Ribas v. Viviane Araujo",
-	"match_start_time": 1677980400,
-	"hours_to_start": 54.463049184150165,
-	"league": "mma_mixed_martial_arts",
-	"best_outcome_odds": {
-		"Amanda Ribas": ["Betfair", 1.92],
-		"Viviane Araujo": ["Marathon Bet", 2.14]
-	},
-	"total_implied_odds": 0.98812
-}, {
-	"match_name": "Bayern Munich v. Augsburg",
-	"match_start_time": 1678545000,
-	"hours_to_start": 211.29488788531887,
-	"league": "soccer_germany_bundesliga",
-	"best_outcome_odds": {
-		"Augsburg": ["Betsson", 21.0],
-		"Bayern Munich": ["Betfair", 1.17],
-		"Draw": ["1xBet", 11.5]
-	},
-	"total_implied_odds": 0.98928
-}]
+{
+    "created": "2021-08-04T12:00:00.000Z",
+    "data": [{
+        "match_name": "Sheffield United v. Blackburn Rovers",
+        "match_start_time": 1679151600,
+        "hours_to_start": 379.80109168416925,
+        "league": "soccer_fa_cup",
+        "best_outcome_odds": {
+            "Blackburn Rovers": ["Pinnacle", 5.34],
+            "Sheffield United": ["William Hill", 1.83],
+            "Draw": ["Nordic Bet", 4.0]
+        },
+        "total_implied_odds": 0.98371
+    }, {
+        "match_name": "Union Berlin v. Union Saint-Gilloise",
+        "match_start_time": 1678383900,
+        "hours_to_start": 166.54987376305792,
+        "league": "soccer_uefa_europa_league",
+        "best_outcome_odds": {
+            "Union Berlin": ["1xBet", 1.69],
+            "Union Saint-Gilloise": ["Unibet", 6.25],
+            "Draw": ["Suprabets", 4.2]
+        },
+        "total_implied_odds": 0.98981
+    }, {
+        "match_name": "Shakhtar Donetsk v. Feyenoord",
+        "match_start_time": 1678392000,
+        "hours_to_start": 168.799873708619,
+        "league": "soccer_uefa_europa_league",
+        "best_outcome_odds": {
+            "Feyenoord": ["Unibet", 2.65],
+            "Shakhtar Donetsk": ["1xBet", 2.96],
+            "Draw": ["1xBet", 3.66]
+        },
+        "total_implied_odds": 0.98842
+    }, {
+        "match_name": "Bayern M\u00fcnchen v. Paris Saint Germain",
+        "match_start_time": 1678305600,
+        "hours_to_start": 144.79953915278116,
+        "league": "soccer_uefa_champs_league",
+        "best_outcome_odds": {
+            "Bayern M\u00fcnchen": ["Suprabets", 1.95],
+            "Paris Saint Germain": ["Marathon Bet", 3.98],
+            "Draw": ["Suprabets", 4.6]
+        },
+        "total_implied_odds": 0.98147
+    }, {
+        "match_name": "Real Madrid v. Liverpool",
+        "match_start_time": 1678910400,
+        "hours_to_start": 312.7995390563541,
+        "league": "soccer_uefa_champs_league",
+        "best_outcome_odds": {
+            "Liverpool": ["1xBet", 3.58],
+            "Real Madrid": ["Unibet", 2.08],
+            "Draw": ["Suprabets", 4.4]
+        },
+        "total_implied_odds": 0.98737
+    }, {
+        "match_name": "Skellefte\u00e5 AIK v. Lule\u00e5 HF",
+        "match_start_time": 1677780000,
+        "hours_to_start": -1.20067886253198,
+        "league": "icehockey_sweden_hockey_league",
+        "best_outcome_odds": {
+            "Lule\u00e5 HF": ["Unibet", 16.0],
+            "Skellefte\u00e5 AIK": ["Betclic", 2.3],
+            "Draw": ["Unibet", 4.6]
+        },
+        "total_implied_odds": 0.71467
+    }, {
+        "match_name": "Aalesund v. V\u00e5lerenga",
+        "match_start_time": 1681138800,
+        "hours_to_start": 931.7988837847445,
+        "league": "soccer_norway_eliteserien",
+        "best_outcome_odds": {
+            "Aalesund": ["Betsson", 3.35],
+            "V\u00e5lerenga": ["Suprabets", 2.38],
+            "Draw": ["Betsson", 3.75]
+        },
+        "total_implied_odds": 0.98534
+    }, {
+        "match_name": "Liverpool v. Manchester United",
+        "match_start_time": 1678033800,
+        "hours_to_start": 69.29876876109176,
+        "league": "soccer_epl",
+        "best_outcome_odds": {
+            "Liverpool": ["Matchbook", 2.5],
+            "Manchester United": ["Unibet", 3.0],
+            "Draw": ["Marathon Bet", 3.9]
+        },
+        "total_implied_odds": 0.98974
+    }, {
+        "match_name": "Atalanta BC v. Udinese",
+        "match_start_time": 1677949200,
+        "hours_to_start": 45.798407422502834,
+        "league": "soccer_italy_serie_a",
+        "best_outcome_odds": {
+            "Atalanta BC": ["1xBet", 1.73],
+            "Udinese": ["Matchbook", 5.8],
+            "Draw": ["Nordic Bet", 4.2]
+        },
+        "total_implied_odds": 0.98854
+    }, {
+        "match_name": "Empoli v. Udinese",
+        "match_start_time": 1678543200,
+        "hours_to_start": 210.79840712222787,
+        "league": "soccer_italy_serie_a",
+        "best_outcome_odds": {
+            "Empoli": ["1xBet", 3.14],
+            "Udinese": ["Suprabets", 2.63],
+            "Draw": ["Unibet", 3.5]
+        },
+        "total_implied_odds": 0.98441
+    }, {
+        "match_name": "South Alabama Jaguars v. Appalachian St Mountaineers",
+        "match_start_time": 1677778200,
+        "hours_to_start": -1.7033740230401357,
+        "league": "basketball_ncaab",
+        "best_outcome_odds": {
+            "Appalachian St Mountaineers": ["Nordic Bet", 12.0],
+            "South Alabama Jaguars": ["MyBookie.ag", 1.52]
+        },
+        "total_implied_odds": 0.74123
+    }, {
+        "match_name": "Northern Iowa Panthers v. Illinois St Redbirds",
+        "match_start_time": 1677780453,
+        "hours_to_start": -1.0775407150056626,
+        "league": "basketball_ncaab",
+        "best_outcome_odds": {
+            "Illinois St Redbirds": ["Pinnacle", 14.29],
+            "Northern Iowa Panthers": ["MyBookie.ag", 1.53]
+        },
+        "total_implied_odds": 0.72357
+    }, {
+        "match_name": "Celta Vigo v. Rayo Vallecano",
+        "match_start_time": 1678555800,
+        "hours_to_start": 214.2965038941966,
+        "league": "soccer_spain_la_liga",
+        "best_outcome_odds": {
+            "Celta Vigo": ["Betfair", 2.22],
+            "Rayo Vallecano": ["Suprabets", 4.1],
+            "Draw": ["1xBet", 3.4]
+        },
+        "total_implied_odds": 0.98847
+    }, {
+        "match_name": "Amanda Ribas v. Viviane Araujo",
+        "match_start_time": 1677980400,
+        "hours_to_start": 54.463049184150165,
+        "league": "mma_mixed_martial_arts",
+        "best_outcome_odds": {
+            "Amanda Ribas": ["Betfair", 1.92],
+            "Viviane Araujo": ["Marathon Bet", 2.14]
+        },
+        "total_implied_odds": 0.98812
+    }, {
+        "match_name": "Bayern Munich v. Augsburg",
+        "match_start_time": 1678545000,
+        "hours_to_start": 211.29488788531887,
+        "league": "soccer_germany_bundesliga",
+        "best_outcome_odds": {
+            "Augsburg": ["Betsson", 21.0],
+            "Bayern Munich": ["Betfair", 1.17],
+            "Draw": ["1xBet", 11.5]
+        },
+        "total_implied_odds": 0.98928
+    }]
+}

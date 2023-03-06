@@ -1,3 +1,6 @@
+//! api docs: https://the-odds-api.com/liveapi/guides/v4/#schema-2
+
+
 const axios = require('axios');
 const rateLimit = require('axios-rate-limit');
 const fs = require('fs');
@@ -14,7 +17,12 @@ const {
 } = require('./constants');
 
 function handleFaultyResponse(response) {
-    throw new Error(`Failed to fetch data. Response: ${response.status} - ${response.statusText}`);
+    if (response.status === 429) {
+        console.log("Rate limit reached");
+    } else {
+        console.log("Error status: " + response.status + " - " + response.statusText);
+    }
+    //throw new Error(`Failed to fetch data. Response: ${response.status} - ${response.statusText}`);
 }
 
 async function getSports() {
@@ -34,32 +42,48 @@ async function getSports() {
     return new Set(response.data.map(item => item.key));
 }
 
-async function getData(sport, region='eu', limiter=null) {
+async function getData(sport, regions, limiter=null) {
     const url = `${BASE_URL}/sports/${sport}/odds/`;
     const escapedUrl = encodeURI(url);
-    let querystring = {
-        apiKey: API_KEY,
-        regions: region,
-        oddsFormat: 'decimal',
-        dateFormat: 'unix',
-    };
-    querystring = new URLSearchParams(querystring).toString();
+    let returndata = []
+    const markets = ["h2h","spreads","totals","outrights"].join(",")
 
-    try {
+    // * FOREACH REGION GET DATA
+    for(let i=0; i<regions.length; i++){
+
+        let region = regions[i]
+        let querystring = {
+            apiKey: API_KEY,
+            regions: region,
+            oddsFormat: 'decimal',
+            dateFormat: 'unix'
+        }; // CURRENTLY ONLY H2H (moneyline)
+
+        querystringencoded = new URLSearchParams(querystring).toString();
+    
         // ! USED FOR RATE LIMITING REQUESTS TO THE API CUZ THEY HAVE RATE LIMITS >:O
-        _uri = escapedUrl + "?" +querystring
-        const response = await limiter.get(_uri)
-
-        if (!response || response.status !== 200) {
-            handleFaultyResponse(response);
+        _uri = escapedUrl + "?" + querystringencoded
+        let response
+        try {
+            response = await limiter.get(_uri)
+        } catch (error) {
+            console.log(error);
+            continue
         }
 
-        return response.data.filter(item => item !== 'message');
-    } catch (e) {
-        console.log(e)
-        return []
-    }
+        let filtered_response = response.data.filter(item => item !== 'message');
+        for(let j=0; j<filtered_response.length; j++){
+            filtered_response[j].region = region
+            let match = filtered_response[j]
 
+            if(match.bookmakers.length > 0){
+                match.region = region
+                match.market = querystring.markets
+                returndata.push(match);
+            }
+        }
+    };
+    return returndata
 }
 
 async function* processMatches(matches, includeStartedMatches = true) {
@@ -72,13 +96,16 @@ async function* processMatches(matches, includeStartedMatches = true) {
         }
 
         const bestOddPerOutcome = {};
+        let marketType = null;
         for (const bookmaker of match.bookmakers) {
             const bookieName = bookmaker.title;
+
+            marketType = bookmaker.markets[0].key;
 
             for (const outcome of bookmaker.markets[0].outcomes) {
                 const outcomeName = outcome.name;
                 const odd = outcome.price; // decimal odds (e.g 0.5 = +50%)
-
+                
                 if (!bestOddPerOutcome[outcomeName] || odd > bestOddPerOutcome[outcomeName][1]) {
                     bestOddPerOutcome[outcomeName] = [bookieName, odd];
                 }
@@ -91,19 +118,23 @@ async function* processMatches(matches, includeStartedMatches = true) {
         const matchName = `${match.home_team} v. ${match.away_team}`;
         const timeToStart = (startTime - Date.now() / 1000) / 3600;
         const league = match.sport_key;
+        //console.log(`Processing match ${i + 1} of ${matchCount} | ${totalImpliedOdds}`)
 
         yield {
+            match_id: match.id,
             match_name: matchName,
             match_start_time: startTime,
             hours_to_start: timeToStart,
             league,
+            key: marketType,
             best_outcome_odds: bestOddPerOutcome,
             total_implied_odds: totalImpliedOdds,
+            region: match.region
         };
     }
 }
 
-async function getArbitrageOpportunities(region, cutoff) {
+async function getArbitrageOpportunities(cutoff) {
     // ! DEMO MODE - READ FROM demo_data.json and return that
     if(DEMO) {
         let demo_data = fs.readFileSync(path.join(__dirname, "output", "demo_data.json"))
@@ -112,15 +143,18 @@ async function getArbitrageOpportunities(region, cutoff) {
         return demo_data;
     }
 
+    // regions
+    const regions = ['eu', 'uk', 'au', 'us'];
+
     // create rate limiter axios object for getting match data from API
-    const limiter = rateLimit(axios.create(), { maxRequests: 25, perMilliseconds: 800, maxRPS: 25 })
+    const limiter = rateLimit(axios.create(), { maxRequests: 6, perMilliseconds: 150, maxRPS: 15 })
 
     // get array of sports
     // TODO: Just add sports to array as they dont change
-    const sports = await getSports(live=false);
+    const sports = await getSports();
     
-    // get data for each match
-    const data = chain(await Promise.all([...sports].map(sport => getData(sport, region, limiter))))
+    // get data for each match and all regions 
+    const data = chain(await Promise.all([...sports].map(sport => getData(sport, regions, limiter))))
         .flatten()
         .filter(item => item !== 'message')
         .value();
@@ -138,7 +172,7 @@ async function getArbitrageOpportunities(region, cutoff) {
     arbitrageOpportunities.sort((a, b) => a.hours_to_start - b.hours_to_start);
 
     // save data to json file if SAVE_DATA is true
-    const file_data = {"created": Date.now(), "region": region, "data": arbitrageOpportunities}
+    const file_data = {"created": Date.now(), "data": arbitrageOpportunities}
     if (SAVE_JSON) {
         const data = JSON.stringify(file_data, null, 2);
 

@@ -1,6 +1,6 @@
 const { getArbitrageOpportunities } = require('./brains.js');
 
-async function returnArbitrageData(region, cutoff) {
+async function returnArbitrageData(cutoff) {
     return new Promise((resolve, reject) => {
         // get current time
         const now = new Date();
@@ -9,7 +9,7 @@ async function returnArbitrageData(region, cutoff) {
         // if data is outdated, get new data
         if (now - lastUpdated > 600000) {
             console.log("Data is outdated. Getting new data...");
-            getArbitrageOpportunities(region, cutoff).then((arb_data) => {
+            getArbitrageOpportunities(cutoff).then((arb_data) => {
                 resolve(arb_data);
             }).catch((err) => {
                 console.log(err);

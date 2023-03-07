@@ -34,10 +34,12 @@ app.use(auth(config));
 // * Routes
 var scraperRouter = require('./routes/scraper');
 var trackerRouter = require('./routes/tracker');
+var calculatorRouter = require('./routes/calculator');
 
 app.use('/scraper', scraperRouter);
 app.use('/tracker', trackerRouter);
- 
+app.use('/calculator', calculatorRouter);
+
 // * Auth0 test
 app.get('/', (req, res) => {
     res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');

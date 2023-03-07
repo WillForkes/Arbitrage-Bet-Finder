@@ -33,7 +33,10 @@ app.use(auth(config));
 
 // * Routes
 var scraperRouter = require('./routes/scraper');
+var trackerRouter = require('./routes/tracker');
+
 app.use('/scraper', scraperRouter);
+app.use('/tracker', trackerRouter);
  
 // * Auth0 test
 app.get('/', (req, res) => {
@@ -56,13 +59,17 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+    // render the error page
+    res.status(err.status || 500);
+    if(env == "development"){
+        res.json({"error": "Something went wrong", "message": err.message, "status": err.status || 500})
+    }else{
+        res.json({"error": "Something went wrong"})
+    }       
 });
 
 module.exports = app;

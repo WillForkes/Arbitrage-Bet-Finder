@@ -13,8 +13,8 @@ router.post('/new', checkUser ,async function(req, res, next) {
         return;
     }
 
-    const betid = req.body.betid; // Bet ID
-    const stake = req.body.stake; // Total amount in £/$/€ staked
+    const betid = parseInt(req.body.betid); // Bet ID
+    const stake = parseFloat(req.body.stake); // Total amount in £/$/€ staked
 
     // * Get bet
     const bet = await prisma.bet.findUnique({
@@ -22,21 +22,47 @@ router.post('/new', checkUser ,async function(req, res, next) {
             id: betid
         }
     })
+
+    if(!bet){
+        res.status(404).json({"error": "Bet not found"});
+        return;
+    }
+
     const betData = JSON.parse(bet.data);
     let profitPercentage = (1 - betData.total_implied_odds); //e.g 0.035
-    profitPercentage = Math.round((profitPercentage * stake) * 1000) / 1000;
+    // round to 4 decimal places
+    profitPercentage = Math.round((profitPercentage + Number.EPSILON) * 10000) / 10000
 
     // * Create new tracker
     prisma.placedBets.create({
         data: {
             userId: req.user.authid,
-            betId: betid
+            betId: betid,
+            totalStake: stake,
+            profitPercentage: profitPercentage
+
         }
     }).then((tracker) => {
-        res.status(200).json(tracker);
+        res.status(200).json({"status": "ok", "data": tracker});
     }).catch((err) => {
-        res.status(500).json({"error": "Failed to create new tracker."});
+        res.status(500).json({"error": "Failed to create new tracker.", "details": err});
+        console.log(err)
     })
+});
+
+router.get('/all', checkUser, async function(req, res, next) {
+    // * Get all trackers
+    const placedBets = await prisma.placedBets.findMany({
+        where: {
+            userId: req.user.authid
+        },
+        include: {
+            bet: true
+        }
+    })
+
+    res.json({"status": "ok", "data": placedBets});
+
 });
 
 module.exports = router;

@@ -81,12 +81,20 @@ router.get('/run', checkUser ,async function(req, res, next) {
     res.json({"status": "ok", "Message": `${betsToInsert.length} new bets found. ${updatedCount} bets updated.`});
 });
 
-router.get("/get", checkUser, async function(req, res, next){
-    if(!req.query.region && !req.query.sport){
-        res.status(400).json({"error": "Missing required parameters"});
-        return;
+router.get("/all", checkUser, async function(req, res, next){
+    // get all bets and sort in descending order (by time
+    let bets = await prisma.bet.findMany({
+        orderBy: {
+            updatedAt: "desc"
+        }
+    })
+
+    // parse the data key for each bet into json
+    for(let i = 0; i < bets.length; i++){
+        bets[i].data = JSON.parse(bets[i].data);
     }
 
+    res.json({"status": "ok", "data": bets});
 });
 
 module.exports = router;

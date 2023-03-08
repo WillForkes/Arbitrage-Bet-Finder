@@ -13,10 +13,12 @@ datasource db {
 model User {
   authid        String       @id
   plan          String       @default("Free")
+  whitelist     String       @default("[]") // whitelisted bookmakers to display
   planExpiresAt DateTime?
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
   apiKey        String?      @unique
+  banned        Boolean      @default(false)
   placedBets    PlacedBets[]
 }
 

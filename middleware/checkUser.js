@@ -48,6 +48,12 @@ let checkUser = async (req, res, next) => {
                 apikey: apikey
             }
         })
+
+        if(!newUser){
+            res.status(500).json({"error": "Error creating user"})
+            return;
+        }
+        
     }
 
     // ! attach user to request

@@ -17,7 +17,7 @@ model User {
   planExpiresAt DateTime?
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
-  apiKey        String?      @unique
+  apikey        String?      @unique
   banned        Boolean      @default(false)
   placedBets    PlacedBets[]
 }

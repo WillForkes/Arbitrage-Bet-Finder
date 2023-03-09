@@ -1,0 +1,29 @@
+{
+  "name": "arbitrageapi",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.11.0",
+    "axios": "^1.3.4",
+    "axios-rate-limit": "^1.3.0",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "express-openid-connect": "^2.12.0",
+    "http-errors": "~1.6.3",
+    "jade": "~1.11.0",
+    "lodash": "^4.17.21",
+    "morgan": "~1.9.1",
+    "stripe": "^11.13.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.21",
+    "prisma": "^4.11.0"
+  }
+}

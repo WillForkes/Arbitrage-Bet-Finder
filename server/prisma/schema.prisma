@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  authid        String       @id
+  plan          String       @default("Free")
+  whitelist     String       @default("[]") // whitelisted bookmakers to display
+  planExpiresAt DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  apikey        String?      @unique
+  banned        Boolean      @default(false)
+  placedBets    PlacedBets[]
+}
+
+model Bet {
+  id         Int          @id @default(autoincrement())
+  data       String
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  placedBets PlacedBets[]
+}
+
+model PlacedBets {
+  id                Int      @id @default(autoincrement())
+  userId            String
+  betId             Int
+  totalStake        Float
+  profitPercentage  Float
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [authid])
+  bet               Bet      @relation(fields: [betId], references: [id])
+}
+
+// Plans
+// Starter - $29.99/month
+// - Arbitrage betting tool
+// - Email alerts
+// - Access to all our betting calculators, guides tips and tricks
+// - Live chat support
+// - 30 Day money back guarantee
+// - API Access (1000 requqests per month)
+
+// Pro - $49.99/month
+// - Arbitrage betting tool
+// - Email alerts
+// - SMS alerts
+// - Access to all our betting calculators, guides tips and tricks
+// - 1 on 1 mentoring support
+// - 30 Day money back guarantee
+// - API Access (4000 requqests per month)
+
+// Plus - $99.99/month
+// - Arbitrage betting tool
+// - Email alerts
+// - SMS alerts
+// - Discord webhook alerts
+// - Access to all our betting calculators, guides tips and tricks
+// - 1 on 1 mentoring support
+// - 30 Day money back guarantee
+// - API Access (10000 requqests per month)
+// - Early access to features
+
+// API Only - $199.99/month
+// - Access to all features on the platform
+// - 25,000 API requests per month?

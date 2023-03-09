@@ -20,8 +20,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors());
-
+app.use(cors({
+    maxAge: 86400,
+    credentials: true,
+    origin: "http://localhost:3001"
+}))
 // * Auth0 Authenticaiton
 const config = {
     authRequired: false,

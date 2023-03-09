@@ -6,6 +6,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors');
 const { PrismaClient } = require('@prisma/client')
 const { auth } = require('express-openid-connect'); // * Auth0
 let { checkUser } = require('./middleware/checkUser');
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());
 
 // * Auth0 Authenticaiton
 const config = {

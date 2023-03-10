@@ -17,6 +17,10 @@ async function sendApiRequest<T>(method: "GET" | "PUT" | "POST" | "DELETE" | "PA
     }
 }
 
-export async function getScrapes(): Promise<any> {
-    return await sendApiRequest("GET", "scraper/all", true)
+export async function profitStake(id: number, stake: number): Promise<any> {
+    return await sendApiRequest("GET", `calculator/spreadStake?betid=${id}&stake=${stake}`, true)
+}
+
+export async function createBet(id: number, stake: number): Promise<any> {
+    return await sendApiRequest("POST", `tracker/new`, true, {betid: id, stake: stake})
 }

@@ -1,6 +1,6 @@
-import React from "react";
-import { getter } from "@/api";
-import useSWR from "swr";
+import React, { useState } from "react";
+import { createBet, profitStake } from "@/api";
+import { SpreadStake } from "@/types";
 
 export default function Modal({
   isVisible,
@@ -11,11 +11,26 @@ export default function Modal({
   id: number;
   closeModal: () => void;
 }) {
-  const { data, error } = useSWR(
-    `/calculator/spreadStake?betid=${id}&stake=500`,
-    getter
-  );
-  console.log(data);
+  const [stake, setStake] = useState(0);
+  const [outcome, setOutcome] = useState<SpreadStake | null>(null);
+  async function getProfit(e: any) {
+    try {
+      setStake(e.target.value);
+      var data = await profitStake(id, parseInt(e.target.value));
+      setOutcome(data);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  async function newBet(e: any) {
+    e.preventDefault();
+    try {
+      var data = await createBet(id, stake);
+      console.log("SUCCESS", data);
+    } catch (e) {
+      console.error(e);
+    }
+  }
   if (isVisible == false) return null;
   return (
     <div className="fixed inset-0 flex flex-col justify-center items-center bg-gray-900 bg-opacity-50 z-50">
@@ -47,7 +62,26 @@ export default function Modal({
               <span className="sr-only">Close modal</span>
             </button>
           </div>
-          <p className="text-white">{data ? data.profit : null}</p>
+          <form action="">
+            <input
+              type="number"
+              value={stake}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
+              onChange={(e) => getProfit(e)}
+            />
+            <p>Profit {outcome?.profit}</p>
+            {outcome?.outcomes.map((outcome) => (
+              <p>
+                {outcome.outcome} wins: {outcome.stake} on {outcome.book}
+              </p>
+            ))}
+            <button
+              onClick={(e) => newBet(e)}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            >
+              Add Bet
+            </button>
+          </form>
         </div>
       </div>
     </div>

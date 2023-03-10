@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { createBet, spreadStake } from "@/api";
+import { createBet, spreadStake, hedgeStake } from "@/api";
 import { SpreadStake } from "@/types";
 
 export default function Modal({
@@ -18,12 +18,13 @@ export default function Modal({
     try {
       setStake(e.target.value); // set stake variable to input value
       var data = await spreadStake(id, parseInt(e.target.value));
+      // * var data = await hedgeStake(id, parseInt(e.target.value));  <-- This works however profit needs altering so that it's a mean of all outcome profits
       setOutcome(data);
     } catch (e) {
       console.log(e);
     }
   }
-  
+
   async function newBet(e: any) {
     e.preventDefault();
     try {

@@ -56,7 +56,12 @@ app.get('/profile', checkUser, async (req, res) => {
             authid: req.oidc.user.sub
         }
     })
-    res.json({"auth0": req.oidc.user, "dbuser": dbuser})
+    res.json({
+        "status":"ok",
+        "data": {
+            "auth0": req.oidc.user,
+            "dbuser": dbuser
+        }});
 });
 
 // catch 404 and forward to error handler

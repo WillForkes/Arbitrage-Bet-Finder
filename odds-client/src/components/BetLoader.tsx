@@ -24,10 +24,11 @@ export default function BetLoader({ b }: props) {
               <b>{b.data.best_outcome_odds[key][1]}</b>
             </div>
           ))}
-          <button onClick={() => setModal(true)}>+</button>
+          <button onClick={() => setModal(true)}>Calculate Stake Amounts</button>
         </div>
       </div>
       <Modal isVisible={modal} closeModal={closeModal} id={b.id} />
+      <hr></hr>
     </>
   );
 }

@@ -17,8 +17,12 @@ async function sendApiRequest<T>(method: "GET" | "PUT" | "POST" | "DELETE" | "PA
     }
 }
 
-export async function profitStake(id: number, stake: number): Promise<any> {
+export async function spreadStake(id: number, stake: number): Promise<any> {
     return await sendApiRequest("GET", `calculator/spreadStake?betid=${id}&stake=${stake}`, true)
+}
+
+export async function hedgeStake(id: number, stake: number): Promise<any> {
+    return await sendApiRequest("GET", `calculator/hedgeStake?betid=${id}&stake=${stake}`, true)
 }
 
 export async function createBet(id: number, stake: number): Promise<any> {

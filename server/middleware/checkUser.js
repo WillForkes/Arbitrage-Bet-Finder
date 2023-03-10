@@ -56,6 +56,24 @@ let checkUser = async (req, res, next) => {
         
     }
 
+    // ! Check user plan has not expired
+    if(user.planExpires < new Date()){
+        // ! Update user plan to free
+        const updatedUser = await prisma.user.update({
+            where: {
+                id: user.id
+            },
+            data: {
+                plan: "free"
+            }
+        })
+
+        if(!updatedUser){
+            res.status(500).json({"error": "Error updating user plan"})
+            return;
+        }
+    }
+
     // ! attach user to request
     req.user = user
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { createBet, profitStake } from "@/api";
+import { createBet, spreadStake } from "@/api";
 import { SpreadStake } from "@/types";
 
 export default function Modal({
@@ -13,15 +13,17 @@ export default function Modal({
 }) {
   const [stake, setStake] = useState(0);
   const [outcome, setOutcome] = useState<SpreadStake | null>(null);
+
   async function getProfit(e: any) {
     try {
-      setStake(e.target.value);
-      var data = await profitStake(id, parseInt(e.target.value));
+      setStake(e.target.value); // set stake variable to input value
+      var data = await spreadStake(id, parseInt(e.target.value));
       setOutcome(data);
     } catch (e) {
       console.log(e);
     }
   }
+  
   async function newBet(e: any) {
     e.preventDefault();
     try {
@@ -31,7 +33,9 @@ export default function Modal({
       console.error(e);
     }
   }
+
   if (isVisible == false) return null;
+  
   return (
     <div className="fixed inset-0 flex flex-col justify-center items-center bg-gray-900 bg-opacity-50 z-50">
       <div className="relative w-full h-full max-w-2xl md:h-auto text-center">
@@ -69,10 +73,10 @@ export default function Modal({
               className="shadow appearance-none border rounded w-full py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
               onChange={(e) => getProfit(e)}
             />
-            <p>Profit {outcome?.profit}</p>
+            <p>Profit ${outcome?.profit}</p>
             {outcome?.outcomes.map((outcome) => (
               <p>
-                {outcome.outcome} wins: {outcome.stake} on {outcome.book}
+                {outcome.outcome} wins: ${outcome.stake} on {outcome.book}
               </p>
             ))}
             <button

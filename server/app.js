@@ -25,6 +25,7 @@ app.use(cors({
     credentials: true,
     origin: "http://localhost:3001"
 }))
+
 // * Auth0 Authenticaiton
 const config = {
     authRequired: false,

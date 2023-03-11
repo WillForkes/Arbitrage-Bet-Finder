@@ -14,8 +14,8 @@ export default function BetLoader({ tb }: props) {
       <div className="match">
         <h3>Bet ID: {tb.betId}</h3>
         <p>${tb.totalStake}</p>
-        <p>{tb.profitPercentage}%</p>
-        <p>Risk: {(tb.profitPercentage > 0.03) ? "High" : "Low"}</p>
+        <p>{tb.profitPercentage * 100}%</p>
+        <p>Risk: {(tb.profitPercentage * 100 > 3) ? "High" : "Low"}</p>
       </div>
       <hr></hr>
     </>

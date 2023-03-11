@@ -5,7 +5,7 @@ async function sendApiRequest<T>(method: "GET" | "PUT" | "POST" | "DELETE" | "PA
     path = `${process.env.NEXT_PUBLIC_URI}/${path}`;
     const response = await axios.request({method, baseURL: path, data, withCredentials:withCredentials, headers: headers});
     const success: boolean = response.data.status;
-    console.log(success)
+
     if (success) {
         return response.data.data as T;
     } else {
@@ -28,3 +28,4 @@ export async function hedgeStake(id: number, stake: number): Promise<any> {
 export async function createBet(id: number, stake: number): Promise<any> {
     return await sendApiRequest("POST", `tracker/new`, true, {betid: id, stake: stake})
 }
+

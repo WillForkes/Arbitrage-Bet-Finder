@@ -5,18 +5,18 @@ import useSWR from "swr";
 import { getter } from "@/api";
 
 export default function profile() {
-  const { data, error } = useSWR("/profile", getter);
+    const { data, error } = useSWR("/profile", getter);
 
-  // parse the data into a User object
-  const user: User = data;
+    // parse the data into a User object
+    const user: User = data;
 
-  return (
+    return (
     <div>
-      {data ? (
+        {data ? (
         <ProfileLoader user={user} key={user.auth0.sid} />
         ) : (
         <p>loading</p>
-      )}
+        )}
     </div>
-  );
+    );
 }

@@ -46,9 +46,28 @@ app.use('/scraper', scraperRouter);
 app.use('/tracker', trackerRouter);
 app.use('/calculator', calculatorRouter);
 
-// * Auth0 test
+
 app.get('/', (req, res) => {
-    res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
+//    res.json({"status":"ok", "data": "Welcome to the API"})
+    res.redirect('http://localhost:3001/')
+});
+
+app.get('/isAuth', (req, res) => {
+    // print cookies sent
+    console.log(req.cookies);
+    if(req.oidc.isAuthenticated()){
+        res.json({
+            "status": "ok",
+            "data": {
+                "authenticated":true
+        }})
+    }else{
+        res.json({
+            "status": "ok",
+            "data": {
+                "authenticated":false
+        }})    
+    }
 });
 
 app.get('/profile', checkUser, async (req, res) => {

@@ -61,14 +61,14 @@ let checkUser = async (req, res, next) => {
             return;
         }
     }
-    
+
 
     let plan = user.subscription[0] ? user.subscription[0].plan : "free"
-    const planExpires = user.subscription[0] ? new Date(user.subscription[0].planExpiresAt) : new Date()
+    const planExpiresAt = user.subscription[0] ? new Date(user.subscription[0].planExpiresAt) : new Date()
     const planStripePaymentId = user.subscription[0] ? user.subscription[0].stripePaymentId : null
 
     // ! Check user plan has not expired
-    if(plan != "free" && planExpires < new Date()){
+    if(plan != "free" && planExpiresAt < new Date()){
         // ! Update user plan to free and set subscription to inactive
         plan = "free"
 
@@ -85,7 +85,7 @@ let checkUser = async (req, res, next) => {
     // ! attach user to request
     delete user.subscription
     user.plan = plan
-    user.planExpires = planExpires
+    user.planExpiresAt = planExpiresAt
     req.user = user
 
     next();

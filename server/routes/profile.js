@@ -44,7 +44,7 @@ router.get('/whitelist', checkUser, async function(req, res, next) {
 
 // * Get profile data
 router.get('/', checkUser, async (req, res) => {
-    const dbuser = await prisma.user.findUnique({
+    let dbuser = await prisma.user.findUnique({
         where: {
             authid: req.oidc.user.sub
         }
@@ -54,6 +54,9 @@ router.get('/', checkUser, async (req, res) => {
         res.status(500).json({"error": "Error getting user"})
         return;
     }
+
+    dbuser.plan = req.user.plan
+    dbuser.planExpiresAt = req.user.planExpiresAt
     
     res.json({
         "status":"ok",

@@ -34,6 +34,11 @@ router.get('/create', checkUser, async (req, res) => {
     
     if(!req.query.plan){
         res.status(500).json({"error": "Error creating payment link. No plan supplied."})
+        return
+    }
+    if(user.plan != "free"){
+        res.status(500).json({"error": "Error creating payment link. User already has a plan."})
+        return
     }
 
     const plan = req.query.plan

@@ -30,10 +30,17 @@ let checkUser = async (req, res, next) => {
     }
 
     // ! Get user data from local db
-    const user = await prisma.user.findUnique({
+    let user = await prisma.user.findUnique({
         where: {
             authid: req.oidc.user.sub
-        }
+        },
+        include: {
+            subscription: {
+                where: {
+                    status: "active"
+                }
+            }
+        }  
     })
 
     // ! If no user, create user
@@ -53,28 +60,32 @@ let checkUser = async (req, res, next) => {
             res.status(500).json({"error": "Error creating user"})
             return;
         }
-        
     }
+    
+
+    let plan = user.subscription[0] ? user.subscription[0].plan : "free"
+    const planExpires = user.subscription[0] ? new Date(user.subscription[0].planExpiresAt) : new Date()
+    const planStripePaymentId = user.subscription[0] ? user.subscription[0].stripePaymentId : null
 
     // ! Check user plan has not expired
-    if(user.planExpires < new Date()){
-        // ! Update user plan to free
-        const updatedUser = await prisma.user.update({
+    if(plan != "free" && planExpires < new Date()){
+        // ! Update user plan to free and set subscription to inactive
+        plan = "free"
+
+        await prisma.subscription.update({
             where: {
-                id: user.id
+                stripePaymentId: planStripePaymentId
             },
             data: {
-                plan: "free"
+                status: "inactive"
             }
         })
-
-        if(!updatedUser){
-            res.status(500).json({"error": "Error updating user plan"})
-            return;
-        }
     }
 
     // ! attach user to request
+    delete user.subscription
+    user.plan = plan
+    user.planExpires = planExpires
     req.user = user
 
     next();

@@ -147,7 +147,7 @@ router.post("/webhook", async (request, response) => {
 
     switch (eventType) {
         case 'checkout.session.completed':
-            // * You should provision the subscription and save the customer ID to your database
+            // * Update subscription with stripe ids - do not activate yet
             const csc_stripePaymentId = data.object.id
             const csc_subId = data.object.subscription
             const csc_customerId = data.object.customer
@@ -162,14 +162,14 @@ router.post("/webhook", async (request, response) => {
                 }
             })
 
-            console.log("Payment successful!")
             break;
+
         case 'invoice.paid':
+            // * Activate customer subscription and create invoice log
             const ip_subId = data.object.subscription
             const ip_invoiceId = data.object.id
             const ip_invoicePDF = data.object.invoice_pdf
 
-            // * Create invoice in database
             await prisma.invoice.create({
                 data: {
                     stripeInvoiceId: ip_invoiceId,
@@ -179,7 +179,7 @@ router.post("/webhook", async (request, response) => {
                 }
             })
 
-            // * Update subscription status
+            // Update subscription status to active
             await prisma.subscription.update({
                 where: {
                     stripeSubscriptionId: ip_subId
@@ -190,28 +190,56 @@ router.post("/webhook", async (request, response) => {
                 }
             })
 
-            console.log("Invoice paid! Subscription activated!")
             break;
+
         case 'invoice.payment_failed':
             // * Remove subscription
+
+            // ! Notify customers that payment failed
+            // ! Send email to customer
+
             const ipf_subId = data.object.subscription
+            const ipf_invoiceId = data.object.id
+
+            await prisma.invoice.create({
+                data: {
+                    stripeInvoiceId: ipf_invoiceId,
+                    stripeSubscriptionId: ipf_subId,
+                    status: eventType
+                }
+            })
 
             await prisma.subscription.update({
                 where: {
                     stripeSubscriptionId: ipf_subId
                 },
                 data: {
-                    status: "inactive",
+                    status: "payment_failed",
                 }
             })
 
             break;
+
+        case 'customer.subscription.deleted':
+            // * Subscription ended (no renewal)
+            const csd_subId = data.object.subscription
+            await prisma.subscription.update({
+                where: {
+                    stripeSubscriptionId: csd_subId
+                },
+                data: {
+                    status: "inactive",
+                }
+            })
+
         default:
             // Unhandled event type
     }
+
+    /// inactive, active, payment_failed, cancelled
   
     // Return a 200 response to acknowledge receipt of the event
-    response.status(200)
+    response.json({"status": "ok"})
 });
 
 module.exports = router;

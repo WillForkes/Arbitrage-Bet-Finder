@@ -49,7 +49,7 @@ model Subscription {
     stripePaymentId         String   @unique
     stripeSubscriptionId    String?  @unique
     stripeCustomerId        String?
-    status                  String   @default("inactive")
+    status                  String   @default("inactive") // inactive, active, paused, payment_failed, cancelled
     createdAt               DateTime @default(now())
     updatedAt               DateTime @updatedAt
     user                    User     @relation(fields: [userId], references: [authid])
@@ -60,7 +60,7 @@ model Invoice {
     id                      Int      @id @default(autoincrement())
     stripeSubscriptionId    String
     stripeInvoiceId         String
-    stripeInvoicePdfUrl     String
+    stripeInvoicePdfUrl     String?
     status                  String
     createdAt               DateTime @default(now())
     updatedAt               DateTime @updatedAt

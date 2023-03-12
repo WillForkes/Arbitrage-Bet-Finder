@@ -7,7 +7,9 @@ export default function Nav() {
   return (
     <nav className="flex items-center justify-between flex-wrap bg-gray-500 p-6">
       <div className="flex items-center flex-shrink-0 text-teal-300 mr-6">
-        <Image src={Logo} alt="logo" height={45} />
+        <Link href="/">
+          <Image src={Logo} alt="logo" height={45} />
+        </Link>
       </div>
       <div className="block lg:hidden">
         <button className="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white">

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Plan } from './types';
 export const getter = (url: string) => axios.get(process.env.NEXT_PUBLIC_URI + url, {withCredentials: true}).then(res => res.data.data) 
 
 async function sendApiRequest<T>(method: "GET" | "PUT" | "POST" | "DELETE" | "PATCH", path: string, withCredentials:boolean, data?: any, headers?: any): Promise<T> {
@@ -27,5 +28,9 @@ export async function hedgeStake(id: number, stake: number): Promise<any> {
 
 export async function createBet(id: number, stake: number): Promise<any> {
     return await sendApiRequest("POST", `tracker/new`, true, {betid: id, stake: stake})
+}
+
+export async function createPayment(plan: Plan): Promise<any> {
+    return await sendApiRequest("POST", "payment/create", true, {plan: plan})
 }
 

@@ -21,6 +21,12 @@ export type User = {
     }
 }
 
+export enum Plan {
+    starter = 'starter',
+    pro = 'pro',
+    plus = 'plus'
+}
+
 export type Bet = {
     data: {
         match_name: string;

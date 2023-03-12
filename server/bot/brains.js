@@ -136,11 +136,38 @@ async function* processMatches(matches, includeStartedMatches = true) {
     }
 }
 
-async function* processPositiveEV(matches, includeStartedMatches = false) {
+function processPositiveEV(matches, includeStartedMatches = false) {
     // * Positive EV
-    // ev = (Amount won per bet * probability of winning) – (Amount lost per bet * probability of losing)
-    // find all matches with an ev > 0 from the matches array
+    // ! ev = (Amount won per bet * probability of winning) – (Amount lost per bet * probability of losing)
+    // amount won per bet = (stake * odds) – stake
+    // probability of winning = 1 / odds
+    // amount lost per bet = stake
+    // probability of losing = 1 / odds
 
+    // find all matches with an ev > 0 from the matches array
+    let positiveBets = [];
+    matches.forEach(match => {
+        match.bookmakers.forEach(bookmaker => {
+            bookmaker.markets.forEach(market => {
+                market.outcomes.forEach(outcome => {
+                let probability = 1/Math.abs(outcome.price);
+                let amountWon = Math.abs(outcome.price);
+                let ev = (amountWon*probability)-(amountWon*(1-probability));
+                if (ev > 0) {
+                    positiveBets.push({
+                        home_team: match.home_team,
+                        away_team: match.away_team,
+                        bookmaker: bookmaker.title,
+                        market: market.key,
+                        outcome: outcome.name,
+                        ev: ev.toFixed(2)
+                    });
+                }
+                });
+            });
+        });
+    });
+    return positiveBets;
 }
 
 async function getArbitrageOpportunities(cutoff) {
@@ -197,4 +224,10 @@ async function getArbitrageOpportunities(cutoff) {
     return file_data
 }
 
+// json parse output/raw.json
+const file = fs.readFileSync(path.join(__dirname, "output", "raw.json"))
+const data = JSON.parse(file)
+
+const d = processPositiveEV(data);
+console.log(d)
 module.exports = {getArbitrageOpportunities}

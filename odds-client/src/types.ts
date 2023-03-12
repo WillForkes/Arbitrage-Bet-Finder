@@ -12,19 +12,13 @@ export type User = {
     dbuser: {
         authid: string;
         plan: string;
+        planExpiresAt: string;
         whitelist: string[];
         createdAt: string;
         updatedAt: string;
-        planExpiresAt: string;
         apikey: string;
         banned: boolean;
     }
-}
-
-export enum Plan {
-    starter = 'starter',
-    pro = 'pro',
-    plus = 'plus'
 }
 
 export type Bet = {

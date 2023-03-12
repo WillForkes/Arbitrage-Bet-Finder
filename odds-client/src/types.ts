@@ -26,6 +26,7 @@ export type Bet = {
         match_name: string;
         best_outcome_odds: OutcomeOdds
         total_implied_odds: number
+        match_start_time: number
     }
     id: number
 }

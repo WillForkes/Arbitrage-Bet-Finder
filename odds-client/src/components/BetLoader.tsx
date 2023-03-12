@@ -11,6 +11,7 @@ export default function BetLoader({ b }: props) {
   function closeModal(): void {
     setModal(false);
   }
+
   return (
     <>
       <div className="bg-grey-600 px-.5 rounded-xl grid grid-cols-3 grid-rows-3 px-3 h-48">
@@ -20,7 +21,10 @@ export default function BetLoader({ b }: props) {
           <h1>Books</h1>
         </div>
         <div className="col-span-3 grid grid-cols-3">
-          <h3>{b.data.match_name}</h3>
+          <h3>
+            {b.data.match_name} at{" "}
+            {new Date(b.data.match_start_time * 1000).toDateString()}
+          </h3>
           <p>{((1 - b.data.total_implied_odds) * 100).toFixed(2)}%</p>
           <div>
             <div className="col-span-3 grid grid-cols-3">

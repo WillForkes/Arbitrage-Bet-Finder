@@ -5,26 +5,62 @@ var express = require('express');
 let { checkUser } = require('../middleware/checkUser');
 var router = express.Router();
 
-/* GET users listing. */
-router.get('/update', async function(req, res, next) {
-  // update user data
+// * Update whitelisted bookies
+router.post('/whitelist', checkUser, async function(req, res, next) {
+    // update bookmaker whitelist on user profile
+    const add = req.body.add; // array
+    
+    let currentWhitelist = JSON.parse(req.user.whitelist)
+    let newWhitelist = currentWhitelist.concat(add)
 
-  const userData = {
+    // remove duplicates
+    newWhitelist = [...new Set(newWhitelist)]
 
-  }
-
-  await prisma.user.update({
+    await prisma.user.update({
         where: {
-            id: req.user.id
+            authid: req.user.authid
         },
-        data: userData
-    }).then((data) => {
-        res.status(200).json(data)
-    }
-    ).catch((err) => {
-        res.status(500).json({"error": "Failed to update user data.", "details": err});
-        console.log(err)
+        data: {
+            whitelist: JSON.stringify(newWhitelist)
+        }
     })
+    
+    res.status(200).json({"status": "ok", "data": {
+        "whitelist": newWhitelist
+    }})
+});
+
+// * Get whitelisted bookies
+router.get('/whitelist', checkUser, async function(req, res, next) {
+    // get bookmaker whitelist on user profile
+    const whitelist = JSON.parse(req.user.whitelist)
+    res.status(200).json({
+        "status": "ok", 
+        "data": {
+            "whitelist": whitelist
+        }
+    })
+});
+
+// * Get profile data
+router.get('/', checkUser, async (req, res) => {
+    const dbuser = await prisma.user.findUnique({
+        where: {
+            authid: req.oidc.user.sub
+        }
+    })
+
+    if(!dbuser){
+        res.status(500).json({"error": "Error getting user"})
+        return;
+    }
+    
+    res.json({
+        "status":"ok",
+        "data": {
+            "auth0": req.oidc.user,
+            "dbuser": dbuser
+        }});
 });
 
 module.exports = router;

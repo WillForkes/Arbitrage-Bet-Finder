@@ -237,14 +237,54 @@ router.post("/webhook", async (request, response) => {
                 }
             })
 
+        case 'customer.subscription.updated':
+            // * Subscription updated
+            const csu_subId = data.object.id
+            const updatedPlan = await getSub(csu_subId)
+
+            // check if plan has changed
+            const sub = await prisma.subscription.findUnique({
+                where: {
+                    stripeSubscriptionId: csu_subId
+                }
+            })
+
+            // if plan has changed then update it in the db
+            if(sub.plan != updatedPlan){
+                await prisma.subscription.update({
+                    where: {
+                        stripeSubscriptionId: csu_subId
+                    },
+                    data: {
+                        plan: updatedPlan,
+                    }
+                })
+            }
+
         default:
             // Unhandled event type
     }
 
     /// inactive, active, payment_failed, cancelled
   
-    // Return a 200 response to acknowledge receipt of the event
     response.json({"status": "ok"})
 });
+
+
+async function getSub(subid){
+    const subscription = await stripe.subscriptions.retrieve(subid);
+    if(!subscription){
+        return null;
+    }
+
+    const productid = subscription.plan?.product;
+    
+    // see which key this is for in the plans object
+    for (const [key, value] of Object.entries(plans)) {
+        if(value.product == productid){
+            return key;
+        }
+    }
+}
 
 module.exports = router;

@@ -88,6 +88,8 @@ async function getData(sport, regions, limiter=null) {
 
 async function* processMatches(matches, includeStartedMatches = true) {
     const matchCount = matches.length;
+
+    // * Arbitrage
     for (let i = 0; i < matchCount; i++) {
         const match = matches[i];
         const startTime = parseInt(match.commence_time);
@@ -132,6 +134,13 @@ async function* processMatches(matches, includeStartedMatches = true) {
             region: match.region
         };
     }
+}
+
+async function* processPositiveEV(matches, includeStartedMatches = false) {
+    // * Positive EV
+    // ev = (Amount won per bet * probability of winning) – (Amount lost per bet * probability of losing)
+    // find all matches with an ev > 0 from the matches array
+
 }
 
 async function getArbitrageOpportunities(cutoff) {

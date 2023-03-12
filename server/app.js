@@ -10,13 +10,16 @@ var cors = require('cors');
 const { PrismaClient } = require('@prisma/client')
 const { auth } = require('express-openid-connect'); // * Auth0
 let { checkUser } = require('./middleware/checkUser');
-
 const prisma = new PrismaClient()
 var app = express();
 
 // * Setup libaries for express
 app.use(logger('dev'));
-app.use(express.json());
+app.use(express.json({
+    verify: (req, res, buf) => {
+      req.rawBody = buf.toString();
+    }
+}));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -25,6 +28,7 @@ app.use(cors({
     credentials: true,
     origin: "http://localhost:3001"
 }))
+
 
 // * Auth0 Authenticaiton
 const config = {
@@ -41,14 +45,17 @@ app.use(auth(config));
 var scraperRouter = require('./routes/scraper');
 var trackerRouter = require('./routes/tracker');
 var calculatorRouter = require('./routes/calculator');
+var profileRouter = require('./routes/profile');
+var paymentRouter = require('./routes/payment');
 
 app.use('/scraper', scraperRouter);
 app.use('/tracker', trackerRouter);
 app.use('/calculator', calculatorRouter);
-
+app.use('/profile', profileRouter);
+app.use('/payment', paymentRouter);
 
 app.get('/', (req, res) => {
-//    res.json({"status":"ok", "data": "Welcome to the API"})
+    //res.json({"status":"ok", "data": "Welcome to the API"})
     res.redirect('http://localhost:3001/')
 });
 
@@ -68,20 +75,6 @@ app.get('/isAuth', (req, res) => {
                 "authenticated":false
         }})    
     }
-});
-
-app.get('/profile', checkUser, async (req, res) => {
-    const dbuser = await prisma.user.findUnique({
-        where: {
-            authid: req.oidc.user.sub
-        }
-    })
-    res.json({
-        "status":"ok",
-        "data": {
-            "auth0": req.oidc.user,
-            "dbuser": dbuser
-        }});
 });
 
 // catch 404 and forward to error handler

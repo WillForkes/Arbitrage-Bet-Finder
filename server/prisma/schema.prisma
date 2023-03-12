@@ -12,14 +12,13 @@ datasource db {
 
 model User {
   authid        String       @id
-  plan          String       @default("Free")
   whitelist     String       @default("[]") // whitelisted bookmakers to display
-  planExpiresAt DateTime?
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
   apikey        String?      @unique
   banned        Boolean      @default(false)
   placedBets    PlacedBets[]
+  subscription  Subscription[]
 }
 
 model Bet {
@@ -40,6 +39,32 @@ model PlacedBets {
   updatedAt         DateTime @updatedAt
   user              User     @relation(fields: [userId], references: [authid])
   bet               Bet      @relation(fields: [betId], references: [id])
+}
+
+model Subscription {
+    id                      Int      @id @default(autoincrement())
+    userId                  String
+    plan                    String
+    planExpiresAt           DateTime
+    stripePaymentId         String   @unique
+    stripeSubscriptionId    String?  @unique
+    stripeCustomerId        String?
+    status                  String   @default("inactive")
+    createdAt               DateTime @default(now())
+    updatedAt               DateTime @updatedAt
+    user                    User     @relation(fields: [userId], references: [authid])
+    invoices                Invoice[]
+}
+
+model Invoice {
+    id                      Int      @id @default(autoincrement())
+    stripeSubscriptionId    String
+    stripeInvoiceId         String
+    stripeInvoicePdfUrl     String
+    status                  String
+    createdAt               DateTime @default(now())
+    updatedAt               DateTime @updatedAt
+    subscription            Subscription @relation(fields: [stripeSubscriptionId], references: [stripeSubscriptionId])
 }
 
 // Plans

@@ -29,10 +29,10 @@ const plans = {
 }
 
 // * Get profile data
-router.get('/create', checkUser, async (req, res) => {
+router.post('/create', checkUser, async (req, res) => {
     let user = req.user
     
-    if(!req.query.plan){
+    if(!req.body.plan){
         res.status(500).json({"error": "Error creating payment link. No plan supplied."})
         return
     }
@@ -41,7 +41,7 @@ router.get('/create', checkUser, async (req, res) => {
         return
     }
 
-    const plan = req.query.plan
+    const plan = req.body.plan
     const productid = plans[plan].product
     const priceid = plans[plan].price
 

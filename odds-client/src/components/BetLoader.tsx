@@ -1,4 +1,5 @@
 import { Bet } from "@/types";
+import { dateFormat } from "@/utils";
 import React, { useState } from "react";
 import Modal from "./Modal";
 
@@ -16,15 +17,12 @@ export default function BetLoader({ b }: props) {
     <>
       <div className="bg-grey-600 px-.5 rounded-xl grid grid-cols-3 grid-rows-3 px-3 h-48">
         <div className="col-span-3 grid grid-cols-3">
-          <h1>Match Name</h1>
+          <h1>{dateFormat(b.data.match_start_time)}</h1>
           <h1>Profit</h1>
           <h1>Books</h1>
         </div>
         <div className="col-span-3 grid grid-cols-3">
-          <h3>
-            {b.data.match_name} at{" "}
-            {new Date(b.data.match_start_time * 1000).toDateString()}
-          </h3>
+          <h3>{b.data.match_name}</h3>
           <p>{((1 - b.data.total_implied_odds) * 100).toFixed(2)}%</p>
           <div>
             <div className="col-span-3 grid grid-cols-3">

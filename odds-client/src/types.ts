@@ -31,6 +31,12 @@ export type Bet = {
     id: number
 }
 
+export enum Plan {
+    starter = "starter",
+    pro = "pro",
+    plus = "plus"
+}
+
 export type TrackedBet = {
     id: number;
     userId: string;

@@ -1,11 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import Logo from "../../../public/arbster_logo.png";
+import Logo from "../../../public/arbster.png";
 
 export default function Nav() {
   return (
-    <nav className="flex items-center justify-between flex-wrap bg-gray-500 p-6">
+    <nav className="flex items-center justify-between flex-wrap bg-gray-900 p-6">
       <div className="flex items-center flex-shrink-0 text-teal-300 mr-6">
         <Link href="/">
           <Image src={Logo} alt="logo" height={45} />

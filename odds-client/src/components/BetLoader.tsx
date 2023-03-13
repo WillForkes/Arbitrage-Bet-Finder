@@ -15,7 +15,7 @@ export default function BetLoader({ b }: props) {
 
   return (
     <>
-      <div className="bg-grey-600 px-.5 rounded-xl grid grid-cols-3 grid-rows-3 px-3 h-48">
+      <div className="bg-grey-800 px-.5 rounded-xl grid grid-cols-3 grid-rows-3 px-3 h-48">
         <div className="col-span-3 grid grid-cols-3">
           <h1>{dateFormat(b.data.match_start_time)}</h1>
           <h1>Profit</h1>

@@ -20,32 +20,40 @@ const transporter = nodemailer.createTransport({
 });
 
 router.post('/email', async function(req, res, next) {
-    // const {betid, authid} = req.body;
+    const {betid, authid} = req.body;
 
-    // if(!betid || !authid){
-    //     res.status(500).json({"error": "Error sending email. No betid or authid supplied."})
-    //     return;
-    // }
+    if(!betid || !authid){
+        res.status(500).json({"error": "Error sending email. No betid or authid supplied."})
+        return;
+    }
 
-    // // Get user and bet
-    // const user = await prisma.user.findUnique({
-    //     where: {
-    //         authid: authid
-    //     }
-    // })
-    // const bet = await prisma.bet.findUnique({
-    //     where: {
-    //         id: betid
-    //     }
-    // })
+    // Get user and bet
+    const user = await prisma.user.findUnique({
+        where: {
+            authid: authid
+        }
+    })
+    const bet = await prisma.bet.findUnique({
+        where: {
+            id: parseInt(betid)
+        }
+    })
+
+    if(!user || !bet){
+        res.status(500).json({"error": "Error sending email. User or bet not found."})
+        return;
+    }
 
     // send email
+    const betData = JSON.parse(bet.data)
+    const profitPercentage = Math.round(((1 - betData.total_implied_odds) + Number.EPSILON) * 100) / 100
+    const message = `Arbster notification: +${profitPercentage}% arbitrage opportunity found! Click here to view: https://arbster.app/bet/${betid}`
     let mailOptions = {
         from: process.env.EMAIL_FROM,
-        to: "wforkes@gmail.com", // list of receivers
-        subject: 'Hello ✔', // Subject line
-        text: 'Hello world?', // plain text body
-        html: '<b>Hello world?</b>' // html body
+        to: user.email, // list of receivers
+        subject: 'Arbster Bet Notification',
+        text: message, 
+        html: '<b>HTML template not created yet...</b>' // html body
     };
 
     transporter.sendMail(mailOptions, (error, info) => {

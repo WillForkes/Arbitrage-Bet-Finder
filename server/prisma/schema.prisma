@@ -17,10 +17,9 @@ model User {
   updatedAt         DateTime     @updatedAt
   region            String?      @default("UK")
   phone             String?
-  discordWebhook    String?
+  email             String?      @unique // used only for email notis
   smsNotifcations   Boolean      @default(false)
   emailNotifications Boolean     @default(false)
-  discordNotifications Boolean   @default(false)
   apikey            String?      @unique
   banned            Boolean      @default(false)
   placedBets        PlacedBets[]

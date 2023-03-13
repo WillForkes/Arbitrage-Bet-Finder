@@ -8,7 +8,7 @@ const nextConfig = {
       {
         source: '/auth/login',
         destination: 'http://localhost:3000/login',
-        permanent: false,
+        permanent: true,
         basePath: false
       },
     ];

@@ -22,8 +22,6 @@ model User {
   emailNotifications Boolean     @default(false)
   apikey            String?      @unique
   banned            Boolean      @default(false)
-  affiliateCode     String?      @unique
-  affiliateBalance  Float        @default(0)
   placedBets        PlacedBets[]
   subscription      Subscription[]
 }

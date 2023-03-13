@@ -58,10 +58,9 @@ router.post('/email', async function(req, res, next) {
 
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-            res.json({"status": "error", "data": {"message": error}})
+            res.json({"error": error})
             return
         }
-        console.log('Message sent: %s', info.messageId);
         res.json({"status": "ok", "data": {"message": info}})
     });
 

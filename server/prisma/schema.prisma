@@ -11,14 +11,20 @@ datasource db {
 }
 
 model User {
-  authid        String       @id
-  whitelist     String       @default("[]") // whitelisted bookmakers to display
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  apikey        String?      @unique
-  banned        Boolean      @default(false)
-  placedBets    PlacedBets[]
-  subscription  Subscription[]
+  authid            String       @id
+  whitelist         String       @default("[]") // whitelisted bookmakers to display
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  region            String?      @default("UK")
+  phone             String?
+  discordWebhook    String?
+  smsNotifcations   Boolean      @default(false)
+  emailNotifications Boolean     @default(false)
+  discordNotifications Boolean   @default(false)
+  apikey            String?      @unique
+  banned            Boolean      @default(false)
+  placedBets        PlacedBets[]
+  subscription      Subscription[]
 }
 
 model Bet {

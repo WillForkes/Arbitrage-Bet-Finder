@@ -21,8 +21,10 @@
     "jade": "~1.11.0",
     "lodash": "^4.17.21",
     "morgan": "~1.9.1",
+    "nodemailer": "^6.9.1",
     "raw-body": "^2.5.2",
-    "stripe": "^11.14.0"
+    "stripe": "^11.14.0",
+    "twilio": "^4.8.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.21",

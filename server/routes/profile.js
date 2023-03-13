@@ -42,6 +42,38 @@ router.get('/whitelist', checkUser, async function(req, res, next) {
     })
 });
 
+// * Update all profile
+router.post('/update', checkUser, async function(req, res, next) {
+    let { region, phone, email, smsNotifications, emailNotifications } = req.body;
+    region = (region) ? region : req.user.region;
+    phone = (phone) ? phone : req.user.phone;
+    email = (email) ? email : req.user.email;
+    smsNotifications = (smsNotifications) ? smsNotifications : req.user.smsNotifications;
+    emailNotifications = (emailNotifications) ? emailNotifications : req.user.emailNotifications;
+
+    const updateData = {
+        region: region,
+        phone: phone,
+        email: email,
+        smsNotifications: smsNotifications,
+        emailNotifications: emailNotifications
+    }
+
+    const updatedUser = await prisma.user.update({
+        where: {
+            authid: req.user.authid
+        },
+        data: updateData
+    })
+
+    if(!updatedUser){
+        res.status(500).json({"error": "Error updating user"})
+        return;
+    }
+
+    res.status(200).json({"status": "ok", "data": {}})
+});
+
 // * Get profile data
 router.get('/', checkUser, async (req, res) => {
     let dbuser = await prisma.user.findUnique({

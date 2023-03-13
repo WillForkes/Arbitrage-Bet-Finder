@@ -47,12 +47,14 @@ var trackerRouter = require('./routes/tracker');
 var calculatorRouter = require('./routes/calculator');
 var profileRouter = require('./routes/profile');
 var paymentRouter = require('./routes/payment');
+var notificationRouter = require('./routes/notification');
 
 app.use('/scraper', scraperRouter);
 app.use('/tracker', trackerRouter);
 app.use('/calculator', calculatorRouter);
 app.use('/profile', profileRouter);
 app.use('/payment', paymentRouter);
+app.use('/notification', notificationRouter);
 
 app.get('/', (req, res) => {
     //res.json({"status":"ok", "data": "Welcome to the API"})

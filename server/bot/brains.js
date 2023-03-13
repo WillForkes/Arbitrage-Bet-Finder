@@ -154,8 +154,13 @@ function processPositiveEV(matches, includeStartedMatches = false) {
                 let amountWon = Math.abs(outcome.price) - 1
                 let amountLost = Math.abs(outcome.price);
                 let ev = (amountWon*probability)-(1*(1-probability));
+<<<<<<< HEAD
                 console.log(`probability: ${probability} Odds: ${amountLost}`, ev);
                 if (ev > 0.001) {
+=======
+                //console.log(`probability: ${probability} Odds: ${amountLost}`, ev);
+                if (ev > 0.1) {
+>>>>>>> 9b2ccbf3c41d00a82f2a0f859134c9408ac51208
                     positiveBets.push({
                         home_team: match.home_team,
                         away_team: match.away_team,

@@ -10,6 +10,7 @@ var cors = require('cors');
 const { PrismaClient } = require('@prisma/client')
 const { auth } = require('express-openid-connect'); // * Auth0
 let { checkUser } = require('./middleware/checkUser');
+let { checkStaff } = require('./middleware/checkStaff');
 const prisma = new PrismaClient()
 var app = express();
 
@@ -48,6 +49,7 @@ var calculatorRouter = require('./routes/calculator');
 var profileRouter = require('./routes/profile');
 var paymentRouter = require('./routes/payment');
 var notificationRouter = require('./routes/notification');
+var adminRouter = require('./routes/admin');
 
 app.use('/scraper', scraperRouter);
 app.use('/tracker', trackerRouter);
@@ -55,6 +57,7 @@ app.use('/calculator', calculatorRouter);
 app.use('/profile', profileRouter);
 app.use('/payment', paymentRouter);
 app.use('/notification', notificationRouter);
+app.use('/admin', adminRouter);
 
 app.get('/', (req, res) => {
     //res.json({"status":"ok", "data": "Welcome to the API"})

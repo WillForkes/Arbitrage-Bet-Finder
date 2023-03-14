@@ -22,6 +22,7 @@ model User {
   emailNotifications Boolean     @default(false)
   apikey            String?      @unique
   banned            Boolean      @default(false)
+  staff             Boolean      @default(false)
   placedBets        PlacedBets[]
   subscription      Subscription[]
 }
@@ -70,6 +71,15 @@ model Invoice {
     createdAt               DateTime @default(now())
     updatedAt               DateTime @updatedAt
     subscription            Subscription @relation(fields: [stripeSubscriptionId], references: [stripeSubscriptionId])
+}
+
+model SignupDeal {
+    id                      Int      @id @default(autoincrement())
+    deal                    String
+    link                    String
+    expiresAt               DateTime
+    createdAt               DateTime @default(now())
+    updatedAt               DateTime @updatedAt
 }
 
 // Plans

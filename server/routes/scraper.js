@@ -1,14 +1,13 @@
 // import ../bot/scraper.js
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
-const { returnArbitrageData } = require('../bot/scraper.js');
+const { returnBettingOpportunities } = require('../bot/scraper.js');
 var express = require('express');
 let { checkUser } = require('../middleware/checkUser');
 var router = express.Router();
 const axios = require('axios');
 
 
-/* GET home page. */
 router.get('/run', checkUser ,async function(req, res, next) {
     // * Check for required querys params and set defaults
 
@@ -18,9 +17,9 @@ router.get('/run', checkUser ,async function(req, res, next) {
     // * Get arbitrage data
     let data
     try {
-        data = await returnArbitrageData(cutoff)
-    } catch{ 
-        res.status(500).json({"error": "Failed to get data."});
+        data = await returnBettingOpportunities(cutoff)
+    } catch(err) { 
+        res.status(500).json({"error": "Failed to get data: " + err});
         return;
     }
 

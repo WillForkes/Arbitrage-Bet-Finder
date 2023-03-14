@@ -136,40 +136,54 @@ async function* processMatches(matches, includeStartedMatches = true) {
     }
 }
 
-function processPositiveEV(matches, includeStartedMatches = false) {
+async function* processPositiveEV(matches, includeStartedMatches = false) {
     // * Positive EV
-    // ! ev = (Amount won per bet * probability of winning) – (Amount lost per bet * probability of losing)
-    // amount won per bet = (stake * odds) – stake
-    // probability of winning = 1 / odds
-    // amount lost per bet = stake
-    // probability of losing = 1 / odds
-
-    // find all matches with an ev > 0 from the matches array
     let positiveBets = [];
-    matches.forEach(match => {
-        match.bookmakers.forEach(bookmaker => {
-            bookmaker.markets.forEach(market => {
-                market.outcomes.forEach(outcome => {
-                let probability = 1/Math.abs(outcome.price);
-                let amountWon = Math.abs(outcome.price) - 1
-                let amountLost = Math.abs(outcome.price);
-                let ev = (amountWon*probability)-(1*(1-probability));
-                console.log(`probability: ${probability} Odds: ${amountLost}`, ev);
-                if (1/ev > 0) {
-                    positiveBets.push({
-                        home_team: match.home_team,
-                        away_team: match.away_team,
-                        bookmaker: bookmaker.title,
-                        market: market.key,
-                        percent: 1/ev,
-                        outcome: outcome.name,
-                        ev: ev.toFixed(2)
-                    });
+
+    for(let a=0; a<matches.length; a++){
+        let match = matches[a]
+
+        for(let b=0; b<match.bookmakers.length; b++){
+            let bookmaker = match.bookmakers[b]
+
+            for(let c=0; c<bookmaker.markets.length; c++){
+                let market = bookmaker.markets[c]
+
+                for(let d=0; d<market.outcomes.length; d++){
+                    let outcome = market.outcomes[d]
+
+                    let probability = 1/Math.abs(outcome.price);
+                    let amountWon = Math.abs(outcome.price) - 1
+                    let amountLost = Math.abs(outcome.price);
+                    let ev = (amountWon*probability)-(1*(1-probability));
+
+                    // console.log(`probability: ${probability} Odds: ${amountLost}`, ev);
+
+                    if (1/ev > 0) {
+                        const matchName = `${match.home_team} v. ${match.away_team}`;
+                        const startTime = parseInt(match.commence_time);
+                        const timeToStart = (startTime - Date.now() / 1000) / 3600;
+                        const league = match.sport_key;
+                        const marketType = market.key;
+
+                        yield {
+                            match_id: match.id,
+                            match_name: matchName,
+                            match_start_time: startTime,
+                            hours_to_start: timeToStart,
+                            league,
+                            key: marketType,
+                            bookmaker: bookmaker.title,
+                            ev: ev.toFixed(2),
+                            percent: ev/1,
+                            region: match.region
+                        }
+                    }
                 }
-                });
-            });
-        });
-    });
+            }
+        }
+    }
+
     return positiveBets;
 }
 
@@ -198,20 +212,35 @@ async function getArbitrageOpportunities(cutoff) {
         .filter(item => item !== 'message')
         .value();
 
-    // process matches
+    // process matches ! Arbitrage
     let results = [];
     for await (const val of processMatches(data, includeStartedMatches=false)) {
         results.push(val)
     }
 
+    // process matches ! Positive EV
+    let positiveEV = [];
+    for await (const val of processPositiveEV(data, includeStartedMatches=false)) {
+        positiveEV.push(val)
+    }
+
     // filter opportunities
     const arbitrageOpportunities = Array.from(results).filter(x => 0 < x.total_implied_odds && x.total_implied_odds < 1 - cutoff);
+    const positiveEVOpportunities = Array.from(positiveEV).filter(x => x.percent > cutoff);
 
     // sort array by hours_to_start in ascending order
     arbitrageOpportunities.sort((a, b) => a.hours_to_start - b.hours_to_start);
+    positiveEVOpportunities.sort((a, b) => a.hours_to_start - b.hours_to_start);
 
     // save data to json file if SAVE_DATA is true
-    const file_data = {"created": Date.now(), "data": arbitrageOpportunities}
+    const file_data = {
+        "created": Date.now(), 
+        "data": {
+           "arbitrage":arbitrageOpportunities,
+           "ev": positiveEVOpportunities
+        }
+    }
+
     if (SAVE_JSON) {
         const data = JSON.stringify(file_data, null, 2);
 
@@ -228,9 +257,10 @@ async function getArbitrageOpportunities(cutoff) {
 }
 
 // json parse output/raw.json
-const file = fs.readFileSync(path.join(__dirname, "output", "raw.json"))
-const data = JSON.parse(file)
+// const file = fs.readFileSync(path.join(__dirname, "output", "raw.json"))
+// const data = JSON.parse(file)
 
-const d = processPositiveEV(data);
-console.log(d)
+// const d = processPositiveEV(data);
+// console.log(d)
+
 module.exports = {getArbitrageOpportunities}

@@ -1,6 +1,6 @@
 const { getArbitrageOpportunities } = require('./brains.js');
 
-async function returnArbitrageData(cutoff) {
+async function returnBettingOpportunities(cutoff) {
     return new Promise((resolve, reject) => {
         // get current time
         const now = new Date();
@@ -22,4 +22,4 @@ async function returnArbitrageData(cutoff) {
     });
 }
 
-module.exports = {returnArbitrageData}
+module.exports = {returnBettingOpportunities}

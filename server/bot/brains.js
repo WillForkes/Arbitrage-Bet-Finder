@@ -136,17 +136,15 @@ async function* processMatches(matches, includeStartedMatches = true) {
     }
 }
 
-function averageOdds(match, i) {
+function averageOdds(match, i, market) {
     let odds = [];
-    for (let x = 0; x < match.bookmakers.length; i++) {
+    for (let x = 0; x < match.bookmakers.length; x++) {
         let book = match.bookmakers[x]
 
-        if (book.markets[0].key == 'h2h') {
-            try {
-                odds.push(book.markets[0].outcomes[i].price)
-            } catch (error) {
-                console.log(error);
-            }
+        try {
+            odds.push(market.outcomes[i].price)
+        } catch (error) {
+            console.log(error);
         }
     }
 
@@ -180,9 +178,9 @@ async function* processPositiveEV(matches, includeStartedMatches = false) {
                 for(let d=0; d<market.outcomes.length; d++){
                     let outcome = market.outcomes[d]
 
-                    if(market.key != 'h2h') continue;
+                    if(market.key != 'h2h') break;
 
-                    let odds = averageOdds(match, d);
+                    let odds = averageOdds(match, d, market);
                     let probability = 1/Math.abs(sumAverage(odds));
                     let amountWon = Math.abs(outcome.price) - 1
                     let amountLost = Math.abs(outcome.price);

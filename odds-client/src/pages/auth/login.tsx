@@ -1,5 +1,6 @@
 import React from "react";
 
 export default function login() {
-  return <div>login</div>;
+  window.location.assign("http://localhost:3000/login");
+  return <div>Loading...</div>;
 }

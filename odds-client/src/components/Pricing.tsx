@@ -15,10 +15,10 @@ export default function Pricing() {
   }
 
   return (
-    <section className="py-20 dark:text-gray-100">
-      <div className="container px-4 mx-auto">
+    <section className="py-20 dark:text-gray-100 bg-gray-900">
+      <div className="container px-4 mx-auto ">
         <div className="max-w-2xl mx-auto mb-16 text-center">
-          <span className="font-bold tracking-wider uppercase dark:text-violet-400">
+          <span className="font-bold tracking-wider uppercase dark:text-blue-400">
             Pricing
           </span>
           <h2 className="text-4xl font-bold lg:text-5xl">
@@ -27,7 +27,7 @@ export default function Pricing() {
         </div>
         <div className="flex flex-wrap items-stretch -mx-4">
           <div className="flex w-full mb-8 sm:px-4 md:w-1/2 lg:w-1/3 lg:mb-0">
-            <div className="flex flex-col p-6 space-y-6 rounded shadow sm:p-8 dark:bg-gray-900">
+            <div className="flex flex-col p-6 space-y-6 rounded shadow sm:p-8 bg-gray-800">
               <div className="space-y-2">
                 <h4 className="text-2xl font-bold">Starter</h4>
                 <span className="text-6xl font-bold">$29.99</span>
@@ -41,7 +41,7 @@ export default function Pricing() {
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                     fill="currentColor"
-                    className="flex-shrink-0 w-6 h-6 dark:text-violet-400"
+                    className="flex-shrink-0 w-6 h-6 dark:text-blue-400"
                   >
                     <path
                       fillRule="evenodd"
@@ -56,7 +56,7 @@ export default function Pricing() {
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                     fill="currentColor"
-                    className="flex-shrink-0 w-6 h-6 dark:text-violet-400"
+                    className="flex-shrink-0 w-6 h-6 dark:text-blue-400"
                   >
                     <path
                       fillRule="evenodd"
@@ -71,7 +71,7 @@ export default function Pricing() {
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                     fill="currentColor"
-                    className="flex-shrink-0 w-6 h-6 dark:text-violet-400"
+                    className="flex-shrink-0 w-6 h-6 dark:text-blue-400"
                   >
                     <path
                       fillRule="evenodd"
@@ -84,7 +84,7 @@ export default function Pricing() {
               </ul>
               <button
                 type="button"
-                className="inline-block px-5 py-3 font-semibold tracking-wider text-center rounded dark:bg-violet-400 dark:text-gray-900"
+                className="inline-block px-5 py-3 font-semibold tracking-wider text-center rounded dark:bg-blue-400 dark:text-gray-800"
                 onClick={() => subscriptionHandle("starter")}
               >
                 Get Started
@@ -92,7 +92,7 @@ export default function Pricing() {
             </div>
           </div>
           <div className="flex w-full mb-8 sm:px-4 md:w-1/2 lg:w-1/3 lg:mb-0">
-            <div className="flex flex-col p-6 space-y-6 rounded shadow sm:p-8 dark:bg-violet-400 dark:text-gray-900">
+            <div className="flex flex-col p-6 space-y-6 rounded shadow sm:p-8 dark:bg-blue-400 dark:text-gray-900">
               <div className="space-y-2">
                 <h4 className="text-2xl font-bold">Pro</h4>
                 <span className="text-6xl font-bold">
@@ -165,14 +165,14 @@ export default function Pricing() {
               </ul>
               <button
                 onClick={() => subscriptionHandle("pro")}
-                className="inline-block w-full px-5 py-3 font-bold tracking-wider text-center rounded dark:bg-gray-800 dark:text-violet-400"
+                className="inline-block w-full px-5 py-3 font-bold tracking-wider text-center rounded dark:bg-gray-800 dark:text-blue-400"
               >
                 Get Started
               </button>
             </div>
           </div>
           <div className="w-full mb-8 sm:px-4 md:w-1/2 lg:w-1/3 lg:mb-0">
-            <div className="p-6 space-y-6 rounded shadow sm:p-8 dark:bg-gray-900">
+            <div className="p-6 space-y-6 rounded shadow sm:p-8 dark:bg-gray-800">
               <div className="space-y-2">
                 <h4 className="text-2xl font-bold">Plus</h4>
                 <span className="text-6xl font-bold">
@@ -189,7 +189,7 @@ export default function Pricing() {
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                     fill="currentColor"
-                    className="flex-shrink-0 w-6 h-6 dark:text-violet-400"
+                    className="flex-shrink-0 w-6 h-6 dark:text-blue-400"
                   >
                     <path
                       fillRule="evenodd"
@@ -204,7 +204,7 @@ export default function Pricing() {
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                     fill="currentColor"
-                    className="flex-shrink-0 w-6 h-6 dark:text-violet-400"
+                    className="flex-shrink-0 w-6 h-6 dark:text-blue-400"
                   >
                     <path
                       fillRule="evenodd"
@@ -219,7 +219,7 @@ export default function Pricing() {
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                     fill="currentColor"
-                    className="flex-shrink-0 w-6 h-6 dark:text-violet-400"
+                    className="flex-shrink-0 w-6 h-6 dark:text-blue-400"
                   >
                     <path
                       fillRule="evenodd"
@@ -234,7 +234,7 @@ export default function Pricing() {
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                     fill="currentColor"
-                    className="flex-shrink-0 w-6 h-6 dark:text-violet-400"
+                    className="flex-shrink-0 w-6 h-6 dark:text-blue-400"
                   >
                     <path
                       fillRule="evenodd"
@@ -249,7 +249,7 @@ export default function Pricing() {
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                     fill="currentColor"
-                    className="flex-shrink-0 w-6 h-6 dark:text-violet-400"
+                    className="flex-shrink-0 w-6 h-6 dark:text-blue-400"
                   >
                     <path
                       fillRule="evenodd"
@@ -262,7 +262,7 @@ export default function Pricing() {
               </ul>
               <button
                 onClick={() => subscriptionHandle("plus")}
-                className="inline-block w-full px-5 py-3 font-semibold tracking-wider text-center rounded dark:bg-violet-400 dark:text-gray-900"
+                className="inline-block w-full px-5 py-3 font-semibold tracking-wider text-center rounded dark:bg-blue-400 dark:text-gray-900"
               >
                 Get Started
               </button>

@@ -48,9 +48,12 @@ let checkUser = async (req, res, next) => {
         // create user
         // generate api key
         const apikey = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        const afilliateCode = makeid(8)
 
         const newUser = await prisma.user.create({
             data: {
+                email: req.oidc.user.email,
+                afilliateCode: afilliateCode,
                 authid: req.oidc.user.sub,
                 apikey: apikey
             }
@@ -90,6 +93,18 @@ let checkUser = async (req, res, next) => {
     req.user = user
 
     next();
+}
+
+function makeid(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
 }
 
 module.exports = { checkUser }

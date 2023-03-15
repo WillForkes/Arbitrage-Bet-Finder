@@ -136,18 +136,19 @@ async function* processMatches(matches, includeStartedMatches = true) {
     }
 }
 
-function averageOdds(match, i, market) {
+function averageOdds(match, i) {
     let odds = [];
-    for (let x = 0; x < match.bookmakers.length; x++) {
-        let book = match.bookmakers[x]
-
-        try {
-            odds.push(market.outcomes[i].price)
-        } catch (error) {
-            console.log(error);
+    match.bookmakers.forEach(book => {
+        if (book.markets[0].key == 'h2h') {
+            try{
+                odds.push(book.markets[0].outcomes[i].price)
+            } 
+            catch (error) {
+                return false
+            }
         }
-    }
-
+        
+    })
     return odds
 }
 
@@ -155,99 +156,140 @@ function sumAverage(odds) {
     return odds.reduce((a, b) => a + b) / odds.length;
 }
 
-async function* processPositiveEV(matches, includeStartedMatches = false) {
-    // * Positive EV
-    // ! ev = (Amount won per bet * probability of winning) – (Amount lost per bet * probability of losing)
-    // amount won per bet = (stake * odds) – stake
+async function processPositiveEV(matches, includeStartedMatches = false) {
     // probability of winning = 1 / odds
     // amount lost per bet = stake
     // probability of losing = 1 / odds
 
     // find all matches with an ev > 0 from the matches array
     let positiveBets = [];
+    
+    matches.forEach(match => {
+        const startTime = parseInt(match.commence_time);
+        if (!includeStartedMatches && startTime < Date.now() / 1000) {
+            return;
+        }
 
-    for(let a=0; a<matches.length; a++){
-        let match = matches[a]
+        match.bookmakers.forEach(bookmaker => {
+            bookmaker.markets.forEach(market => {
+                if (market.key != 'h2h') return;
 
-        for(let b=0; b<match.bookmakers.length; b++){
-            let bookmaker = match.bookmakers[b]
-
-            for(let c=0; c<bookmaker.markets.length; c++){
-                let market = bookmaker.markets[c]
-
-                for(let d=0; d<market.outcomes.length; d++){
-                    let outcome = market.outcomes[d]
-
-                    if(market.key != 'h2h') break;
-
-                    let sum = 0;
-                    var x;
-                    for (x = 0; x < match.bookmakers.length; x++) {
-                        let book = match.bookmakers[x]
-                        try {
-                            sum += book.markets[0].outcomes[d].price
-                        } catch (error) {
-                            console.log(error);
-                        }
+                market.outcomes.forEach((outcome, i) => {
+                    let odds = averageOdds(match, i);
+                    let sumAvg = sumAverage(odds);
+                    if(!sumAvg){
+                        return
                     }
-                    let odds = sum/x
-                    let probability = 1/Math.abs(odds);
+                    let probability = 1/Math.abs(sumAvg);
                     let amountWon = Math.abs(outcome.price) - 1
                     let amountLost = Math.abs(outcome.price);
                     let ev = (amountWon*probability)-(1*(1-probability));
-                    
+
                     if ((ev/1).toFixed(3) > 0.01) {
-                        const startTime = parseInt(match.commence_time);
-                        if (!includeStartedMatches && startTime < Date.now() / 1000) {
-                            continue;
-                        }
+
                         const matchName = `${match.home_team} v. ${match.away_team}`;
                         const timeToStart = (startTime - Date.now() / 1000) / 3600;
                         const league = match.sport_key;
-                        const marketType = market.key;
 
-                        yield {
+                        positiveBets.push({
                             match_id: match.id,
                             match_name: matchName,
                             match_start_time: startTime,
                             hours_to_start: timeToStart,
                             league,
-                            key: marketType,
+                            key: "h2h",
                             bookmaker: bookmaker.title,
+                            winProbability: probability,
+                            odds: outcome.price,
                             ev: ev.toFixed(3),
                             region: match.region
+                        });
+                    }
+                });
+            });
+        });
+    });
+    return positiveBets;
+}
+
+async function findPositiveEVBets(data, includeStartedMatches = false) {
+    let positiveEVBets = [];
+
+    for (let i = 0; i < data.length; i++) {
+        let match = data[i];
+        let bookmakers = match.bookmakers;
+
+        for (let j = 0; j < bookmakers.length; j++) {
+            let markets = bookmakers[j].markets;
+
+            for (let k = 0; k < markets.length; k++) {
+                if (markets[k].key === 'h2h') {
+                    let outcomes = markets[k].outcomes;
+                    let totalProbability = 0;
+
+                    for (let l = 0; l < outcomes.length; l++) {
+                        totalProbability += 1 / outcomes[l].price;
+                    }
+
+                    for (let l = 0; l < outcomes.length; l++) {
+                        let probability = 1 / outcomes[l].price;
+                        let expectedValue = (probability / totalProbability) * outcomes[l].price - 1;
+
+                        if (expectedValue > 0) {
+                            const startTime = parseInt(match.commence_time);
+                            if (!includeStartedMatches && startTime < Date.now() / 1000) {
+                                continue;
+                            }
+                            const matchName = `${match.home_team} v. ${match.away_team}`;
+                            const timeToStart = (startTime - Date.now() / 1000) / 3600;
+                            const league = match.sport_key;
+                            positiveEVBets.push({
+                                match_id: match.id,
+                                match_name: matchName,
+                                match_start_time: startTime,
+                                hours_to_start: timeToStart,
+                                league,
+                                key: "h2h",
+                                ev: expectedValue,
+                                odds: outcomes[l].price,
+                                winProbability: probability,
+                                region: match.region
+                            });
                         }
                     }
                 }
             }
         }
     }
+
+    return positiveEVBets;
 }
 
+
+// ! Function to get arbitrage opportunities from the above functions
 async function getArbitrageOpportunities(cutoff) {
     // ! DEMO MODE - READ FROM demo_data.json and return that
+    let data
     if(DEMO) {
-        let demo_data = fs.readFileSync(path.join(__dirname, "output", "demo_data.json"))
-        demo_data = JSON.parse(demo_data)
-        demo_data.data.sort((a, b) => a.hours_to_start - b.hours_to_start);
-        return demo_data;
-    }
-
+        data = fs.readFileSync(path.join(__dirname, "output", "raw.json"))
+        data = JSON.parse(data)
+    } else {
     // regions
-    const regions = ['eu', 'uk', 'au', 'us'];
+        const regions = ['eu', 'uk', 'au', 'us'];
 
-    // create rate limiter axios object for getting match data from API
-    const limiter = rateLimit(axios.create(), { maxRequests: 6, perMilliseconds: 150, maxRPS: 15 })
+        // create rate limiter axios object for getting match data from API
+        const limiter = rateLimit(axios.create(), { maxRequests: 6, perMilliseconds: 150, maxRPS: 15 })
 
-    // get array of sports
-    // TODO: Just add sports to array as they dont change
-    const sports = await getSports();
-    
-    // get data for each match and all regions 
-    const data = chain(await Promise.all([...sports].map(sport => getData(sport, regions, limiter))))
-        .flatten()
-        .filter(item => item !== 'message')
-        .value();
+        // get array of sports
+        // TODO: Just add sports to array as they dont change
+        const sports = await getSports();
+        
+        // get data for each match and all regions 
+        data = chain(await Promise.all([...sports].map(sport => getData(sport, regions, limiter))))
+            .flatten()
+            .filter(item => item !== 'message')
+            .value();
+    }
 
     // process matches
     let results = [];
@@ -255,10 +297,8 @@ async function getArbitrageOpportunities(cutoff) {
         results.push(val)
     }
 
-    let evResults = [];
-    for await (const val of processPositiveEV(data, includeStartedMatches=false)) {
-        evResults.push(val)
-    }
+    //let evResults = await processPositiveEV(data, includeStartedMatches=false);
+    let evResults = await findPositiveEVBets(data);
 
     // filter opportunities
     const arbitrageOpportunities = Array.from(results).filter(x => 0 < x.total_implied_odds && x.total_implied_odds < 1 - cutoff);

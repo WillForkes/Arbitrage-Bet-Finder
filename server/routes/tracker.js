@@ -50,6 +50,20 @@ router.post('/new', checkUser ,async function(req, res, next) {
     })
 });
 
+router.post("/remove", checkUser, async function(req, res, next) {
+    const { betid } = req.body;
+
+    await prisma.placedBets.delete({
+        where: {
+            betId: betid,
+            userId: req.user.authid
+        }
+    })
+
+    res.json({"status": "ok", "data": {}});
+
+})
+
 router.get('/all', checkUser, async function(req, res, next) {
     // * Get all trackers
     const placedBets = await prisma.placedBets.findMany({

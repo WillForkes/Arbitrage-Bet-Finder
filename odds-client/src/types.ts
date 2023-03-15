@@ -1,3 +1,12 @@
+export type Region = {
+    country: String, // 2 letter country code like "US" for the United States
+    region: String,  // For US states this is the 2 letter state like TX for texas
+                     // For the United Kingdom this could be ENG as a country like “England"
+    eu: String;      // "0" for false "1" for true
+    timezone: String;
+    city: String;
+}
+
 export type User = {
     auth0: {
         nickname: string;
@@ -18,6 +27,11 @@ export type User = {
         updatedAt: string;
         apikey: string;
         banned: boolean;
+        subscription: {
+            id: number;
+            plan: string;
+            planExpiresAt: string;
+        }
     }
 }
 

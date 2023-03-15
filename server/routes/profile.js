@@ -81,7 +81,7 @@ router.get('/', checkUser, async (req, res) => {
             authid: req.oidc.user.sub
         },
         include: {
-            subscriptions: true
+            subscription: true
         }
     })
 
@@ -90,6 +90,7 @@ router.get('/', checkUser, async (req, res) => {
         return;
     }
 
+    dbuser.subscription = (dbuser.subscription) ? dbuser.subscription[0] : null;
     dbuser.plan = req.user.plan
     dbuser.planExpiresAt = req.user.planExpiresAt
     

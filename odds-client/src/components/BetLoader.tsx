@@ -1,6 +1,7 @@
 import { Bet } from "@/types";
 import { dateFormat } from "@/utils";
 import React, { useState } from "react";
+import Image from "next/image";
 import Modal from "./Modal";
 
 interface props {
@@ -27,7 +28,19 @@ export default function BetLoader({ b }: props) {
           <div>
             <div className="col-span-3 grid grid-cols-3">
               {Object.keys(b.data.best_outcome_odds).map((key, index) => (
-                <span key={index}>{b.data.best_outcome_odds[key][0]} </span>
+                <div className="">
+                  <span key={index}>{b.data.best_outcome_odds[key][0]} </span>
+                  <Image
+                    width={32}
+                    height={37}
+                    alt="logo"
+                    src={`https://oddsjam.com/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Foddsjam-static-assets%2Fsportsbook-logos%2F${b.data.best_outcome_odds[
+                      key
+                    ][0]
+                      .toLowerCase()
+                      .replace(" ", "")}.jpg&w=64&q=75`}
+                  />
+                </div>
               ))}
             </div>
           </div>

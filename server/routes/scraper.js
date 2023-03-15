@@ -78,7 +78,7 @@ router.get('/run', checkUser ,async function(req, res, next) {
         return;
     }
 
-    res.json({"status": "ok", "Message": `${betsToInsert.length} new bets found. ${updatedCount} bets updated. ${goodBets.length} notifications sent.`});
+    res.json({"status": "ok", "Message": `${betsToInsert.length} new bets found. ${updatedCount} bets updated. Notifications sent.`});
 
     // send notifications
     await sendBatchNotifications();

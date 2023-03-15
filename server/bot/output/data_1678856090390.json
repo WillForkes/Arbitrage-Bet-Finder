@@ -1,0 +1,452 @@
+{
+  "created": 1678856090390,
+  "data": {
+    "arbitrage": [
+      {
+        "match_id": "4263c6ac44bb832176a58a5be9b80bc3",
+        "match_name": "Napoli v. Eintracht Frankfurt",
+        "match_start_time": 1678910400,
+        "hours_to_start": 15.086011111140252,
+        "league": "soccer_uefa_champs_league",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Eintracht Frankfurt": [
+            "Betfair",
+            7.8
+          ],
+          "Napoli": [
+            "Unibet",
+            1.5
+          ],
+          "Draw": [
+            "Suprabets",
+            5
+          ]
+        },
+        "total_implied_odds": 0.9949,
+        "region": "eu"
+      },
+      {
+        "match_id": "c30dfcc3e6df221d84477916d31e0028",
+        "match_name": "South Africa v. West Indies",
+        "match_start_time": 1678964400,
+        "hours_to_start": 30.086016666690508,
+        "league": "cricket_odi",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "South Africa": [
+            "William Hill",
+            1.29
+          ],
+          "West Indies": [
+            "Betfair",
+            4.7
+          ]
+        },
+        "total_implied_odds": 0.988,
+        "region": "eu"
+      },
+      {
+        "match_id": "c30dfcc3e6df221d84477916d31e0028",
+        "match_name": "South Africa v. West Indies",
+        "match_start_time": 1678964400,
+        "hours_to_start": 30.086016666690508,
+        "league": "cricket_odi",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "South Africa": [
+            "Bet Victor",
+            1.29
+          ],
+          "West Indies": [
+            "Betfair",
+            4.7
+          ]
+        },
+        "total_implied_odds": 0.988,
+        "region": "uk"
+      },
+      {
+        "match_id": "43a99e29258540235cabd47145952068",
+        "match_name": "Anadolu Efes v. KK Partizan NIS",
+        "match_start_time": 1678987800,
+        "hours_to_start": 36.58601861112648,
+        "league": "basketball_euroleague",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Anadolu Efes": [
+            "TwinSpires",
+            1.4
+          ],
+          "KK Partizan NIS": [
+            "DraftKings",
+            3.6
+          ]
+        },
+        "total_implied_odds": 0.9921,
+        "region": "us"
+      },
+      {
+        "match_id": "907386c565aa3130123aeeb79913cbde",
+        "match_name": "Ferencváros v. Leverkusen",
+        "match_start_time": 1678996800,
+        "hours_to_start": 39.08601083331638,
+        "league": "soccer_uefa_europa_league",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Ferencváros": [
+            "Matchbook",
+            3.9
+          ],
+          "Leverkusen": [
+            "1xBet",
+            2.1
+          ],
+          "Draw": [
+            "Matchbook",
+            3.85
+          ]
+        },
+        "total_implied_odds": 0.9923,
+        "region": "eu"
+      },
+      {
+        "match_id": "01fd08a6043aac38835899cc2d9ead1e",
+        "match_name": "Nottingham Forest v. Newcastle United",
+        "match_start_time": 1679083200,
+        "hours_to_start": 63.08601388891538,
+        "league": "soccer_epl",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Newcastle United": [
+            "1xBet",
+            1.75
+          ],
+          "Nottingham Forest": [
+            "Betfair",
+            5.9
+          ],
+          "Draw": [
+            "Betfair",
+            3.95
+          ]
+        },
+        "total_implied_odds": 0.9941,
+        "region": "eu"
+      },
+      {
+        "match_id": "db7629332922d153d043eb4af44c08ef",
+        "match_name": "North Queensland Cowboys v. New Zealand Warriors",
+        "match_start_time": 1679121000,
+        "hours_to_start": 73.58601527776983,
+        "league": "rugbyleague_nrl",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "New Zealand Warriors": [
+            "Coral",
+            4
+          ],
+          "North Queensland Cowboys": [
+            "Ladbrokes",
+            1.35
+          ]
+        },
+        "total_implied_odds": 0.9907,
+        "region": "uk"
+      },
+      {
+        "match_id": "cb99f505a8170b2be19de3968237fae6",
+        "match_name": "Wycombe Wanderers v. Barnsley",
+        "match_start_time": 1679151600,
+        "hours_to_start": 82.08601416667302,
+        "league": "soccer_england_league1",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Barnsley": [
+            "Betfair Sportsbook",
+            2.63
+          ],
+          "Wycombe Wanderers": [
+            "BoyleSports",
+            2.88
+          ],
+          "Draw": [
+            "Unibet",
+            3.8
+          ]
+        },
+        "total_implied_odds": 0.9906,
+        "region": "uk"
+      },
+      {
+        "match_id": "1b6e7651e83bfb73cb3dd564a9e67e27",
+        "match_name": "Reading v. Hull City",
+        "match_start_time": 1679151600,
+        "hours_to_start": 82.08601444443067,
+        "league": "soccer_efl_champ",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Hull City": [
+            "Suprabets",
+            2.94
+          ],
+          "Reading": [
+            "Betfair",
+            2.8
+          ],
+          "Draw": [
+            "Suprabets",
+            3.41
+          ]
+        },
+        "total_implied_odds": 0.9905,
+        "region": "eu"
+      },
+      {
+        "match_id": "310ddd7a6ec2d8f6461aea50b6e1291a",
+        "match_name": "Atlético Madrid v. Valencia",
+        "match_start_time": 1679169600,
+        "hours_to_start": 87.0860113888979,
+        "league": "soccer_spain_la_liga",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Atlético Madrid": [
+            "1xBet",
+            1.67
+          ],
+          "Valencia": [
+            "Suprabets",
+            7
+          ],
+          "Draw": [
+            "Betfair",
+            4
+          ]
+        },
+        "total_implied_odds": 0.9917,
+        "region": "eu"
+      },
+      {
+        "match_id": "0d847a71d85f39a45a892b096cf33418",
+        "match_name": "Roman Dolidze v. Marvin Vettori",
+        "match_start_time": 1679174100,
+        "hours_to_start": 88.33601527776983,
+        "league": "mma_mixed_martial_arts",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Marvin Vettori": [
+            "Betfair",
+            1.42
+          ],
+          "Roman Dolidze": [
+            "Ladbrokes",
+            3.45
+          ]
+        },
+        "total_implied_odds": 0.9941,
+        "region": "au"
+      },
+      {
+        "match_id": "0d847a71d85f39a45a892b096cf33418",
+        "match_name": "Roman Dolidze v. Marvin Vettori",
+        "match_start_time": 1679174100,
+        "hours_to_start": 88.33601555552748,
+        "league": "mma_mixed_martial_arts",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Marvin Vettori": [
+            "Marathon Bet",
+            1.47
+          ],
+          "Roman Dolidze": [
+            "Unibet",
+            3.35
+          ]
+        },
+        "total_implied_odds": 0.9788,
+        "region": "eu"
+      },
+      {
+        "match_id": "0d847a71d85f39a45a892b096cf33418",
+        "match_name": "Roman Dolidze v. Marvin Vettori",
+        "match_start_time": 1679174100,
+        "hours_to_start": 88.33601555552748,
+        "league": "mma_mixed_martial_arts",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Marvin Vettori": [
+            "Betfair",
+            1.42
+          ],
+          "Roman Dolidze": [
+            "Ladbrokes",
+            3.45
+          ]
+        },
+        "total_implied_odds": 0.9941,
+        "region": "uk"
+      },
+      {
+        "match_id": "0dd35741b275fd0e3c07ebfdc05ebdcf",
+        "match_name": "Leon Edwards v. Kamaru Usman",
+        "match_start_time": 1679181300,
+        "hours_to_start": 90.33601555552748,
+        "league": "mma_mixed_martial_arts",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Kamaru Usman": [
+            "Betfair",
+            1.46
+          ],
+          "Leon Edwards": [
+            "Marathon Bet",
+            3.24
+          ]
+        },
+        "total_implied_odds": 0.9936,
+        "region": "eu"
+      },
+      {
+        "match_id": "1dbb1bcff572a032e9289bb12c045337",
+        "match_name": "Real Betis v. Mallorca",
+        "match_start_time": 1679230800,
+        "hours_to_start": 104.0860113888979,
+        "league": "soccer_spain_la_liga",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Mallorca": [
+            "Unibet",
+            5.5
+          ],
+          "Real Betis": [
+            "Suprabets",
+            1.92
+          ],
+          "Draw": [
+            "1xBet",
+            3.48
+          ]
+        },
+        "total_implied_odds": 0.99,
+        "region": "eu"
+      },
+      {
+        "match_id": "38decf7408789ec3caf766bc1d07042e",
+        "match_name": "Preston Parsons v. Trevin Giles",
+        "match_start_time": 1679774400,
+        "hours_to_start": 255.08601555552747,
+        "league": "mma_mixed_martial_arts",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Preston Parsons": [
+            "Pinnacle",
+            2.05
+          ],
+          "Trevin Giles": [
+            "Betclic",
+            2
+          ]
+        },
+        "total_implied_odds": 0.9878,
+        "region": "eu"
+      },
+      {
+        "match_id": "06f491453cb35e153d61c67257f3cb3b",
+        "match_name": "Bayern Munich v. Borussia Dortmund",
+        "match_start_time": 1680366600,
+        "hours_to_start": 419.5860133333339,
+        "league": "soccer_germany_bundesliga",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Bayern Munich": [
+            "Suprabets",
+            1.56
+          ],
+          "Borussia Dortmund": [
+            "William Hill",
+            5.8
+          ],
+          "Draw": [
+            "Suprabets",
+            5.6
+          ]
+        },
+        "total_implied_odds": 0.992,
+        "region": "eu"
+      },
+      {
+        "match_id": "071995da614c7299e2abf021fe3e480d",
+        "match_name": "Lille v. Lorient",
+        "match_start_time": 1680433200,
+        "hours_to_start": 438.0860136110915,
+        "league": "soccer_france_ligue_one",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Lille": [
+            "1xBet",
+            1.44
+          ],
+          "Lorient": [
+            "Suprabets",
+            8.4
+          ],
+          "Draw": [
+            "Suprabets",
+            5.6
+          ]
+        },
+        "total_implied_odds": 0.9921,
+        "region": "eu"
+      },
+      {
+        "match_id": "cd59f791abd032246e46cb6687d893f9",
+        "match_name": "Tromso v. Molde",
+        "match_start_time": 1681138800,
+        "hours_to_start": 634.0860113888979,
+        "league": "soccer_norway_eliteserien",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Molde": [
+            "Suprabets",
+            2.14
+          ],
+          "Tromso": [
+            "Betsson",
+            3.65
+          ],
+          "Draw": [
+            "Betsson",
+            4
+          ]
+        },
+        "total_implied_odds": 0.9913,
+        "region": "eu"
+      },
+      {
+        "match_id": "440886a0c769054e97af9e9fd37602a6",
+        "match_name": "SK Brann v. Haugesund",
+        "match_start_time": 1681146900,
+        "hours_to_start": 636.3360113888979,
+        "league": "soccer_norway_eliteserien",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Haugesund": [
+            "Betsson",
+            5
+          ],
+          "SK Brann": [
+            "Unibet",
+            1.75
+          ],
+          "Draw": [
+            "Betsson",
+            4.5
+          ]
+        },
+        "total_implied_odds": 0.9937,
+        "region": "eu"
+      }
+    ],
+    "ev": []
+  }
+}

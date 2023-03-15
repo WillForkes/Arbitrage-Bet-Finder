@@ -180,8 +180,18 @@ async function* processPositiveEV(matches, includeStartedMatches = false) {
 
                     if(market.key != 'h2h') break;
 
-                    let odds = averageOdds(match, d, market);
-                    let probability = 1/Math.abs(sumAverage(odds));
+                    let sum = 0;
+                    var x;
+                    for (x = 0; x < match.bookmakers.length; x++) {
+                        let book = match.bookmakers[x]
+                        try {
+                            sum += book.markets[0].outcomes[d].price
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    }
+                    let odds = sum/x
+                    let probability = 1/Math.abs(odds);
                     let amountWon = Math.abs(outcome.price) - 1
                     let amountLost = Math.abs(outcome.price);
                     let ev = (amountWon*probability)-(1*(1-probability));

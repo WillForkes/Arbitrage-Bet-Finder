@@ -1,3 +1,4 @@
+import { Dropdown, HiViewGrid, HiCog, HiCurrencyDollar, HiLogout } from "flowbite-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -11,9 +12,11 @@ export default function Nav() {
     <a href="https://arbster.com/" className="flex items-center">
         <Image src={Logo} height={60} alt="Arbster image"/>
     </a>
-  <div className="flex items-center md:order-2">
+  {/* <div className="flex items-center md:order-2">
       <button type="button" className="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
-        <span className="sr-only">Open user menu</span>
+        <span className="sr-only">
+            Open user menu
+        </span>
         <Image src={Logo} height={60} className="w-8 h-8 rounded-full" alt="user photo"/>
       </button>
       <div className="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
@@ -40,7 +43,34 @@ export default function Nav() {
         <span className="sr-only">Open main menu</span>
         <svg className="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" ></path></svg>
     </button>
+  </div> */}
+  <div className="flex items-center md:order-2">
+    <Dropdown label="Account">
+    <Dropdown.Header>
+        <Image src={Logo} height={60} className="w-8 h-8 rounded-full" alt="user photo"/>
+        <span className="block text-sm">
+        Bonnie Green
+        </span>
+        <span className="block truncate text-sm font-medium">
+        bonnie@flowbite.com
+        </span>
+    </Dropdown.Header>
+    <Dropdown.Item icon={HiViewGrid}>
+        Dashboard
+    </Dropdown.Item>
+    <Dropdown.Item icon={HiCog}>
+        Settings
+    </Dropdown.Item>
+    <Dropdown.Item icon={HiCurrencyDollar}>
+        Earnings
+    </Dropdown.Item>
+    <Dropdown.Divider />
+    <Dropdown.Item icon={HiLogout}>
+        Sign out
+    </Dropdown.Item>
+    </Dropdown>
   </div>
+
   <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="mobile-menu-2">
     <ul className="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
       <li>

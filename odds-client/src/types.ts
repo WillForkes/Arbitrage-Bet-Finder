@@ -45,6 +45,15 @@ export type Bet = {
     id: number
 }
 
+export type EV = {
+    data: {
+        match_name: string;
+        ev: number
+        match_start_time: number
+    }
+    id: number
+}
+
 export enum Plan {
     starter = "starter",
     pro = "pro",

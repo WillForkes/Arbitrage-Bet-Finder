@@ -32,7 +32,7 @@ export default function Nav() {
             Bet Scraper
           </a>
           <Link
-            href="/scraper/all"
+            href="/scraper/ev"
             className="block mt-9 lg:inline-block lg:mt-0 text-gray-100 hover:text-white mr-4"
           >
             Positive EV Tool

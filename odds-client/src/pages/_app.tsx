@@ -9,8 +9,12 @@ import useSWR from "swr";
 export const UserContext = createContext<User | null>(null);
 
 export default function App({ Component, pageProps }: AppProps) {
-  const { data, error } = useSWR("/scraper/all", getter);
-  const user = data?.user;
+  const { data, error } = useSWR("/profile", getter);
+  var user;
+  if (data) {
+    user = data;
+  }
+
   return (
     <div className="c">
       <UserContext.Provider value={user}>

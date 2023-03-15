@@ -14,6 +14,7 @@ import React, { useContext } from "react";
 import Logo from "../../../public/arbster.png";
 
 export default function ProfileDropdown() {
+  const user = useContext(UserContext);
   return (
     <div className="flex items-center md:order-2">
       <Dropdown label="Account">
@@ -24,16 +25,21 @@ export default function ProfileDropdown() {
             className="w-8 h-8 rounded-full"
             alt="user photo"
           />
-          <span className="block text-sm">Bonnie Green</span>
+          <span className="block text-sm">{user?.auth0.nickname}</span>
           <span className="block truncate text-sm font-medium">
-            bonnie@flowbite.com
+            {user?.auth0.name}
           </span>
         </Dropdown.Header>
         <Dropdown.Item icon={HiViewGrid}>Dashboard</Dropdown.Item>
         <Dropdown.Item icon={HiCog}>Settings</Dropdown.Item>
         <Dropdown.Item icon={HiCurrencyDollar}>Earnings</Dropdown.Item>
         <Dropdown.Divider />
-        <Dropdown.Item icon={HiLogout}>Sign out</Dropdown.Item>
+        <Dropdown.Item
+          onClick={() => window.location.assign("http://localhost:3000/logout")}
+          icon={HiLogout}
+        >
+          Sign out
+        </Dropdown.Item>
       </Dropdown>
     </div>
   );

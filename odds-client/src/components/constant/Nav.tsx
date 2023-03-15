@@ -48,7 +48,7 @@ export default function Nav() {
     </button>
   </div> */}
 
-        <ProfileDropdown />
+        {user != null ? <ProfileDropdown /> : <p>login</p>}
 
         <div
           className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"

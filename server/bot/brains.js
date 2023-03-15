@@ -204,6 +204,7 @@ async function processPositiveEV(matches, includeStartedMatches = false) {
                             ev: ev.toFixed(3),
                             region: match.region
                         });
+                        console.log(probability, outcome.price)
                     }
                 });
             });
@@ -234,7 +235,7 @@ async function findPositiveEVBets(data, includeStartedMatches = false) {
                     totalProbability = 1/ totalProbability;
                     for (let l = 0; l < outcomes.length; l++) {
                         let probability = 1 / outcomes[l].price;
-                        let expectedValue = ((outcomes[l].price - 1) * totalProbability) - (1 - totalProbability);
+                        let expectedValue = ((outcomes[l].price - 1) * totalProbability) * (1 - totalProbability);
                         console.log(expectedValue)
                         if (expectedValue > 0) {
                             const startTime = parseInt(match.commence_time);

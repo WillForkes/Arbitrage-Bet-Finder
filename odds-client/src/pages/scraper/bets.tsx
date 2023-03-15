@@ -10,7 +10,7 @@ export default function bets() {
   const arbData = data?.arbitrage;
   
   return (
-    <div className="page-offset-x py-8">
+    <div className="page-offset-x py-8 bg-gray-900">
       {data ? (
             arbData.map((bet: Bet) => (
                 <div className="drop-shadow-md rounded-md grid py-1 gap-6 grid-cols-1 2xl:grid-cols-2 mb-2">

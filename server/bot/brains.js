@@ -235,7 +235,7 @@ async function findPositiveEVBets(data, includeStartedMatches = false) {
                     for (let l = 0; l < outcomes.length; l++) {
                         let probability = 1 / outcomes[l].price;
                         let expectedValue = ((outcomes[l].price - 1) * totalProbability) - (1 - totalProbability);
-                        console.log(expectedValue)
+
                         if (expectedValue > 0) {
                             const startTime = parseInt(match.commence_time);
                             if (!includeStartedMatches && startTime < Date.now() / 1000) {
@@ -300,15 +300,17 @@ async function getArbitrageOpportunities(cutoff) {
     }
 
     //let evResults = await processPositiveEV(data, includeStartedMatches=false);
-    let evResults = processPositiveEV(data);
-    console.log(evResults);
+    let evResults = await processPositiveEV(data);
+    evResults = [...evResults]
+
     // filter opportunities
     const arbitrageOpportunities = Array.from(results).filter(x => 0 < x.total_implied_odds && x.total_implied_odds < 1 - cutoff);
     const EVOpportunities = Array.from(evResults).filter(x => x.ev > cutoff);
 
     // sort array by hours_to_start in ascending order
     arbitrageOpportunities.sort((a, b) => a.hours_to_start - b.hours_to_start);
-    EVOpportunities.sort((a, b) => a.hours_to_start - b.hours_to_start);
+    EVOpportunities.sort((a, b) => a.ev - b.ev);
+    
     // save data to json file if SAVE_DATA is true
     const file_data = {
         "created": Date.now(), 

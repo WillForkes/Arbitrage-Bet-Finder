@@ -12,7 +12,7 @@ router.get('/run', checkUser ,async function(req, res, next) {
     // * Check for required querys params and set defaults
 
     // variables
-    const cutoff = (req.query.cutoff) ? req.query.cutoff : 0.005; // in percentage
+    const cutoff = (req.query.cutoff) ? req.query.cutoff : 0.10; // in percentage
 
     // * Get arbitrage data
     let data
@@ -146,6 +146,10 @@ router.post("/clean", async function(req, res, next){
 })
 
 router.get("/all", checkUser, async function(req, res, next){
+    const page = (req.query.page) ? parseInt(req.query.page) - 1 : 0;
+    const perPage = 25;
+    const skip = page * perPage;
+
     // get all bets and sort in descending order (by time
     let arbBets = await prisma.bet.findMany({
         where: {
@@ -153,7 +157,9 @@ router.get("/all", checkUser, async function(req, res, next){
         },
         orderBy: {
             updatedAt: "desc"
-        }
+        },
+        skip: skip,
+        take: perPage
     })
 
     let evBets = await prisma.bet.findMany({
@@ -162,7 +168,9 @@ router.get("/all", checkUser, async function(req, res, next){
         },
         orderBy: {
             updatedAt: "desc"
-        }
+        },
+        skip: skip,
+        take: perPage
     })
 
     // parse the data key for each bet into json

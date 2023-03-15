@@ -18,6 +18,11 @@ export type User = {
         updatedAt: string;
         apikey: string;
         banned: boolean;
+        subscription: {
+            id: number;
+            plan: string;
+            planExpiresAt: string;
+        }
     }
 }
 

@@ -3,6 +3,8 @@ import { dateFormat } from "@/utils";
 import React, { useState } from "react";
 import Image from "next/image";
 import Modal from "./Modal";
+import { Table } from "flowbite-react";
+import { Region } from '../types';
 
 interface props {
   b: Bet;
@@ -16,31 +18,71 @@ export default function BetLoader({ b }: props) {
 
   return (
     <>
-      <table>
-        <tr>
-          <td>Match</td>
-          <td>Profit</td>
-          <td>Books</td>
-        </tr>
-        <tr>
-          <td>{b.data.match_name}</td>
-          <td>{((1 - b.data.total_implied_odds) * 100).toFixed(2)}%</td>
-
-          {Object.keys(b.data.best_outcome_odds).map((key, index) => (
-            <tr>
-              <td key={index}>{b.data.best_outcome_odds[key][0]}</td>
-            </tr>
-          ))}
-        </tr>
-      </table>
-      <div className="flex justify-center items-center col-start-1 row-span-1 col-span-3 mb-2 content-center">
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          onClick={() => setModal(true)}
-        >
-          Calculate Stake
-        </button>
-      </div>
+    <Table hoverable={true}>    
+        <Table.Head>
+            <Table.HeadCell>
+                Match
+            </Table.HeadCell>
+            <Table.HeadCell>
+                Profit
+            </Table.HeadCell>
+            <Table.HeadCell>
+                Region
+            </Table.HeadCell>
+            <Table.HeadCell>
+                League
+            </Table.HeadCell>            
+            <Table.HeadCell>
+                Bookmakers
+            </Table.HeadCell>
+            <Table.HeadCell>
+            <span className="sr-only">
+                Edit
+            </span>
+            </Table.HeadCell>
+        </Table.Head>
+        <Table.Body className="divide">
+            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {b.data.match_name}
+                </Table.Cell>
+                <Table.Cell>
+                    {((1 - b.data.total_implied_odds) * 100).toFixed(2)}%
+                </Table.Cell>
+                <Table.Cell>
+                    {b.data.region.toUpperCase()}
+                </Table.Cell>
+                <Table.Cell>
+                    {b.data.league.toUpperCase()}
+                </Table.Cell>
+                
+                <Table.Cell>
+                    {Object.keys(b.data.best_outcome_odds).map((key, index) => (
+                        <div className="flex items-center space-x-3">
+                            <div className="flex-shrink-0">
+                                <div className="relative">
+                                    <Image src="" alt="Bookmaker Logo" width={50} height={50} />
+                                </div>
+                            </div>
+                            <div className="min-w-0 flex-1">
+                                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                    {b.data.best_outcome_odds[key][0]}
+                                </p>
+                            </div>
+                        </div>
+                    ))}
+                </Table.Cell>
+                <Table.Cell>
+                    <button
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        onClick={() => setModal(true)}
+                    >
+                        Calculate Stake
+                    </button>
+                </Table.Cell>
+            </Table.Row>
+        </Table.Body>
+    </Table>
 
       {/*         
       <div className="bg-grey-800 px-.5 rounded-xl grid grid-cols-3 grid-rows-3 px-3 h-48">

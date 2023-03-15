@@ -47,26 +47,23 @@ export default function Nav() {
   <div className="flex items-center md:order-2">
     <Dropdown label="Account">
     <Dropdown.Header>
-        <Image src={Logo} height={60} className="w-8 h-8 rounded-full" alt="user photo"/>
+        <img src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" width={60} height={60} className="w-8 h-8 rounded-full" alt="user photo"/>
         <span className="block text-sm">
-        Bonnie Green
+        USERNAME
         </span>
         <span className="block truncate text-sm font-medium">
-        bonnie@flowbite.com
+        USEREMAIL@EMAIL.com
         </span>
     </Dropdown.Header>
     <Dropdown.Item icon={HiViewGrid}>
-        Dashboard
+        <Link href="/profile">Profile</Link>
     </Dropdown.Item>
     <Dropdown.Item icon={HiCog}>
         Settings
     </Dropdown.Item>
-    <Dropdown.Item icon={HiCurrencyDollar}>
-        Earnings
-    </Dropdown.Item>
     <Dropdown.Divider />
     <Dropdown.Item icon={HiLogout}>
-        Sign out
+        <Link href="http://localhost:3000/logout">Sign out</Link>
     </Dropdown.Item>
     </Dropdown>
   </div>

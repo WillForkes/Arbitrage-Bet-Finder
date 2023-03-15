@@ -3,19 +3,20 @@ import { Bet } from "@/types";
 import React, { useState } from "react";
 import useSWR from "swr";
 import { getter } from "@/api";
+import { Table } from "flowbite-react";
 
 export default function bets() {
   const { data, error } = useSWR("/scraper/all", getter);
   const arbData = data?.arbitrage;
   
   return (
-    <div className="page-offset-x py-8 bg-black-700">
+    <div className="page-offset-x py-8">
       {data ? (
-        arbData.map((bet: Bet) => (
-          <div className="bg-gray-800 drop-shadow-md rounded-md grid py-3 gap-6 grid-cols-1 2xl:grid-cols-2 mb-6">
-            <BetLoader b={bet} key={bet.id} />
-          </div>
-        ))
+            arbData.map((bet: Bet) => (
+                <div className="drop-shadow-md rounded-md grid py-1 gap-6 grid-cols-1 2xl:grid-cols-2 mb-2">
+                        <BetLoader b={bet} key={bet.id} />
+                </div>
+            ))
       ) : (
         <p>loading</p>
       )}

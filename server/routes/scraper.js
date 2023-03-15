@@ -26,24 +26,26 @@ router.get('/run', checkUser ,async function(req, res, next) {
     // * Insert arbitrage data into database - update records if already exist
     let betsToInsert = [];
     let updatedCount = 0;
+    const arbitrageData = data.data.arbitrage;
+    const evData = data.data.ev;
 
     await prisma.bet.findMany().then(async (existingBets) => {
 
-        // Loop through all bets scraped
-        for (let i = 0; i < data.data.length; i++) {
+        // ! Insert/update arbitrage
+        for (let i = 0; i < arbitrageData.length; i++) {
             let found = false;
 
             // If bet already exists - update it
             for (let j = 0; j < existingBets.length; j++) {
                 const parsedBetData = JSON.parse(existingBets[j].data);
-                if (data.data[i].match_id == parsedBetData.match_id) {
+                if (arbitrageData[i].match_id == parsedBetData.match_id && existingBets[j].type =="arbitrage") {
                     try {
                         await prisma.bet.update({
                             where: {
                                 id: existingBets[j].id
                             },
                             data: {
-                                data: JSON.stringify(data.data[i])
+                                data: JSON.stringify(arbitrageData[i]),
                             }
                         })
                     } catch {
@@ -58,18 +60,52 @@ router.get('/run', checkUser ,async function(req, res, next) {
             }
 
             if(!found){
-                betsToInsert.push(JSON.stringify(data.data[i]));
+                betsToInsert.push([JSON.stringify(arbitrageData[i]), "arbitrage"]);
             }
         }
+
+        // ! Insert/update ev
+        for (let i = 0; i < evData.length; i++) {
+            let found = false;
+
+            // If bet already exists - update it
+            for (let j = 0; j < existingBets.length; j++) {
+                const parsedBetData = JSON.parse(existingBets[j].data);
+                if (evData[i].match_id == parsedBetData.match_id && existingBets[j].type =="ev") {
+                    try {
+                        await prisma.bet.update({
+                            where: {
+                                id: existingBets[j].id
+                            },
+                            data: {
+                                data: JSON.stringify(evData[i]),
+                            }
+                        })
+                    } catch {
+                        res.status(500).json({"error": "Failed to update arbitrage data in database."});
+                        return;
+                    }
+
+                    updatedCount++;
+                    found = true;
+                    break;
+                }
+            }
+
+            if(!found){
+                betsToInsert.push([JSON.stringify(evData[i]), "ev"]);
+            }
+        }            
     });
 
     // Insert new bets
     try {
         for(let i = 0; i < betsToInsert.length; i++){
-            const topup = betsToInsert[i];
+            const toput = betsToInsert[i];
             await prisma.bet.create({
                 data: {
-                    data: topup
+                    data: toput[0],
+                    type: toput[1]
                 }
             })
         }
@@ -78,26 +114,69 @@ router.get('/run', checkUser ,async function(req, res, next) {
         return;
     }
 
-    res.json({"status": "ok", "Message": `${betsToInsert.length} new bets found. ${updatedCount} bets updated. ${goodBets.length} notifications sent.`});
+    res.json({"status": "ok", "Message": `${betsToInsert.length} new bets found. ${updatedCount} bets updated.`});
 
     // send notifications
-    await sendBatchNotifications();
+    //await sendBatchNotifications();
 });
+
+router.post("/clean", async function(req, res, next){
+    const threshold = (req.body.threshold) ? parseInt(req.body.threshold) : 10; // in minutes
+
+    // Get all bets that are older than 10 minutes
+    const betsToDelete = await prisma.bet.findMany({
+        where: {
+            updatedAt: {
+                lt: new Date(Date.now() - (threshold * 60 * 1000))
+            }
+        }
+    })
+
+    // Delete all bets that are older than 10 minutes
+    for(let i = 0; i < betsToDelete.length; i++){
+        await prisma.bet.delete({
+            where: {
+                id: betsToDelete[i].id
+            }
+        })
+    }
+
+    res.json({"status": "ok", "Message": `${betsToDelete.length} bets deleted (older than ${threshold} minutes).`});
+        
+})
 
 router.get("/all", checkUser, async function(req, res, next){
     // get all bets and sort in descending order (by time
-    let bets = await prisma.bet.findMany({
+    let arbBets = await prisma.bet.findMany({
+        where: {
+            type: "arbitrage"
+        },
+        orderBy: {
+            updatedAt: "desc"
+        }
+    })
+
+    let evBets = await prisma.bet.findMany({
+        where: {
+            type: "ev"
+        },
         orderBy: {
             updatedAt: "desc"
         }
     })
 
     // parse the data key for each bet into json
-    for(let i = 0; i < bets.length; i++){
-        bets[i].data = JSON.parse(bets[i].data);
+    for(let i = 0; i < arbBets.length; i++){
+        arbBets[i].data = JSON.parse(arbBets[i].data);
+    }
+    for(let i = 0; i < evBets.length; i++){
+        evBets[i].data = JSON.parse(evBets[i].data);
     }
 
-    res.json({"status": "ok", "data": bets});
+    res.json({"status": "ok", "data": {
+        "arbitrage": arbBets,
+        "ev": evBets
+    }});
 });
 
 

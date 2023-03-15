@@ -29,7 +29,7 @@ model User {
 
 model Bet {
   id         Int          @id @default(autoincrement())
-  type       String       @default("arb")  // arv, ev
+  type       String       @default("arbitrage")  // arv, ev
   data       String
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt

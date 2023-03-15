@@ -21,7 +21,7 @@ function isToday(date: Date) {
     return (new Date().toDateString() == date.toDateString());
 }
 
-export function dateFormat(date: number): string {
+function dateFormat(date: number): string {
     var d: Date = new Date(date *1000)
     if (isTomorrow(d)) {
         return 'Tomorrow at ' + d.toLocaleTimeString([], {timeStyle: "short"}); 
@@ -31,3 +31,20 @@ export function dateFormat(date: number): string {
         return d.toLocaleString([], { dateStyle: "long", timeStyle: 'short' });
     }
 }
+
+function currencyCode(code: string, europe: boolean): string {
+    if (europe) {
+        return '€'
+    }
+
+    switch (code) {
+        case 'US':
+            return '$'
+        case 'UK':
+            return '£'
+        default:
+            return '$'
+    }
+}
+
+module.exports = { dateFormat, currencyCode }

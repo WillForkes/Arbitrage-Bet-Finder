@@ -13,6 +13,8 @@ let { checkUser } = require('./middleware/checkUser');
 let { checkStaff } = require('./middleware/checkStaff');
 const prisma = new PrismaClient()
 var app = express();
+const { lookup } = require('geoip-lite'); // * Geolocation IP data
+
 
 // * Setup libaries for express
 app.use(logger('dev'));
@@ -50,7 +52,6 @@ var profileRouter = require('./routes/profile');
 var paymentRouter = require('./routes/payment');
 var notificationRouter = require('./routes/notification');
 var adminRouter = require('./routes/admin');
-
 app.use('/scraper', scraperRouter);
 app.use('/tracker', trackerRouter);
 app.use('/calculator', calculatorRouter);
@@ -59,9 +60,30 @@ app.use('/payment', paymentRouter);
 app.use('/notification', notificationRouter);
 app.use('/admin', adminRouter);
 
+
+// * Essential base routes
 app.get('/', (req, res) => {
     //res.json({"status":"ok", "data": "Welcome to the API"})
     res.redirect('http://localhost:3001/')
+});
+
+app.get('/region', (req, res) => {
+    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    const details = lookup(ip); // location of the user
+    res.json({"status":"ok", "data": details})
+
+    // * Example response
+    // { 
+    //     range: [ 3479298048, 3479300095 ],
+    //     country: 'US',
+    //     region: 'TX',
+    //     eu: '0',
+    //     timezone: 'America/Chicago',
+    //     city: 'San Antonio',
+    //     ll: [ 29.4969, -98.4032 ],
+    //     metro: 641,
+    //     area: 1000 
+    // }
 });
 
 app.get('/isAuth', (req, res) => {

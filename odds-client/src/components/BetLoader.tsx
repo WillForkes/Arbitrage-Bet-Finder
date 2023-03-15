@@ -18,7 +18,7 @@ export default function BetLoader({ b }: props) {
 
   return (
     <>
-    <Table hoverable={true}>    
+    <Table hoverable={false}>    
         <Table.Head>
             <Table.HeadCell>
                 Match

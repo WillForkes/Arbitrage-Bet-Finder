@@ -21,7 +21,7 @@ function isToday(date: Date) {
     return (new Date().toDateString() == date.toDateString());
 }
 
-function dateFormat(date: number): string {
+export function dateFormat(date: number): string {
     var d: Date = new Date(date *1000)
     if (isTomorrow(d)) {
         return 'Tomorrow at ' + d.toLocaleTimeString([], {timeStyle: "short"}); 

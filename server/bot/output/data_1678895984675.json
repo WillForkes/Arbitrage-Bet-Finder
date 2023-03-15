@@ -1,12 +1,12 @@
 {
-  "created": 1678884154311,
+  "created": 1678895984675,
   "data": {
     "arbitrage": [
       {
         "match_id": "f60646a8037898906e805564a019a4ce",
         "match_name": "Southampton v. Brentford",
         "match_start_time": 1678908600,
-        "hours_to_start": 6.790472777750757,
+        "hours_to_start": 3.5042697222365273,
         "league": "soccer_epl",
         "key": "h2h",
         "best_outcome_odds": {
@@ -30,7 +30,7 @@
         "match_id": "3568c4aec125be9dba53697e02c5db55",
         "match_name": "Brighton and Hove Albion v. Crystal Palace",
         "match_start_time": 1678908600,
-        "hours_to_start": 6.790472777750757,
+        "hours_to_start": 3.5042697222365273,
         "league": "soccer_epl",
         "key": "h2h",
         "best_outcome_odds": {
@@ -54,7 +54,7 @@
         "match_id": "6b2a6500bbda0bb802ce3125b1fade46",
         "match_name": "Real Madrid v. Liverpool",
         "match_start_time": 1678910400,
-        "hours_to_start": 7.29047083331479,
+        "hours_to_start": 4.004267222219044,
         "league": "soccer_uefa_champs_league",
         "key": "h2h",
         "best_outcome_odds": {
@@ -78,7 +78,7 @@
         "match_id": "94d96c799bd41cd4e7b8bffff53b9549",
         "match_name": "Los Angeles Clippers v. Golden State Warriors",
         "match_start_time": 1678932000,
-        "hours_to_start": 13.290476111107402,
+        "hours_to_start": 10.004272500011655,
         "league": "basketball_nba",
         "key": "h2h",
         "best_outcome_odds": {
@@ -98,7 +98,7 @@
         "match_id": "c30dfcc3e6df221d84477916d31e0028",
         "match_name": "South Africa v. West Indies",
         "match_start_time": 1678964400,
-        "hours_to_start": 22.29047527776824,
+        "hours_to_start": 19.004272222254013,
         "league": "cricket_odi",
         "key": "h2h",
         "best_outcome_odds": {
@@ -118,7 +118,7 @@
         "match_id": "907386c565aa3130123aeeb79913cbde",
         "match_name": "Ferencváros v. Leverkusen",
         "match_start_time": 1678996800,
-        "hours_to_start": 31.29047083331479,
+        "hours_to_start": 28.004267222219042,
         "league": "soccer_uefa_europa_league",
         "key": "h2h",
         "best_outcome_odds": {
@@ -142,7 +142,7 @@
         "match_id": "01fd08a6043aac38835899cc2d9ead1e",
         "match_name": "Nottingham Forest v. Newcastle United",
         "match_start_time": 1679083200,
-        "hours_to_start": 55.29047277775076,
+        "hours_to_start": 52.00426972223653,
         "league": "soccer_epl",
         "key": "h2h",
         "best_outcome_odds": {
@@ -166,7 +166,7 @@
         "match_id": "db7629332922d153d043eb4af44c08ef",
         "match_name": "North Queensland Cowboys v. New Zealand Warriors",
         "match_start_time": 1679121000,
-        "hours_to_start": 65.7904738889138,
+        "hours_to_start": 62.50427138891485,
         "league": "rugbyleague_nrl",
         "key": "h2h",
         "best_outcome_odds": {
@@ -186,7 +186,31 @@
         "match_id": "cb99f505a8170b2be19de3968237fae6",
         "match_name": "Wycombe Wanderers v. Barnsley",
         "match_start_time": 1679151600,
-        "hours_to_start": 74.29047305557462,
+        "hours_to_start": 71.00426999999418,
+        "league": "soccer_england_league1",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Barnsley": [
+            "Betfair",
+            2.7
+          ],
+          "Wycombe Wanderers": [
+            "Suprabets",
+            2.86
+          ],
+          "Draw": [
+            "Unibet",
+            3.8
+          ]
+        },
+        "total_implied_odds": 0.9832,
+        "region": "eu"
+      },
+      {
+        "match_id": "cb99f505a8170b2be19de3968237fae6",
+        "match_name": "Wycombe Wanderers v. Barnsley",
+        "match_start_time": 1679151600,
+        "hours_to_start": 71.00426999999418,
         "league": "soccer_england_league1",
         "key": "h2h",
         "best_outcome_odds": {
@@ -210,7 +234,7 @@
         "match_id": "1b6e7651e83bfb73cb3dd564a9e67e27",
         "match_name": "Reading v. Hull City",
         "match_start_time": 1679151600,
-        "hours_to_start": 74.29047333333227,
+        "hours_to_start": 71.00427111109097,
         "league": "soccer_efl_champ",
         "key": "h2h",
         "best_outcome_odds": {
@@ -231,34 +255,10 @@
         "region": "eu"
       },
       {
-        "match_id": "cb99f505a8170b2be19de3968237fae6",
-        "match_name": "Wycombe Wanderers v. Barnsley",
-        "match_start_time": 1679151600,
-        "hours_to_start": 74.29047333333227,
-        "league": "soccer_england_league1",
-        "key": "h2h",
-        "best_outcome_odds": {
-          "Barnsley": [
-            "Betfair",
-            2.7
-          ],
-          "Wycombe Wanderers": [
-            "Suprabets",
-            2.86
-          ],
-          "Draw": [
-            "Unibet",
-            3.8
-          ]
-        },
-        "total_implied_odds": 0.9832,
-        "region": "eu"
-      },
-      {
         "match_id": "cb968449de52c0b887ae2fce288f81e0",
         "match_name": "Chelsea v. Everton",
         "match_start_time": 1679160600,
-        "hours_to_start": 76.79047277775075,
+        "hours_to_start": 73.50426972223653,
         "league": "soccer_epl",
         "key": "h2h",
         "best_outcome_odds": {
@@ -282,7 +282,7 @@
         "match_id": "1c6cfd514ba205f6c0709a5e29572a8f",
         "match_name": "SD Ponferradina v. Alavés",
         "match_start_time": 1679169600,
-        "hours_to_start": 79.29047111113866,
+        "hours_to_start": 76.00426833331585,
         "league": "soccer_spain_segunda_division",
         "key": "h2h",
         "best_outcome_odds": {
@@ -306,7 +306,7 @@
         "match_id": "310ddd7a6ec2d8f6461aea50b6e1291a",
         "match_name": "Atlético Madrid v. Valencia",
         "match_start_time": 1679169600,
-        "hours_to_start": 79.29047138889631,
+        "hours_to_start": 76.00426861113972,
         "league": "soccer_spain_la_liga",
         "key": "h2h",
         "best_outcome_odds": {
@@ -330,7 +330,7 @@
         "match_id": "0d847a71d85f39a45a892b096cf33418",
         "match_name": "Roman Dolidze v. Marvin Vettori",
         "match_start_time": 1679174100,
-        "hours_to_start": 80.54047444442908,
+        "hours_to_start": 77.2542716666725,
         "league": "mma_mixed_martial_arts",
         "key": "h2h",
         "best_outcome_odds": {
@@ -350,7 +350,7 @@
         "match_id": "0dd35741b275fd0e3c07ebfdc05ebdcf",
         "match_name": "Leon Edwards v. Kamaru Usman",
         "match_start_time": 1679181300,
-        "hours_to_start": 82.54047444442908,
+        "hours_to_start": 79.2542716666725,
         "league": "mma_mixed_martial_arts",
         "key": "h2h",
         "best_outcome_odds": {
@@ -370,7 +370,7 @@
         "match_id": "3ed874cf847d3ab7c2bcde0152179aa1",
         "match_name": "Hawthorn Hawks v. Essendon Bombers",
         "match_start_time": 1679199600,
-        "hours_to_start": 87.62380944444074,
+        "hours_to_start": 84.337605833345,
         "league": "aussierules_afl",
         "key": "h2h",
         "best_outcome_odds": {
@@ -390,7 +390,7 @@
         "match_id": "1dbb1bcff572a032e9289bb12c045337",
         "match_name": "Real Betis v. Mallorca",
         "match_start_time": 1679230800,
-        "hours_to_start": 96.29047138889631,
+        "hours_to_start": 93.00426861113972,
         "league": "soccer_spain_la_liga",
         "key": "h2h",
         "best_outcome_odds": {
@@ -414,7 +414,7 @@
         "match_id": "d4938ddfa811ccf865900ac59a1f5b68",
         "match_name": "Getafe v. Sevilla",
         "match_start_time": 1679247000,
-        "hours_to_start": 100.79047138889631,
+        "hours_to_start": 97.50426861113972,
         "league": "soccer_spain_la_liga",
         "key": "h2h",
         "best_outcome_odds": {
@@ -438,7 +438,7 @@
         "match_id": "38decf7408789ec3caf766bc1d07042e",
         "match_name": "Preston Parsons v. Trevin Giles",
         "match_start_time": 1679774400,
-        "hours_to_start": 247.29047444442907,
+        "hours_to_start": 244.0042716666725,
         "league": "mma_mixed_martial_arts",
         "key": "h2h",
         "best_outcome_odds": {
@@ -458,7 +458,7 @@
         "match_id": "071995da614c7299e2abf021fe3e480d",
         "match_name": "Lille v. Lorient",
         "match_start_time": 1680433200,
-        "hours_to_start": 430.2904727777508,
+        "hours_to_start": 427.00426972223653,
         "league": "soccer_france_ligue_one",
         "key": "h2h",
         "best_outcome_odds": {
@@ -482,7 +482,7 @@
         "match_id": "cd59f791abd032246e46cb6687d893f9",
         "match_name": "Tromso v. Molde",
         "match_start_time": 1681138800,
-        "hours_to_start": 626.2904713888963,
+        "hours_to_start": 623.0042686111398,
         "league": "soccer_norway_eliteserien",
         "key": "h2h",
         "best_outcome_odds": {
@@ -506,7 +506,7 @@
         "match_id": "440886a0c769054e97af9e9fd37602a6",
         "match_name": "SK Brann v. Haugesund",
         "match_start_time": 1681146900,
-        "hours_to_start": 628.5404713888963,
+        "hours_to_start": 625.2542686111398,
         "league": "soccer_norway_eliteserien",
         "key": "h2h",
         "best_outcome_odds": {

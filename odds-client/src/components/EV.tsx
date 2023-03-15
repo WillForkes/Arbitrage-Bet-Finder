@@ -1,14 +1,14 @@
-import { Bet } from "@/types";
+import { Bet, EV } from "@/types";
 import { dateFormat } from "@/utils";
 import React, { useState } from "react";
 import Image from "next/image";
 import Modal from "./Modal";
 
 interface props {
-  b: Bet;
+  b: EV;
 }
 
-export default function BetLoader({ b }: props) {
+export default function EVLoader({ b }: props) {
   const [modal, setModal] = useState(false);
   function closeModal(): void {
     setModal(false);
@@ -24,13 +24,7 @@ export default function BetLoader({ b }: props) {
         </tr>
         <tr>
           <td>{b.data.match_name}</td>
-          <td>{((1 - b.data.total_implied_odds) * 100).toFixed(2)}%</td>
-
-          {Object.keys(b.data.best_outcome_odds).map((key, index) => (
-            <tr>
-              <td key={index}>{b.data.best_outcome_odds[key][0]}</td>
-            </tr>
-          ))}
+          <td>{b.data.ev}</td>
         </tr>
       </table>
       <div className="flex justify-center items-center col-start-1 row-span-1 col-span-3 mb-2 content-center">

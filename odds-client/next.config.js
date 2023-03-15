@@ -12,7 +12,10 @@ const nextConfig = {
         basePath: false
       },
     ];
-  }
+  },
+  images: {
+    domains: ['oddsjam.com'],
+  },
 }
 
 

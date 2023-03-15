@@ -38,11 +38,13 @@ export type User = {
 export type Bet = {
     data: {
         match_name: string;
-        best_outcome_odds: OutcomeOdds
-        total_implied_odds: number
-        match_start_time: number
+        best_outcome_odds: OutcomeOdds;
+        total_implied_odds: number;
+        match_start_time: number;
+        region: string;
+        league: string;
     }
-    id: number
+    id: number;
 }
 
 export type EV = {

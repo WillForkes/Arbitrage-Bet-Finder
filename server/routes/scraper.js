@@ -12,7 +12,7 @@ router.get('/run', checkUser ,async function(req, res, next) {
     // * Check for required querys params and set defaults
 
     // variables
-    const cutoff = (req.query.cutoff) ? req.query.cutoff : 0.10; // in percentage
+    const cutoff = (req.query.cutoff) ? req.query.cutoff : 0.01; // in percentage
 
     // * Get arbitrage data
     let data

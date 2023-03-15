@@ -305,12 +305,12 @@ async function getArbitrageOpportunities(cutoff) {
 
     // filter opportunities
     const arbitrageOpportunities = Array.from(results).filter(x => 0 < x.total_implied_odds && x.total_implied_odds < 1 - cutoff);
-    const EVOpportunities = Array.from(evResults).filter(x => x.ev > cutoff);
+    const EVOpportunities = Array.from(evResults).filter(x => x.ev > 0.1);
 
     // sort array by hours_to_start in ascending order
     arbitrageOpportunities.sort((a, b) => a.hours_to_start - b.hours_to_start);
     EVOpportunities.sort((a, b) => a.ev - b.ev);
-    
+
     // save data to json file if SAVE_DATA is true
     const file_data = {
         "created": Date.now(), 

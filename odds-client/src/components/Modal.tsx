@@ -36,7 +36,7 @@ export default function Modal({
   }
 
   if (isVisible == false) return null;
-  
+
   return (
     <div className="fixed inset-0 flex flex-col justify-center items-center bg-gray-900 bg-opacity-50 z-50">
       <div className="relative w-full h-full max-w-2xl md:h-auto text-center">
@@ -71,7 +71,7 @@ export default function Modal({
             <input
               type="number"
               value={stake}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               onChange={(e) => getProfit(e)}
             />
             <p>Profit ${outcome?.profit}</p>

@@ -51,7 +51,10 @@ export type EV = {
     data: {
         match_name: string;
         ev: number
+        league: string
+        region: string
         match_start_time: number
+        bookmaker: string
     }
     id: number
 }

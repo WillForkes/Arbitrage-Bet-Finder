@@ -4,13 +4,15 @@ import React, { useState } from "react";
 import useSWR from "swr";
 import { getter } from "@/api";
 import EVLoader from "@/components/EV";
+import Auth from "@/components/Auth";
 
 export default function ev() {
   const { data, error } = useSWR("/scraper/all", getter);
   const evData = data?.ev;
   console.log(evData);
   return (
-    <div className="page-offset-x py-8 bg-black-700">
+    <div className="page-offset-x py-8 bg-gray-900">
+      <Auth />
       {data ? (
         evData.map((bet: EV) => (
           <div className="bg-gray-800 drop-shadow-md rounded-md grid py-3 gap-6 grid-cols-1 2xl:grid-cols-2 mb-6">

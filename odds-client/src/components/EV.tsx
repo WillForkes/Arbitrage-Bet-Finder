@@ -49,14 +49,6 @@ export default function EVLoader({ b }: props) {
           </Table.Row>
         </Table.Body>
       </Table>
-      <div className="flex justify-center items-center col-start-1 row-span-1 col-span-3 mb-2 content-center">
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          onClick={() => setModal(true)}
-        >
-          Calculate Stake
-        </button>
-      </div>
 
       {/*         
       <div className="bg-grey-800 px-.5 rounded-xl grid grid-cols-3 grid-rows-3 px-3 h-48">

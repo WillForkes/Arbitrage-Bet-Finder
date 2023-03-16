@@ -1,5 +1,6 @@
 import { getter } from "@/api";
 import Nav from "@/components/constant/Nav";
+import Footer from "@/components/constant/Footer";
 import "@/styles/globals.css";
 import { User } from "@/types";
 import type { AppProps } from "next/app";
@@ -20,6 +21,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <UserContext.Provider value={user}>
         <Nav />
         <Component {...pageProps} />
+        <Footer />
       </UserContext.Provider>
     </div>
   );

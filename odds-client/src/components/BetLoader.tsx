@@ -18,7 +18,7 @@ export default function BetLoader({ b }: props) {
 
   return (
     <>
-    <Table hoverable={false}>    
+    <Table hoverable={false} className="items-center">
         <Table.Head>
             <Table.HeadCell>
                 Match
@@ -53,7 +53,7 @@ export default function BetLoader({ b }: props) {
                     {b.data.region.toUpperCase()}
                 </Table.Cell>
                 <Table.Cell>
-                    {b.data.league.toUpperCase()}
+                    {b.data.leagueFormatted}
                 </Table.Cell>
                 
                 <Table.Cell>

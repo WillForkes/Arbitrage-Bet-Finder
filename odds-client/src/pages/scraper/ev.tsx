@@ -4,11 +4,8 @@ import React, { useState } from "react";
 import useSWR from "swr";
 import { getter } from "@/api";
 import EVLoader from "@/components/EV";
-<<<<<<< HEAD
 import Auth from "@/components/Auth";
-=======
 import { Spinner } from "flowbite-react";
->>>>>>> c7ac6245185638dc11f6ac0991c9ce81cb39e19d
 
 export default function ev() {
   const { data, error } = useSWR("/scraper/all", getter);
@@ -16,13 +13,8 @@ export default function ev() {
 
   return (
     <div className="page-offset-x py-8 bg-gray-900">
-<<<<<<< HEAD
       <Auth />
       {data ? (
-=======
-      {data ? 
-      (
->>>>>>> c7ac6245185638dc11f6ac0991c9ce81cb39e19d
         evData.map((bet: EV) => (
           <div className=" drop-shadow-md rounded-md grid py-3 gap-6 grid-cols-1 2xl:grid-cols-2 mb-6">
             <EVLoader b={bet} key={bet.id} />
@@ -30,9 +22,9 @@ export default function ev() {
         ))
       ) : (
         <div className="mx-auto max-w-screen-md p-64 text-center mb-8 lg:mb-12">
-            <Spinner aria-label="Default status example" />
+          <Spinner aria-label="Default status example" />
         </div>
-          )}
+      )}
     </div>
   );
 }

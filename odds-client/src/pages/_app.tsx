@@ -1,5 +1,6 @@
 import { getter } from "@/api";
 import Nav from "@/components/constant/Nav";
+import Footer from "@/components/constant/Footer";
 import "@/styles/globals.css";
 import { User } from "@/types";
 import type { AppProps } from "next/app";

@@ -149,38 +149,60 @@ router.get("/all", checkUser, async function(req, res, next){
     const page = (req.query.page) ? parseInt(req.query.page) - 1 : 0;
     const perPage = 25;
     const skip = page * perPage;
+    let arbBets = []
+    let evBets = []
 
-    // get all bets and sort in descending order (by time
-    let arbBets = await prisma.bet.findMany({
-        where: {
-            type: "arbitrage"
-        },
-        orderBy: {
-            updatedAt: "desc"
-        },
-        skip: skip,
-        take: perPage
-    })
+    // ! Sort arb bets
+    if(req.user.plan != "free") {
+        arbBets = await prisma.bet.findMany({
+            where: {
+                type: "arbitrage"
+            },
+            skip: skip,
+            take: perPage
+        })
 
-    let evBets = await prisma.bet.findMany({
-        where: {
-            type: "ev"
-        },
-        orderBy: {
-            updatedAt: "desc"
-        },
-        skip: skip,
-        take: perPage
-    })
+        for(let i = 0; i < arbBets.length; i++){
+            arbBets[i].data = JSON.parse(arbBets[i].data);
 
-    // parse the data key for each bet into json
-    for(let i = 0; i < arbBets.length; i++){
-        arbBets[i].data = JSON.parse(arbBets[i].data);
+            const leagueFormatted = arbBets[i].data.league.replaceAll("_", " ").split(" ");
+            for(let j = 0; j < leagueFormatted.length; j++){
+                leagueFormatted[j] = leagueFormatted[j].charAt(0).toUpperCase() + leagueFormatted[j].slice(1);
+            }
+            arbBets[i].data.leagueFormatted = leagueFormatted.join(" ");
+        }
+
+        // sort evBets by highest EV
+        arbBets.sort((a, b) => {
+            return a.data.total_implied_odds - b.data.total_implied_odds;
+        })
+
+        if(req.user.plan == "pro" || req.user.plan == "premium") {
+            // ! Sort positive EV Bets
+            evBets = await prisma.bet.findMany({
+                where: {
+                    type: "ev"
+                },
+                skip: skip,
+                take: perPage
+            })
+
+            for(let i = 0; i < evBets.length; i++){
+                evBets[i].data = JSON.parse(evBets[i].data);
+
+                const leagueFormatted = evBets[i].data.league.replaceAll("_", " ").split(" ");
+                for(let j = 0; j < leagueFormatted.length; j++){
+                    leagueFormatted[j] = leagueFormatted[j].charAt(0).toUpperCase() + leagueFormatted[j].slice(1);
+                }
+                evBets[i].data.leagueFormatted = leagueFormatted.join(" ");
+            }
+
+            evBets.sort((a, b) => {
+                return b.data.ev - a.data.ev;
+            })
+        }
+        
     }
-    for(let i = 0; i < evBets.length; i++){
-        evBets[i].data = JSON.parse(evBets[i].data);
-    }
-
     res.json({"status": "ok", "data": {
         "arbitrage": arbBets,
         "ev": evBets

@@ -102,4 +102,37 @@ router.get('/', checkUser, async (req, res) => {
         }});
 });
 
+router.post("/startTrial", checkUser, async function(req, res, next) {
+    if(req.user.trialActivated == true){
+        res.status(401).json({"error": "Trial already activated"})
+        return;
+    }
+
+    const sub = await prisma.subscription.create({
+        data: {
+            userId: req.user.authid,
+            plan: "trial",
+            planExpiresAt: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 5), // 5 days
+            status: "active",
+        }
+    })
+
+    await prisma.user.update({
+        where: {
+            authid: req.user.authid
+        },
+        data: {
+            trialActivated: true
+        }
+    })
+
+    if(!sub){
+        res.status(500).json({"error": "Error starting trial"})
+        return;
+    }
+
+    res.status(200).json({"status": "ok", "data": {}})
+});
+
+
 module.exports = router;

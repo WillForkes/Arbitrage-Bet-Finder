@@ -27,6 +27,7 @@ export type User = {
         updatedAt: string;
         apikey: string;
         banned: boolean;
+        trialActivated: boolean;
         subscription: {
             id: number;
             plan: string;
@@ -43,6 +44,7 @@ export type Bet = {
         match_start_time: number;
         region: string;
         league: string;
+        leagueFormatted: string;
     }
     id: number;
 }

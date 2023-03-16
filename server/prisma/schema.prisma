@@ -23,6 +23,7 @@ model User {
   apikey            String?      @unique
   banned            Boolean      @default(false)
   staff             Boolean      @default(false)
+  trialActivated    Boolean      @default(false)
   placedBets        PlacedBets[]
   subscription      Subscription[]
 }
@@ -53,7 +54,7 @@ model Subscription {
     userId                  String
     plan                    String
     planExpiresAt           DateTime
-    stripePaymentId         String   @unique
+    stripePaymentId         String?  @unique
     stripeSubscriptionId    String?  @unique
     stripeCustomerId        String?
     status                  String   @default("inactive") // inactive, active, paused, payment_failed, cancelled

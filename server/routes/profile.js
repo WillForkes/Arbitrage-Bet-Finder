@@ -108,6 +108,19 @@ router.post("/startTrial", checkUser, async function(req, res, next) {
         return;
     }
 
+    // check user doesnt have any other subs
+    const userSubs = await prisma.subscription.count({
+        where: {
+            userId: req.user.authid,
+            status: "active"
+        }
+    })
+
+    if(userSubs > 0){
+        res.status(401).json({"error": "User already has an active subscription"})
+        return;
+    }
+
     const sub = await prisma.subscription.create({
         data: {
             userId: req.user.authid,

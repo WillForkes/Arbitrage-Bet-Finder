@@ -1,17 +1,35 @@
-import { User } from "@/types";
+import { User, Invoice } from "@/types";
 import Link from "next/link";
 import React, { useState } from "react";
 import Modal from "./Modal";
-import { Button, TextInput, Checkbox, Label, Tabs, Card, HiClipboardList, HiUserCircle, HiAdjustments, MdDashboard, HiMail } from "flowbite-react"
+import { Badge, Button, TextInput, Checkbox, Label, Tabs, Card, HiClipboardList, HiUserCircle, HiAdjustments, MdDashboard, HiMail } from "flowbite-react"
 import Image from "next/image";
 import Logo from "../../public/arbster.png";
+import { createPortal } from "@/api";
 
 interface props {
   user: User;
+  invoices: Invoice[];
 }
 
-export default function BetLoader({ user }: props) {
+export default function BetLoader({ user, invoices }: props) {
+    async function gotoBillingPortal() {
+        try {
+            var response = await createPortal();
+            window.location.assign(response.url);
+        } catch (e) {
+            console.error(e);
+        }
+    }
 
+    async function gotoPDF(invoice: Invoice) {
+        try {
+            window.location.assign(invoice.stripeInvoicePdfUrl);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+    
   return (
     <>
     <Tabs.Group
@@ -29,7 +47,12 @@ export default function BetLoader({ user }: props) {
                             <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Nickname</dt>
                             <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">{user.auth0.nickname}</dd>
                             <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Plan</dt>
-                            <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">{user.dbuser.plan}</dd>
+
+                            {/* Small text div that takes up only 100 pixels */}
+                            <div className="w-20 h-10">
+                                <span className="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">{user.dbuser.plan.toUpperCase()}</span>
+
+                            </div>
                             <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Region</dt>
                             <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">{user.dbuser.region}</dd>
                         </dl>
@@ -57,36 +80,40 @@ export default function BetLoader({ user }: props) {
                     <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
                         Latest invoices
                     </h5>
-                    <a
-                        href="#"
-                        className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500"
-                    >
-                        View all
-                    </a>
+                    {/* CREATE BILLING PORTAL LINK AND REDIRECT TO IT from GET localhost:3000/payments/portal */}
+                    <button onClick={() => {gotoBillingPortal()}} className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900">View all</button>
                     </div>
                     <div className="flow-root">
                         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-                            <li className="py-3 sm:py-4">
-                                <div className="flex items-center space-x-4">
-                                    <div className="shrink-0">
-                                    <Image src={Logo} className="h-8 w-8 rounded-full" alt="Neil image" />
+                            {/* foreach invoice */}
+                            {invoices.map((invoice: Invoice) => (
+                                <li className="py-3 sm:py-4">
+                                    <div className="flex items-center space-x-4">
+                                        <div className="shrink-0">
+                                        <Image src={Logo} className="h-8 w-8 rounded-full" alt="Neil image" />
+                                        </div>
+                                        <div className="min-w-0 flex-1">
+                                        <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
+                                            {invoice.subscription.plan.toUpperCase()} PLAN
+                                        </p>
+                                        <p className="truncate text-sm text-gray-500 dark:text-gray-400">
+                                            ID: {invoice.stripeInvoiceId}
+                                        </p>
+                                        <p className="truncate text-sm text-gray-500 dark:text-gray-400">
+                                            {new Date(invoice.createdAt).toDateString()}
+                                        </p>  
+                                        <p className="truncate text-sm text-gray-500 dark:text-gray-400">
+                                            {/* If starter - 29.99, if pro, 49.99, if plus 99.99 */}
+                                            {invoice.subscription.plan.toUpperCase() === "STARTER" ? "$29.99" : invoice.subscription.plan.toUpperCase() === "PRO" ? "$49.99" : "$99.99"}
+                                        </p>  
+                                                                          
+                                        </div>
+                                        <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                            <button onClick={() => {gotoPDF(invoice)}} className="text-white bg-gray-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900">Download Invoice PDF</button>
+                                        </div>
                                     </div>
-                                    <div className="min-w-0 flex-1">
-                                    <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
-                                        PLAN NAME
-                                    </p>
-                                    <p className="truncate text-sm text-gray-500 dark:text-gray-400">
-                                        Invoice id
-                                    </p>
-                                    <p className="truncate text-sm text-gray-500 dark:text-gray-400">
-                                        DD-MM-YYYY
-                                    </p>                                    
-                                    </div>
-                                    <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                    $0.00
-                                    </div>
-                                </div>
-                            </li>
+                                </li>
+                            ))}
                         </ul>
                     </div>
                 </Card>

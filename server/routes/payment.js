@@ -100,7 +100,9 @@ router.get("/portal", checkUser, async (req, res) => {
         include: {
             subscription: {
                 where: {
-                    status: "active"
+                    plan: {
+                        not: "trial"
+                    }
                 }
             }
         }
@@ -108,6 +110,10 @@ router.get("/portal", checkUser, async (req, res) => {
 
     if(!dbuser){
         res.status(500).json({"error": "Error getting user from database!"})
+        return;
+    }
+    if(!dbuser.subscription[0]){
+        res.status(500).json({"error": "User has not subscribed to any plans in the past."})
         return;
     }
 

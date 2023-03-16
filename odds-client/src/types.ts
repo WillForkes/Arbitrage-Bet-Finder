@@ -1,3 +1,5 @@
+import { dateFormat } from './utils';
+
 export type Region = {
     country: String, // 2 letter country code like "US" for the United States
     region: String,  // For US states this is the 2 letter state like TX for texas
@@ -5,6 +7,19 @@ export type Region = {
     eu: String;      // "0" for false "1" for true
     timezone: String;
     city: String;
+}
+
+export type Invoice = {
+    id: number;
+    stripeSubscriptionId: string;
+    stripeInvoiceId: string;
+    stripeInvoicePdfUrl: string;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
+    subscription: {
+        plan: string;
+    }
 }
 
 export type User = {

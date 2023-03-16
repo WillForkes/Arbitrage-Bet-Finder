@@ -177,7 +177,7 @@ router.get("/all", checkUser, async function(req, res, next){
             return a.data.total_implied_odds - b.data.total_implied_odds;
         })
 
-        if(req.user.plan == "pro" || req.user.plan == "premium") {
+        if(req.user.plan == "trial" || req.user.plan == "starter" || req.user.plan == "pro" || req.user.plan == "premium") {
             // ! Sort positive EV Bets
             evBets = await prisma.bet.findMany({
                 where: {

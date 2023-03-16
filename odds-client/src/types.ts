@@ -28,6 +28,7 @@ export type User = {
         apikey: string;
         banned: boolean;
         trialActivated: boolean;
+        region: string;
         subscription: {
             id: number;
             plan: string;

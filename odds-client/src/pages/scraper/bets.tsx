@@ -11,8 +11,8 @@ import Auth from "@/components/Auth";
 export default function bets() {
   const { data, error } = useSWR("/scraper/all", getter);
   const arbData = data?.arbitrage;
-  const user: User | null = useContext(UserContext);
-  const showBets = user ? user.dbuser.plan=="free" : false;
+  const user: User | null = useContext(UserContext).user;
+  const showBets = user ? user.dbuser.plan!="free" : false;
 
   return (
     <div className="page-offset-x py-8 bg-gray-900">

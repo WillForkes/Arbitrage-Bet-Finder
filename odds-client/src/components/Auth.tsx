@@ -3,10 +3,10 @@ import { useRouter } from "next/router";
 import { useContext } from "react";
 
 export default function Auth() {
-  const user = useContext(UserContext);
+  const u = useContext(UserContext);
   var router = useRouter();
-  console.log(user);
-  if (user.auth == false && typeof window !== "undefined") {
+
+  if (u.auth == false && typeof window !== "undefined") {
     router.push("/");
     return null;
   } else {

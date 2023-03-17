@@ -177,30 +177,28 @@ router.get("/all", checkUser, async function(req, res, next){
             return a.data.total_implied_odds - b.data.total_implied_odds;
         })
 
-        if(req.user.plan == "trial" || req.user.plan == "starter" || req.user.plan == "pro" || req.user.plan == "premium") {
-            // ! Sort positive EV Bets
-            evBets = await prisma.bet.findMany({
-                where: {
-                    type: "ev"
-                },
-                skip: skip,
-                take: perPage
-            })
+        // ! Sort positive EV Bets
+        evBets = await prisma.bet.findMany({
+            where: {
+                type: "ev"
+            },
+            skip: skip,
+            take: perPage
+        })
 
-            for(let i = 0; i < evBets.length; i++){
-                evBets[i].data = JSON.parse(evBets[i].data);
+        for(let i = 0; i < evBets.length; i++){
+            evBets[i].data = JSON.parse(evBets[i].data);
 
-                const leagueFormatted = evBets[i].data.league.replaceAll("_", " ").split(" ");
-                for(let j = 0; j < leagueFormatted.length; j++){
-                    leagueFormatted[j] = leagueFormatted[j].charAt(0).toUpperCase() + leagueFormatted[j].slice(1);
-                }
-                evBets[i].data.leagueFormatted = leagueFormatted.join(" ");
+            const leagueFormatted = evBets[i].data.league.replaceAll("_", " ").split(" ");
+            for(let j = 0; j < leagueFormatted.length; j++){
+                leagueFormatted[j] = leagueFormatted[j].charAt(0).toUpperCase() + leagueFormatted[j].slice(1);
             }
-
-            evBets.sort((a, b) => {
-                return b.data.ev - a.data.ev;
-            })
+            evBets[i].data.leagueFormatted = leagueFormatted.join(" ");
         }
+
+        evBets.sort((a, b) => {
+            return b.data.ev - a.data.ev;
+        })
         
     }
     res.json({"status": "ok", "data": {

@@ -8,9 +8,11 @@ import { Region } from '../types';
 
 interface props {
   b: Bet;
+  showBets: boolean;
 }
 
-export default function BetLoader({ b }: props) {
+export default function BetLoader({ b, showBets }: props) {
+    
   const [modal, setModal] = useState(false);
   function closeModal(): void {
     setModal(false);
@@ -41,19 +43,20 @@ export default function BetLoader({ b }: props) {
             </span>
             </Table.HeadCell>
         </Table.Head>
-        <Table.Body className="divide">
+        <Table.Body className={`divide ${showBets ? '' : 'blur'}`}>
             <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {b.data.match_name}
                 </Table.Cell>
                 <Table.Cell>
-                    {((1 - b.data.total_implied_odds) * 100).toFixed(2)}%
+                    {/* if showBets is true, show the real data, else use a placeholder value */}
+                    {showBets ? ((1 - b.data.total_implied_odds) * 100).toFixed(2) : '0.00'}%
                 </Table.Cell>
                 <Table.Cell>
-                    {b.data.region.toUpperCase()}
+                    {showBets ? b.data.region.toUpperCase() : 'REGION'}
                 </Table.Cell>
                 <Table.Cell>
-                    {b.data.leagueFormatted}
+                    {showBets ? b.data.leagueFormatted : 'SPORT_LEAGUE'}
                 </Table.Cell>
                 
                 <Table.Cell>
@@ -66,7 +69,7 @@ export default function BetLoader({ b }: props) {
                             </div>
                             <div className="min-w-0 flex-1">
                                 <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                    {b.data.best_outcome_odds[key][0]}
+                                    {showBets ? b.data.best_outcome_odds[key][0] : 'BOOKMAKER'}
                                 </p>
                             </div>
                         </div>

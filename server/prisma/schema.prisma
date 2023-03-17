@@ -24,6 +24,7 @@ model User {
   banned            Boolean      @default(false)
   staff             Boolean      @default(false)
   trialActivated    Boolean      @default(false)
+  promotions        Boolean      @default(true)
   placedBets        PlacedBets[]
   subscription      Subscription[]
 }

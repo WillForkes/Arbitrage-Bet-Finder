@@ -10,7 +10,6 @@ export default function support() {
     return (
     <>
         <div className="page-offset-x py-8 bg-gray-900">
-
             <Card className="py-8 px-4 mx-auto max-w-screen-md sm:py-16 lg:px-6 md:px-12">
                 <form className="flex flex-col gap-4">
                     <div>

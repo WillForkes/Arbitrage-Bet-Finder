@@ -73,6 +73,7 @@ export type EV = {
         region: string
         match_start_time: number
         bookmaker: string
+        leagueFormatted: string
     }
     id: number
 }

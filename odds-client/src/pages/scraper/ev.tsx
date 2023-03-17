@@ -1,14 +1,18 @@
 import BetLoader from "@/components/BetLoader";
 import { Bet, EV } from "@/types";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import useSWR from "swr";
 import { getter } from "@/api";
 import EVLoader from "@/components/EV";
 import { Spinner } from "flowbite-react";
+import { UserContext } from "@/pages/_app";
+import { User } from "@/types";
 
 export default function ev() {
   const { data, error } = useSWR("/scraper/all", getter);
   const evData = data?.ev;
+  const user: User | null = useContext(UserContext);
+  const showBets = user ? user.dbuser.plan!="free" : false;
 
   return (
     <div className="page-offset-x py-8 bg-gray-900">

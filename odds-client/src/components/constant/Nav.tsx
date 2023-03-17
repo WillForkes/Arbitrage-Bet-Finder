@@ -5,18 +5,17 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useContext } from "react";
 import Logo from "../../../public/arbster.png";
+import Login from "./Login";
 import ProfileDropdown from "./ProfileDropdown";
 
 export default function Nav() {
-  const user: User | null = useContext(UserContext);
+  const user: User | null = useContext(UserContext).user;
   return (
     <nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
       <div className="container flex flex-wrap items-center justify-between mx-auto">
         <a href="https://arbster.com/" className="flex items-center">
           <Image src={Logo} height={60} alt="Arbster image" />
         </a>
-
-        {user != null ? <ProfileDropdown /> : <p>login</p>}
 
         <div
           className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"

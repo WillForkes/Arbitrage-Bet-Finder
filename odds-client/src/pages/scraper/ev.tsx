@@ -4,6 +4,7 @@ import React, { useState, useContext } from "react";
 import useSWR from "swr";
 import { getter } from "@/api";
 import EVLoader from "@/components/EV";
+import Auth from "@/components/Auth";
 import { Spinner } from "flowbite-react";
 import { UserContext } from "@/pages/_app";
 import { User } from "@/types";
@@ -16,8 +17,8 @@ export default function ev() {
 
   return (
     <div className="page-offset-x py-8 bg-gray-900">
-      {data ? 
-      (
+      <Auth />
+      {data ? (
         evData.map((bet: EV) => (
           <div className=" drop-shadow-md rounded-md grid py-3 gap-6 grid-cols-1 2xl:grid-cols-2 mb-6">
             <EVLoader b={bet} key={bet.id} />
@@ -25,9 +26,9 @@ export default function ev() {
         ))
       ) : (
         <div className="mx-auto max-w-screen-md p-64 text-center mb-8 lg:mb-12">
-            <Spinner aria-label="Default status example" />
+          <Spinner aria-label="Default status example" />
         </div>
-          )}
+      )}
     </div>
   );
 }

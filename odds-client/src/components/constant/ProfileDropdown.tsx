@@ -16,7 +16,7 @@ import Logo from "../../../public/arbster.png";
 export default function ProfileDropdown() {
   const user = useContext(UserContext);
   return (
-    <div className="flex items-center md:order-2">
+    <>
       <Dropdown label="Account">
         <Dropdown.Header>
           <Image
@@ -25,9 +25,9 @@ export default function ProfileDropdown() {
             className="w-8 h-8 rounded-full"
             alt="user photo"
           />
-          <span className="block text-sm">{user?.auth0.nickname}</span>
+          <span className="block text-sm">{user?.user?.auth0.nickname}</span>
           <span className="block truncate text-sm font-medium">
-            {user?.auth0.name}
+            {user?.user?.auth0.name}
           </span>
         </Dropdown.Header>
         <Dropdown.Item icon={HiViewGrid}>Dashboard</Dropdown.Item>
@@ -41,6 +41,6 @@ export default function ProfileDropdown() {
           Sign out
         </Dropdown.Item>
       </Dropdown>
-    </div>
+    </>
   );
 }

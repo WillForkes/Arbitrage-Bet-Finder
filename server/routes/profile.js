@@ -79,9 +79,6 @@ router.get('/', checkUser, async (req, res) => {
     let dbuser = await prisma.user.findUnique({
         where: {
             authid: req.oidc.user.sub
-        },
-        include: {
-            subscription: true
         }
     })
 
@@ -90,7 +87,6 @@ router.get('/', checkUser, async (req, res) => {
         return;
     }
 
-    dbuser.subscription = (dbuser.subscription) ? dbuser.subscription[0] : null;
     dbuser.plan = req.user.plan
     dbuser.planExpiresAt = req.user.planExpiresAt
     
@@ -102,9 +98,47 @@ router.get('/', checkUser, async (req, res) => {
         }});
 });
 
+router.get("/invoices", checkUser, async function(req, res, next) {
+    const invoices = await prisma.invoice.findMany({
+        include: {
+            subscription: true
+        }
+    })
+
+    //search through subscriptions to find matching user id and append to array
+    let invoicesReal = []
+    for(let i = 0; i < invoices.length; i++){
+        if(invoices[i].subscription.userId == req.user.authid){
+            invoicesReal.push(invoices[i])
+        }
+    }
+
+    if(!invoices){
+        res.status(500).json({"error": "Error getting invoices"})
+        return;
+    }
+
+    res.status(200).json({"status": "ok", "data": {
+        "invoices": invoicesReal
+    }})
+})
+
 router.post("/startTrial", checkUser, async function(req, res, next) {
     if(req.user.trialActivated == true){
         res.status(401).json({"error": "Trial already activated"})
+        return;
+    }
+
+    // check user doesnt have any other subs
+    const userSubs = await prisma.subscription.count({
+        where: {
+            userId: req.user.authid,
+            status: "active"
+        }
+    })
+
+    if(userSubs > 0){
+        res.status(401).json({"error": "User already has an active subscription"})
         return;
     }
 

@@ -1,27 +1,187 @@
-import { User } from "@/types";
+import { User, Invoice } from "@/types";
 import Link from "next/link";
 import React, { useState } from "react";
 import Modal from "./Modal";
+import { Badge, Button, TextInput, Checkbox, Label, Tabs, Card, HiClipboardList, HiUserCircle, HiAdjustments, MdDashboard, HiMail } from "flowbite-react"
+import Image from "next/image";
+import Logo from "../../public/arbster.png";
+import { createPortal } from "@/api";
 
 interface props {
   user: User;
+  invoices: Invoice[];
 }
 
-export default function BetLoader({ user }: props) {
+export default function BetLoader({ user, invoices }: props) {
+    async function gotoBillingPortal() {
+        try {
+            var response = await createPortal();
+            window.location.assign(response.url);
+        } catch (e) {
+            console.error(e);
+        }
+    }
 
+    async function gotoPDF(invoice: Invoice) {
+        try {
+            window.location.assign(invoice.stripeInvoicePdfUrl);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+    
   return (
     <>
-      <div className="match">
-        <h3>Welcome, {user.auth0.nickname}</h3>
-        <p>Email: {user.auth0.email}</p>
-        <p>Account Created: {user.dbuser.createdAt}</p>
-        <p>Your Plan: {user.dbuser.subscription.plan}</p>
-        <p>Your Plan Expires: {user.dbuser.subscription.planExpiresAt}</p>
-        <hr></hr>
-        <h3>Identifiers</h3>
-        <p>SID: {user.auth0.sid}</p>
-        <p>Auth0 ID: {user.auth0.sub}</p>
-      </div>
+    <Tabs.Group
+        className="dark:bg-gray-900 dark:text-white py-4 p-10"
+        aria-label="Tabs with icons"
+        style="underline"
+        >
+        <Tabs.Item active={true} title="Profile">
+            <div className="mx-auto max-w-screen-xl">
+                <Card>
+                    <div className="relative p-4 bg-white dark:bg-gray-800 sm:p-5`">
+                        <dl>
+                            <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Email</dt>
+                            <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">{user.auth0.email}</dd>
+                            <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Nickname</dt>
+                            <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">{user.auth0.nickname}</dd>
+                            <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Plan</dt>
+
+                            {/* Small text div that takes up only 100 pixels */}
+                            <div className="w-20 h-10">
+                                <span className="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">{user.dbuser.plan.toUpperCase()}</span>
+
+                            </div>
+                            <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Region</dt>
+                            <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">{user.dbuser.region}</dd>
+                        </dl>
+                        
+                        <div className="flex justify-between items-center">
+                            <div className="flex items-center space-x-3 sm:space-x-4">
+                                <button type="button" className="text-white inline-flex items-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                                    <svg aria-hidden="true" className="mr-1 -ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path></svg>
+                                    Edit
+                                </button>
+                            </div>              
+                            <button type="button" className="inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">
+                                <svg aria-hidden="true" className="w-5 h-5 mr-1.5 -ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </Card>
+            </div>
+        </Tabs.Item>
+        <Tabs.Item title="Invoices">
+            <div className="mx-auto max-w-screen-xl">
+                <Card>
+                    <div className="mb-4 flex items-center justify-between">
+                    <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
+                        Latest invoices
+                    </h5>
+                    {/* CREATE BILLING PORTAL LINK AND REDIRECT TO IT from GET localhost:3000/payments/portal */}
+                    <button onClick={() => {gotoBillingPortal()}} className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900">View all</button>
+                    </div>
+                    <div className="flow-root">
+                        <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+                            {/* foreach invoice */}
+                            {invoices.map((invoice: Invoice) => (
+                                <li className="py-3 sm:py-4">
+                                    <div className="flex items-center space-x-4">
+                                        <div className="shrink-0">
+                                        <Image src={Logo} className="h-8 w-8 rounded-full" alt="Neil image" />
+                                        </div>
+                                        <div className="min-w-0 flex-1">
+                                        <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
+                                            {invoice.subscription.plan.toUpperCase()} PLAN
+                                        </p>
+                                        <p className="truncate text-sm text-gray-500 dark:text-gray-400">
+                                            ID: {invoice.stripeInvoiceId}
+                                        </p>
+                                        <p className="truncate text-sm text-gray-500 dark:text-gray-400">
+                                            {new Date(invoice.createdAt).toDateString()}
+                                        </p>  
+                                        <p className="truncate text-sm text-gray-500 dark:text-gray-400">
+                                            {/* If starter - 29.99, if pro, 49.99, if plus 99.99 */}
+                                            {invoice.subscription.plan.toUpperCase() === "STARTER" ? "$29.99" : invoice.subscription.plan.toUpperCase() === "PRO" ? "$49.99" : "$99.99"}
+                                        </p>  
+                                                                          
+                                        </div>
+                                        <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                            <button onClick={() => {gotoPDF(invoice)}} className="text-white bg-gray-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900">Download Invoice PDF</button>
+                                        </div>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </Card>
+            </div>
+        </Tabs.Item>
+        <Tabs.Item title="Settings">
+        <div className="mx-auto max-w-screen-xl">
+            <Card>
+                <div className="flex flex-col gap-4" id="checkbox">
+                    <div className="flex items-center gap-2 p-2">
+                        <Checkbox id="promotion" />
+                        <Label htmlFor="promotion">
+                        I want to get promotional offers
+                        </Label>
+                    </div>
+                    <div className="flex items-center gap-2 p-2">
+                        <Checkbox id="email" />
+                        <Label htmlFor="email">
+                            Email notifications
+                        </Label>
+                    </div>
+                    <div>
+                        <TextInput
+                            id="email4"
+                            type="email"
+                            placeholder="name@arbster.com"
+                            required={true}/>
+                    </div>
+
+
+                    <div className="flex items-center gap-2 p-2">
+                        <Checkbox id="email" />
+                        <Label htmlFor="email">
+                            Phone notifications
+                        </Label>
+                    </div>
+                    <div>
+                        <TextInput
+                            id="email4"
+                            type="email"
+                            placeholder="+11234567890"
+                            required={true}/>
+                    </div>
+
+                    <div>
+                    <Label htmlFor="email">
+                        Whitelisted bookmakers
+                    </Label>  
+                    <select multiple id="countries_multiple" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="BOOKMAKER">Bookmaker 1</option>
+                        <option value="BOOKMAKER">Bookmaker 2</option>
+                        <option value="BOOKMAKER">Bookmaker 4</option>
+                        <option value="BOOKMAKER">Bookmaker 4</option>
+                        <option value="BOOKMAKER">Bookmaker 5</option>
+                        <option value="BOOKMAKER">Bookmaker 6</option>
+                        
+                    </select>
+                    </div>
+                    <Button type="submit">
+                        Save account settings
+                    </Button>
+
+                </div>
+            </Card>
+        </div>
+
+        </Tabs.Item>
+    </Tabs.Group>
     </>
   );
 }

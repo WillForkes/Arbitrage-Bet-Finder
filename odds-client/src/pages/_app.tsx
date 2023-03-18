@@ -11,6 +11,7 @@ export const UserContext = createContext<{
   user: User | null;
   auth: boolean | null;
 }>({ user: null, auth: false });
+
 export const AlertContext = createContext<{
   msg: string | null;
   error: boolean | null;

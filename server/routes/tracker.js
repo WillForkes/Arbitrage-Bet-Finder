@@ -17,11 +17,7 @@ router.post('/new', checkUser ,async function(req, res, next) {
     const stake = parseFloat(req.body.stake); // Total amount in £/$/€ staked
 
     // * Get bet
-    const bet = await prisma.bet.findUnique({
-        where: {
-            id: betid
-        }
-    })
+    const bet = await prisma.bet.findUnique({ where: {id: betid}    })
 
     if(!bet){
         res.status(404).json({"error": "Bet not found"});
@@ -30,17 +26,23 @@ router.post('/new', checkUser ,async function(req, res, next) {
 
     const betData = JSON.parse(bet.data);
     let profitPercentage = (1 - betData.total_implied_odds); //e.g 0.035
-    // round to 4 decimal places
     profitPercentage = Math.round((profitPercentage + Number.EPSILON) * 10000) / 10000
+
+    // get all bookmakers into an array
+    let bookmakers = []
+    for (var outcome in betData.best_outcome_odds) {
+        bookmakers.push(betData.best_outcome_odds[outcome][0])
+    }
+    bookmakers = JSON.stringify(bookmakers)
 
     // * Create new tracker
     prisma.placedBets.create({
         data: {
             userId: req.user.authid,
-            betId: betid,
+            matchName: betData.match_name,
             totalStake: stake,
-            profitPercentage: profitPercentage
-
+            profitPercentage: profitPercentage,
+            bookmakers: bookmakers
         }
     }).then((tracker) => {
         res.status(200).json({"status": "ok", "data": tracker});

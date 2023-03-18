@@ -151,20 +151,50 @@ router.get("/all", checkUser, async function(req, res, next){
     const skip = page * perPage;
     let arbBets = []
     let evBets = []
+    const userWhitelist = JSON.parse(req.user.whitelist);
 
-    // ! Sort arb bets
     if(req.user.plan != "free") {
+        // ! get and sort arb bets by lowest implied odds
         arbBets = await prisma.bet.findMany({
             where: {
                 type: "arbitrage"
-            },
-            skip: skip,
-            take: perPage
+            }
+        })
+        arbBets.sort((a, b) => {
+            return a.data.total_implied_odds - b.data.total_implied_odds;
         })
 
+        // ! get an sort ev bets by highest %
+        evBets = await prisma.bet.findMany({
+            where: {
+                type: "ev"
+            }
+        })
+        evBets.sort((a, b) => {
+            return b.data.ev - a.data.ev;
+        })
+
+        // Paginate - into 25 bets per page
+        arbBets = arbBets.slice(skip, skip + perPage);
+        evBets = evBets.slice(skip, skip + perPage);
+
+        // ! League formatting for arb bets
         for(let i = 0; i < arbBets.length; i++){
             arbBets[i].data = JSON.parse(arbBets[i].data);
 
+            // * Check to see if all bookmakers in bet are whitelisted on user account
+            // * If not, remove bet from array
+            // if(userWhitelist.length > 2) { // ! Must have ATLEAST 2 bookmakers whitelisted
+            //     if(arbBets[i].type == "arbitrage"){
+            //         arbBets[i].data.best_outcome_odds.forEach(bookmakerArray => {
+            //             if(!userWhitelist.includes(bookmakerArray[0].toLowerCase()))
+            //                 arbBets.splice(i, 1)
+            //         }); 
+            //     }
+            // }
+
+
+            // * Add formatted league name to the object
             const leagueFormatted = arbBets[i].data.league.replaceAll("_", " ").split(" ");
             for(let j = 0; j < leagueFormatted.length; j++){
                 leagueFormatted[j] = leagueFormatted[j].charAt(0).toUpperCase() + leagueFormatted[j].slice(1);
@@ -172,20 +202,7 @@ router.get("/all", checkUser, async function(req, res, next){
             arbBets[i].data.leagueFormatted = leagueFormatted.join(" ");
         }
 
-        // sort evBets by highest EV
-        arbBets.sort((a, b) => {
-            return a.data.total_implied_odds - b.data.total_implied_odds;
-        })
-
-        // ! Sort positive EV Bets
-        evBets = await prisma.bet.findMany({
-            where: {
-                type: "ev"
-            },
-            skip: skip,
-            take: perPage
-        })
-
+        // ! League formatting for ev bets
         for(let i = 0; i < evBets.length; i++){
             evBets[i].data = JSON.parse(evBets[i].data);
 
@@ -195,11 +212,10 @@ router.get("/all", checkUser, async function(req, res, next){
             }
             evBets[i].data.leagueFormatted = leagueFormatted.join(" ");
         }
-
-        evBets.sort((a, b) => {
-            return b.data.ev - a.data.ev;
-        })
         
+    } else {
+        arbBets = [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]
+        evBets = [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]
     }
     res.json({"status": "ok", "data": {
         "arbitrage": arbBets,

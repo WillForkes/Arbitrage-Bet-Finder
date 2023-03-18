@@ -53,6 +53,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <Nav />
           <Alert />
           <Component {...pageProps} />
+        <Footer />
         </AlertContext.Provider>
       </UserContext.Provider>
     </div>

@@ -35,10 +35,10 @@ model Bet {
   data       String
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
-  placedBets PlacedBets[]
 }
 
 model PlacedBets {
+<<<<<<< HEAD
   id               Int      @id @default(autoincrement())
   userId           String
   betId            Int
@@ -48,6 +48,17 @@ model PlacedBets {
   updatedAt        DateTime @updatedAt
   user             User     @relation(fields: [userId], references: [authid])
   bet              Bet      @relation(fields: [betId], references: [id])
+=======
+  id                Int      @id @default(autoincrement())
+  userId            String
+  matchName         String
+  totalStake        Float
+  profitPercentage  Float
+  bookmakers        String   @default("[]")   // ["Betfair", "Bet365", etc...]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [authid])
+>>>>>>> b76189e65f07f660abe96814d0cc61c353316199
 }
 
 model Subscription {

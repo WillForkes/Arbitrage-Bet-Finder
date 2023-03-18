@@ -46,7 +46,7 @@ export default function BetLoader({ b, showBets }: props) {
         <Table.Body className={`divide ${showBets ? '' : 'blur'}`}>
             <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {b.data.match_name}
+                    {showBets ? b.data.match_name : 'HOME TEAM v. AWAY TEAM'}
                 </Table.Cell>
                 <Table.Cell>
                     {/* if showBets is true, show the real data, else use a placeholder value */}
@@ -60,7 +60,7 @@ export default function BetLoader({ b, showBets }: props) {
                 </Table.Cell>
                 
                 <Table.Cell>
-                    {Object.keys(b.data.best_outcome_odds).map((key, index) => (
+                    { showBets ? Object.keys(b.data.best_outcome_odds).map((key, index) => (
                         <div className="flex items-center space-x-3">
                             <div className="flex-shrink-0">
                                 <div className="relative">
@@ -69,11 +69,39 @@ export default function BetLoader({ b, showBets }: props) {
                             </div>
                             <div className="min-w-0 flex-1">
                                 <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                    {showBets ? b.data.best_outcome_odds[key][0] : 'BOOKMAKER'}
+                                    {b.data.best_outcome_odds[key][0]}
                                 </p>
                             </div>
                         </div>
-                    ))}
+                    )) : 
+                    <div>
+                        <div className="flex items-center space-x-3">
+                            <div className="flex-shrink-0">
+                                <div className="relative">
+                                    <Image src="" alt="Bookmaker Logo" width={50} height={50} />
+                                </div>
+                            </div>
+                            <div className="min-w-0 flex-1">
+                                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                    BOOKMAKER TEMPLATE
+                                </p>
+                            </div>
+                        </div>
+                        <div className="flex items-center space-x-3">
+                            <div className="flex-shrink-0">
+                                <div className="relative">
+                                    <Image src="" alt="Bookmaker Logo" width={50} height={50} />
+                                </div>
+                            </div>
+                            <div className="min-w-0 flex-1">
+                                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                    BOOKMAKER TEMPLATE
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                    
                 </Table.Cell>
                 <Table.Cell>
                     <button

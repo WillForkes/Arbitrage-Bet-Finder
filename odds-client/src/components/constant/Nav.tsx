@@ -16,7 +16,9 @@ export default function Nav() {
         <a href="https://arbster.com/" className="flex items-center">
           <Image src={Logo} height={60} alt="Arbster image" />
         </a>
-
+        <div className="flex items-center md:order-2">
+          {user != null ? <ProfileDropdown /> : <Login />}
+        </div>
         <div
           className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
           id="mobile-menu-2"

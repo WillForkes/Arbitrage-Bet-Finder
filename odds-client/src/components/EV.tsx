@@ -29,23 +29,21 @@ export default function EVLoader({ b, showBets }: props) {
             <span className="sr-only">Edit</span>
           </Table.HeadCell>
         </Table.Head>
-        <Table.Body className={`divide ${showBets ? '' : 'blur'}`}>
+        <Table.Body className={`divide ${showBets ? "" : "blur"}`}>
           <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                {showBets ? b.data.match_name : 'HOME TEAM v AWAY TEAM'}
+              {showBets ? b.data.match_name : "HOME TEAM v AWAY TEAM"}
             </Table.Cell>
             <Table.Cell>
-                {showBets ? (b.data.ev *100).toFixed(2) : '00.0%'}
+              {showBets ? (b.data.ev * 100).toFixed(2) + "%" : "00.0%"}
             </Table.Cell>
             <Table.Cell>
-                {showBets ? b.data.region.toUpperCase() : 'REGION'}
+              {showBets ? b.data.region.toUpperCase() : "REGION"}
             </Table.Cell>
             <Table.Cell>
-                {showBets ? b.data.leagueFormatted : 'SPORTS_LEAGUE'}
+              {showBets ? b.data.leagueFormatted : "SPORTS_LEAGUE"}
             </Table.Cell>
-            <Table.Cell>
-                {showBets ? b.data.bookmaker : 'BOOKMAKER'}
-            </Table.Cell>
+            <Table.Cell>{showBets ? b.data.bookmaker : "BOOKMAKER"}</Table.Cell>
             <Table.Cell>
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

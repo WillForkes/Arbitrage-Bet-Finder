@@ -61,7 +61,20 @@ export type Bet = {
         region: string;
         league: string;
         leagueFormatted: string;
-    }
+    } 
+    id: number;
+}
+
+export type BetTrack = {
+    data: string;
+    id: number;
+}
+
+
+export type Tracker = {
+    bet: BetTrack
+    totalStake: number
+    profitPercentage: number;
     id: number;
 }
 

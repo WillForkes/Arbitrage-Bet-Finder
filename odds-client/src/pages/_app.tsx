@@ -6,6 +6,7 @@ import { User } from "@/types";
 import type { AppProps } from "next/app";
 import { createContext, useState } from "react";
 import useSWR from "swr";
+import Alert from "@/components/Alert";
 
 export const UserContext = createContext<{
   user: User | null;
@@ -15,12 +16,19 @@ export const UserContext = createContext<{
 export const AlertContext = createContext<{
   msg: string | null;
   error: boolean | null;
-  setAlert: () => void;
+  setAlert: (data: { msg: string; error: boolean | null }) => void;
 } | null>({ msg: "", error: null, setAlert: () => {} });
 
 export default function App({ Component, pageProps }: AppProps) {
-  function setAlert() {}
   const { data, error, isLoading } = useSWR("/profile", getter);
+  const [errorState, setErrorState] = useState<{
+    msg: string;
+    error: boolean | null;
+  }>({ msg: "", error: null });
+
+  function setAlert(data: { msg: string; error: boolean | null }) {
+    setErrorState({ msg: data.msg, error: data.error });
+  }
   var user,
     isAuth: boolean | null = null;
 
@@ -33,12 +41,17 @@ export default function App({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <div className="c">
+    <div className="bg-gray-700">
       <UserContext.Provider value={{ user: user, auth: isAuth }}>
         <AlertContext.Provider
-          value={{ msg: null, error: null, setAlert: setAlert }}
+          value={{
+            msg: errorState.msg,
+            error: errorState.error,
+            setAlert: setAlert,
+          }}
         >
           <Nav />
+          <Alert />
           <Component {...pageProps} />
         </AlertContext.Provider>
       </UserContext.Provider>

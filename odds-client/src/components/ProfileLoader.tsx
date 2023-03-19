@@ -10,11 +10,6 @@ import {
   Label,
   Tabs,
   Card,
-  HiClipboardList,
-  HiUserCircle,
-  HiAdjustments,
-  MdDashboard,
-  HiMail,
 } from "flowbite-react";
 import Image from "next/image";
 import Logo from "../../public/arbster.png";
@@ -26,7 +21,7 @@ interface props {
   invoices: Invoice[];
 }
 
-export default function BetLoader({ user, invoices }: props) {
+export default function ProfileLoader({ user, invoices }: props) {
   const [editProfile, setEditProfile] = useState(false);
   const [region, setRegion] = useState(user.dbuser.region);
   const [notifications, setNotifications] = useState({
@@ -35,7 +30,7 @@ export default function BetLoader({ user, invoices }: props) {
     sms: user.dbuser.smsNotifications,
     phone: user.dbuser.phone,
   });
-  
+
   async function gotoBillingPortal() {
     try {
       var response = await createPortal();

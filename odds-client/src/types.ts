@@ -68,17 +68,14 @@ export type Bet = {
     id: number;
 }
 
-export type BetTrack = {
-    data: string;
-    id: number;
-}
-
-
 export type Tracker = {
-    bet: BetTrack
-    totalStake: number
+    matchName: string;
+    bookmakers: string;
+    totalStake: number;
     profitPercentage: number;
     id: number;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export type EV = {

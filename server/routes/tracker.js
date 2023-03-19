@@ -71,9 +71,6 @@ router.get('/all', checkUser, async function(req, res, next) {
     const placedBets = await prisma.placedBets.findMany({
         where: {
             userId: req.user.authid
-        },
-        include: {
-            bet: true
         }
     })
 

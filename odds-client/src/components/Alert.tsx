@@ -14,8 +14,8 @@ export default function AlertCom() {
         }}
       >
         <span>
-          <span className="font-medium">Info alert!</span> Change a few things
-          up and try submitting again.
+          <span className="font-medium">Error!</span>
+          test
         </span>
       </Alert>
     </div>

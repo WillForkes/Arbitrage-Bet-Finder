@@ -46,7 +46,7 @@ export async function updateNotificationsA(user: {
     email: boolean,
     emaila: string,
     sms: boolean,
-    phone: number,
+    phone: string,
   }): Promise<any> {
     return await sendApiRequest("POST", "profile/update", true, {smsNotifications: user.sms, emailNotifications: user.email, phone: user.phone, email: user.emaila})
 }

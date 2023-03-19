@@ -35,6 +35,7 @@ export default function BetLoader({ user, invoices }: props) {
     sms: user.dbuser.smsNotifications,
     phone: user.dbuser.phone,
   });
+  
   async function gotoBillingPortal() {
     try {
       var response = await createPortal();
@@ -57,7 +58,7 @@ export default function BetLoader({ user, invoices }: props) {
     email: boolean;
     emaila: string;
     sms: boolean;
-    phone: number;
+    phone: string;
   }) {
     try {
       await updateNotificationsA(notifications);
@@ -306,14 +307,14 @@ export default function BetLoader({ user, invoices }: props) {
                 <div>
                   <TextInput
                     id="email4"
-                    type="email"
+                    type="text"
                     placeholder="+11234567890"
                     required={true}
                     value={notifications.phone}
                     onChange={(e) =>
                       setNotifications({
                         ...notifications,
-                        phone: parseInt(e.target.value),
+                        phone: e.target.value,
                       })
                     }
                   />

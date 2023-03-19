@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Plan } from './types';
+import { Plan, User } from './types';
 export const getter = (url: string) => axios.get(process.env.NEXT_PUBLIC_URI + url, {withCredentials: true}).then(res => res.data.data) 
 
 async function sendApiRequest<T>(method: "GET" | "PUT" | "POST" | "DELETE" | "PATCH", path: string, withCredentials:boolean, data?: any, headers?: any): Promise<T> {
@@ -37,4 +37,18 @@ export async function createPayment(plan: Plan): Promise<any> {
 export async function createPortal(): Promise<any> {
     return await sendApiRequest("GET", "payment/portal", true)
 }
+
+export async function updateProfileA(region: string): Promise<any> {
+    return await sendApiRequest("POST", "profile/update", true, {region: region})
+}
+
+export async function updateNotificationsA(user: {
+    email: boolean,
+    emaila: string,
+    sms: boolean,
+    phone: number,
+  }): Promise<any> {
+    return await sendApiRequest("POST", "profile/update", true, {smsNotifications: user.sms, emailNotifications: user.email, phone: user.phone, email: user.emaila})
+}
+
 

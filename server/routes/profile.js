@@ -58,6 +58,7 @@ router.post('/update', checkUser, async function(req, res, next) {
         smsNotifications: smsNotifications,
         emailNotifications: emailNotifications
     }
+    console.log(updateData);
 
     const updatedUser = await prisma.user.update({
         where: {
@@ -71,7 +72,7 @@ router.post('/update', checkUser, async function(req, res, next) {
         return;
     }
 
-    res.status(200).json({"status": "ok", "data": {}})
+    res.status(200).json({"status": "ok", "data": updatedUser})
 });
 
 // * Get profile data

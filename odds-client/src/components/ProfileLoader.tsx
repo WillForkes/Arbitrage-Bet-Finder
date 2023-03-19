@@ -18,7 +18,7 @@ import {
 } from "flowbite-react";
 import Image from "next/image";
 import Logo from "../../public/arbster.png";
-import { createPortal } from "@/api";
+import { createPortal, updateNotificationsA, updateProfileA } from "@/api";
 import ProfileEdit from "./ProfileEdit";
 
 interface props {
@@ -27,6 +27,14 @@ interface props {
 }
 
 export default function BetLoader({ user, invoices }: props) {
+  const [editProfile, setEditProfile] = useState(false);
+  const [region, setRegion] = useState(user.dbuser.region);
+  const [notifications, setNotifications] = useState({
+    email: user.dbuser.emailNotifications,
+    emaila: user.auth0.email,
+    sms: user.dbuser.smsNotifications,
+    phone: user.dbuser.phone,
+  });
   async function gotoBillingPortal() {
     try {
       var response = await createPortal();
@@ -34,6 +42,26 @@ export default function BetLoader({ user, invoices }: props) {
     } catch (e) {
       console.error(e);
     }
+  }
+
+  async function updateProfile(user: User) {
+    try {
+      var response = await updateProfileA(region);
+      setEditProfile(false);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async function updateNotifications(notifications: {
+    email: boolean;
+    emaila: string;
+    sms: boolean;
+    phone: number;
+  }) {
+    try {
+      await updateNotificationsA(notifications);
+    } catch (e) {}
   }
 
   async function gotoPDF(invoice: Invoice) {
@@ -81,34 +109,54 @@ export default function BetLoader({ user, invoices }: props) {
                   <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
                     Region
                   </dt>
-                  <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
-                    {user.dbuser.region}
-                  </dd>
+                  {editProfile ? (
+                    <div className="">
+                      <TextInput
+                        onChange={(e) => setRegion(e.target.value)}
+                        type="text"
+                        value={region}
+                      />
+                      <button
+                        type="button"
+                        className="text-white inline-flex items-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                        onClick={() => updateProfile(user)}
+                      >
+                        Confirm
+                      </button>
+                    </div>
+                  ) : (
+                    <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
+                      {region}
+                    </dd>
+                  )}
                   <ProfileEdit />
                 </dl>
 
                 <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-3 sm:space-x-4">
-                    <button
-                      type="button"
-                      className="text-white inline-flex items-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                    >
-                      <svg
-                        aria-hidden="true"
-                        className="mr-1 -ml-1 w-5 h-5"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
+                    {!editProfile ? (
+                      <button
+                        type="button"
+                        className="text-white inline-flex items-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                        onClick={() => setEditProfile(!editProfile)}
                       >
-                        <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path>
-                        <path
-                          fill-rule="evenodd"
-                          d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
-                          clip-rule="evenodd"
-                        ></path>
-                      </svg>
-                      Edit
-                    </button>
+                        <svg
+                          aria-hidden="true"
+                          className="mr-1 -ml-1 w-5 h-5"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path>
+                          <path
+                            fill-rule="evenodd"
+                            d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
+                            clip-rule="evenodd"
+                          ></path>
+                        </svg>
+                        Edit
+                      </button>
+                    ) : null}
                   </div>
                   <button
                     type="button"
@@ -214,7 +262,16 @@ export default function BetLoader({ user, invoices }: props) {
                   </Label>
                 </div>
                 <div className="flex items-center gap-2 p-2">
-                  <Checkbox id="email" />
+                  <Checkbox
+                    id="email"
+                    onClick={() =>
+                      setNotifications({
+                        ...notifications,
+                        email: !notifications.email,
+                      })
+                    }
+                    checked={notifications.email}
+                  />
                   <Label htmlFor="email">Email notifications</Label>
                 </div>
                 <div>
@@ -223,11 +280,27 @@ export default function BetLoader({ user, invoices }: props) {
                     type="email"
                     placeholder="name@arbster.com"
                     required={true}
+                    value={notifications.emaila}
+                    onChange={(e) =>
+                      setNotifications({
+                        ...notifications,
+                        emaila: e.target.value,
+                      })
+                    }
                   />
                 </div>
 
                 <div className="flex items-center gap-2 p-2">
-                  <Checkbox id="email" />
+                  <Checkbox
+                    id="email"
+                    onClick={() =>
+                      setNotifications({
+                        ...notifications,
+                        sms: !notifications.sms,
+                      })
+                    }
+                    checked={notifications.sms}
+                  />
                   <Label htmlFor="email">Phone notifications</Label>
                 </div>
                 <div>
@@ -236,6 +309,13 @@ export default function BetLoader({ user, invoices }: props) {
                     type="email"
                     placeholder="+11234567890"
                     required={true}
+                    value={notifications.phone}
+                    onChange={(e) =>
+                      setNotifications({
+                        ...notifications,
+                        phone: parseInt(e.target.value),
+                      })
+                    }
                   />
                 </div>
 
@@ -254,7 +334,12 @@ export default function BetLoader({ user, invoices }: props) {
                     <option value="BOOKMAKER">Bookmaker 6</option>
                   </select>
                 </div>
-                <Button type="submit">Save account settings</Button>
+                <Button
+                  onClick={() => updateNotifications(notifications)}
+                  type="submit"
+                >
+                  Save account settings
+                </Button>
               </div>
             </Card>
           </div>

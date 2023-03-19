@@ -48,7 +48,10 @@ export type User = {
             id: number;
             plan: string;
             planExpiresAt: string;
-        }
+        },
+        smsNotifications: boolean,
+        emailNotifications: boolean,
+        phone: number
     }
 }
 

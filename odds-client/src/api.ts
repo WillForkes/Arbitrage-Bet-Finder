@@ -7,10 +7,6 @@ async function sendApiRequest<T>(method: "GET" | "PUT" | "POST" | "DELETE" | "PA
     path = `${process.env.NEXT_PUBLIC_URI}/${path}`;
     const response = await axios.request({method, baseURL: path, data, withCredentials:withCredentials, headers: headers});
     const success: boolean = response.data.status;
-<<<<<<< HEAD
-=======
-    
->>>>>>> 82a812716314a0dbe1c82360f19e132acd37e359
     if (success) {
         return response.data.data as T;
     } else {

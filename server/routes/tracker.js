@@ -75,7 +75,25 @@ router.get('/all', checkUser, async function(req, res, next) {
     })
 
     res.json({"status": "ok", "data": placedBets});
-
 });
+
+router.delete("/:betId", checkUser, async function(req, res, next) {
+    const { betId } = req.params;
+
+    if(!betId){
+        res.status(400).json({"error": "Missing required query params: [id]"});
+        return;
+    }
+
+    // delete where betId = betId and userId = req.user.authid
+    await prisma.placedBets.deleteMany({
+        where: {
+            userId: req.user.authid,
+            id: parseInt(betId)
+        }
+    })
+
+    res.json({"status": "ok", "data": {}})
+})
 
 module.exports = router;

@@ -204,7 +204,6 @@ async function processPositiveEV(matches, includeStartedMatches = false) {
                             ev: ev.toFixed(3),
                             region: match.region
                         });
-                        console.log(probability, outcome.price)
                     }
                 });
             });

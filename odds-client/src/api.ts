@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { useContext } from 'react';
-import { AlertContext } from './pages/_app';
 import { Plan, User } from './types';
 export const getter = (url: string) => axios.get(process.env.NEXT_PUBLIC_URI + url, {withCredentials: true}).then(res => res.data.data) 
 
@@ -8,11 +7,10 @@ async function sendApiRequest<T>(method: "GET" | "PUT" | "POST" | "DELETE" | "PA
     path = `${process.env.NEXT_PUBLIC_URI}/${path}`;
     const response = await axios.request({method, baseURL: path, data, withCredentials:withCredentials, headers: headers});
     const success: boolean = response.data.status;
-    const alertContext = useContext(AlertContext)
+    
     if (success) {
         return response.data.data as T;
     } else {
-        alertContext?.setAlert({msg: response.data.error, error: true})
         if (response.data.error) {
             throw new Error(response.data.error);
         } else {
@@ -35,6 +33,10 @@ export async function createBet(id: number, stake: number): Promise<any> {
 
 export async function createPayment(plan: Plan): Promise<any> {
     return await sendApiRequest("POST", "payment/create", true, {plan: plan})
+}
+
+export async function deleteTrackedBet(betId: number): Promise<any> {
+    return await sendApiRequest("DELETE", `tracker/${betId}`, true)
 }
 
 export async function createPortal(): Promise<any> {

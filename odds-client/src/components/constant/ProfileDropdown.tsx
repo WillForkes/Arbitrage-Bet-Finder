@@ -12,9 +12,11 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useContext } from "react";
 import Logo from "../../../public/arbster.png";
+import { useRouter } from "next/router";
 
 export default function ProfileDropdown() {
   const user = useContext(UserContext);
+  const router = useRouter();
   return (
     <>
       <Dropdown label="Account">
@@ -30,9 +32,15 @@ export default function ProfileDropdown() {
             {user?.user?.auth0.name}
           </span>
         </Dropdown.Header>
-        <Dropdown.Item icon={HiViewGrid}>Dashboard</Dropdown.Item>
-        <Dropdown.Item icon={HiCog}>Settings</Dropdown.Item>
-        <Dropdown.Item icon={HiCurrencyDollar}>Earnings</Dropdown.Item>
+        <Dropdown.Item onClick={() => router.push("/profile")} icon={HiCog}>
+          Settings
+        </Dropdown.Item>
+        <Dropdown.Item
+          onClick={() => router.push("/tracker")}
+          icon={HiCurrencyDollar}
+        >
+          Bet Tracker
+        </Dropdown.Item>
         <Dropdown.Divider />
         <Dropdown.Item
           onClick={() => window.location.assign("http://localhost:3000/logout")}

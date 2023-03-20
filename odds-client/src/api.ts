@@ -8,11 +8,9 @@ async function sendApiRequest<T>(method: "GET" | "PUT" | "POST" | "DELETE" | "PA
     path = `${process.env.NEXT_PUBLIC_URI}/${path}`;
     const response = await axios.request({method, baseURL: path, data, withCredentials:withCredentials, headers: headers});
     const success: boolean = response.data.status;
-    const alertContext = useContext(AlertContext)
     if (success) {
         return response.data.data as T;
     } else {
-        alertContext?.setAlert({msg: response.data.error, error: true})
         if (response.data.error) {
             throw new Error(response.data.error);
         } else {

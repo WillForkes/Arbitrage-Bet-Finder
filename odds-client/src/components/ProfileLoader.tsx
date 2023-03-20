@@ -26,7 +26,7 @@ interface props {
   invoices: Invoice[];
 }
 
-export default function BetLoader({ user, invoices }: props) {
+export default function ProfileLoader({ user, invoices }: props) {
   const [editProfile, setEditProfile] = useState(false);
   const [region, setRegion] = useState(user.dbuser.region);
   const [notifications, setNotifications] = useState({
@@ -46,8 +46,9 @@ export default function BetLoader({ user, invoices }: props) {
 
   async function updateProfile(user: User) {
     try {
-      var response = await updateProfileA(region);
+      await updateProfileA(region);
       setEditProfile(false);
+      console.log(editProfile);
     } catch (e) {
       console.error(e);
     }
@@ -61,7 +62,9 @@ export default function BetLoader({ user, invoices }: props) {
   }) {
     try {
       await updateNotificationsA(notifications);
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   async function gotoPDF(invoice: Invoice) {
@@ -129,7 +132,6 @@ export default function BetLoader({ user, invoices }: props) {
                       {region}
                     </dd>
                   )}
-                  <ProfileEdit />
                 </dl>
 
                 <div className="flex justify-between items-center">

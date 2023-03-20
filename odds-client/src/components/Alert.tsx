@@ -1,12 +1,12 @@
 import { AlertContext } from "@/pages/_app";
-import { Toast, HiCheck, Alert } from "flowbite-react";
+import { Toast, Alert } from "flowbite-react";
 import React, { useContext } from "react";
 
 export default function AlertCom() {
   const error = useContext(AlertContext);
   if (error?.msg == "") return null;
   return (
-    <div>
+    <div className="px-10 dark:bg-gray-900">
       <Alert
         color="failure"
         onDismiss={function onDismiss() {
@@ -15,7 +15,7 @@ export default function AlertCom() {
       >
         <span>
           <span className="font-medium">Error!</span>
-          test
+          {" " + error?.msg}
         </span>
       </Alert>
     </div>

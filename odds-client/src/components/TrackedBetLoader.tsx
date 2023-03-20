@@ -1,14 +1,13 @@
 import { Tracker } from "@/types";
 import { dateFormat } from "@/utils";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {deleteTrackedBet} from "@/api";
 import Image from "next/image";
 import Modal from "./Modal";
 import { Table } from "flowbite-react";
 import { Region } from "../types";
 import {CSVLink, CSVDownload} from 'react-csv';
-
-
+import { AlertContext } from "@/pages/_app";
 
 interface props {
   bets: Tracker[];
@@ -16,24 +15,37 @@ interface props {
 }
 
 export default function BetLoader({ bets, showBets }: props) {
-  const [modal, setModal] = useState(false);
-  function closeModal(): void {
-    setModal(false);
-  }
-
-  function calculateTotalProfit(bets: Tracker[]): number {
-    let totalProfit = 0;
-    bets.forEach((bet) => {
-      totalProfit += bet.totalStake * bet.profitPercentage;
-    });
-    return totalProfit;
-  }
-
+    const alertContext = useContext(AlertContext);
     const csvData =[['match_name', 'profit', 'stake', 'bookmakers', 'time']];
-    bets.forEach((bet) => {
-        const bookmakerString = JSON.parse(bet.bookmakers).join(', ');
-        csvData.push([bet.matchName, (bet.totalStake * bet.profitPercentage).toString(), bet.totalStake.toString(), bookmakerString, bet.createdAt]);
-    });
+
+    const [modal, setModal] = useState(false);
+    function closeModal(): void {
+        setModal(false);
+    }
+
+    function calculateTotalProfit(bets: Tracker[]): number {
+        let totalProfit = 0;
+        bets.forEach((bet) => {
+            totalProfit += bet.totalStake * bet.profitPercentage;
+        });
+        return totalProfit;
+    }
+
+    function deleteBet(betId: number): void {
+        deleteTrackedBet(betId).then(() => {
+            alertContext?.setAlert({
+                msg: 'Bet deleted successfully!',
+                error: false
+            });
+            closeModal();
+        }).catch((err) => {
+            alertContext?.setAlert({
+                msg: 'Error deleting bet!',
+                error: true
+            });
+        });
+    }
+
 
     if(bets.length === 0) {
         return (
@@ -51,6 +63,11 @@ export default function BetLoader({ bets, showBets }: props) {
         </>
         )
     } else {
+        bets.forEach((bet) => {
+            const bookmakerString = JSON.parse(bet.bookmakers).join(', ');
+            csvData.push([bet.matchName, (bet.totalStake * bet.profitPercentage).toString(), bet.totalStake.toString(), bookmakerString, bet.createdAt]);
+        });
+
         return (
             <>
                 <section className="bg-gray-50 dark:bg-gray-900 py-3 sm:py-5">
@@ -150,9 +167,7 @@ export default function BetLoader({ bets, showBets }: props) {
 
                                                 <td>
                                                     <button onClick={() => {
-                                                        deleteTrackedBet(bet.id);
-                                                        bets = bets.filter(function(el) { return el.id != bet.id; }); 
-                                                        
+                                                        deleteBet(bet.id)
                                                     }} className="flex items-center justify-center flex-shrink-0 px-2 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-red-700 dark:bg-red-800 dark:text-white dark:border-red-600 dark:hover:text-white dark:hover:bg-gray-700">
                                                         Delete
                                                     </button>

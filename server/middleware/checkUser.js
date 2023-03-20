@@ -71,7 +71,7 @@ let checkUser = async (req, res, next) => {
     let planExpiresAt
     let planId
 
-    if(user.subscription.length == 0){
+    if(user.subscription?.length == 0){
         plan = "free"
         planExpiresAt = new Date()
         planId = null

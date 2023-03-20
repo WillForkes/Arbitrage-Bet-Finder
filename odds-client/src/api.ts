@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { useContext } from 'react';
-import { AlertContext } from './pages/_app';
 import { Plan, User } from './types';
 export const getter = (url: string) => axios.get(process.env.NEXT_PUBLIC_URI + url, {withCredentials: true}).then(res => res.data.data) 
 
@@ -8,6 +7,10 @@ async function sendApiRequest<T>(method: "GET" | "PUT" | "POST" | "DELETE" | "PA
     path = `${process.env.NEXT_PUBLIC_URI}/${path}`;
     const response = await axios.request({method, baseURL: path, data, withCredentials:withCredentials, headers: headers});
     const success: boolean = response.data.status;
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 82a812716314a0dbe1c82360f19e132acd37e359
     if (success) {
         return response.data.data as T;
     } else {
@@ -35,6 +38,10 @@ export async function createPayment(plan: Plan): Promise<any> {
     return await sendApiRequest("POST", "payment/create", true, {plan: plan})
 }
 
+export async function deleteTrackedBet(betId: number): Promise<any> {
+    return await sendApiRequest("DELETE", `tracker/${betId}`, true)
+}
+
 export async function createPortal(): Promise<any> {
     return await sendApiRequest("GET", "payment/portal", true)
 }
@@ -47,7 +54,7 @@ export async function updateNotificationsA(user: {
     email: boolean,
     emaila: string,
     sms: boolean,
-    phone: number,
+    phone: string,
   }): Promise<any> {
     return await sendApiRequest("POST", "profile/update", true, {smsNotifications: user.sms, emailNotifications: user.email, phone: user.phone, email: user.emaila})
 }

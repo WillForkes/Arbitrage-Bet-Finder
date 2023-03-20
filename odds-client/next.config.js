@@ -14,7 +14,7 @@ const nextConfig = {
     ];
   },
   images: {
-    domains: ['oddsjam.com'],
+    domains: ['oddsjam.com', 'flowbite.s3.amazonaws.com'],
   },
 }
 

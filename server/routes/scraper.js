@@ -4,6 +4,7 @@ const prisma = new PrismaClient()
 const { returnBettingOpportunities } = require('../bot/scraper.js');
 var express = require('express');
 let { checkUser } = require('../middleware/checkUser');
+let { freeStuff } = require('../middleware/freeStuff');
 var router = express.Router();
 const axios = require('axios');
 
@@ -145,13 +146,13 @@ router.post("/clean", async function(req, res, next){
         
 })
 
-router.get("/all", checkUser, async function(req, res, next){
+router.get("/all", freeStuff, async function(req, res, next){
     const page = (req.query.page) ? parseInt(req.query.page) - 1 : 0;
     const perPage = 25;
     const skip = page * perPage;
     let arbBets = []
     let evBets = []
-    const userWhitelist = JSON.parse(req.user.whitelist);
+    // const userWhitelist = JSON.parse(req.user.whitelist);
 
     if(req.user.plan != "free") {
         // ! get and sort arb bets by lowest implied odds

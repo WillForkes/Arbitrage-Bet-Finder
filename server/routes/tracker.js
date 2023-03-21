@@ -25,20 +25,33 @@ router.post('/new', checkUser ,async function(req, res, next) {
     }
 
     const betData = JSON.parse(bet.data);
-    let profitPercentage = (1 - betData.total_implied_odds); //e.g 0.035
-    profitPercentage = Math.round((profitPercentage + Number.EPSILON) * 10000) / 10000
+    let profitPercentage
 
     // get all bookmakers into an array
     let bookmakers = []
-    for (var outcome in betData.best_outcome_odds) {
-        bookmakers.push(betData.best_outcome_odds[outcome][0])
+    let type
+    if(bet.type == "arbitrage"){
+        type = "arbitrage"
+        profitPercentage = (1 - betData.total_implied_odds); //e.g 0.035
+        profitPercentage = Math.round((profitPercentage + Number.EPSILON) * 10000) / 10000
+
+        for (var outcome in betData.best_outcome_odds) {
+            bookmakers.push(betData.best_outcome_odds[outcome][0])
+        }
+    } else {
+        type = "ev"
+        profitPercentage = parseFloat(betData.ev); //e.g 0.035
+        Math.round((profitPercentage + Number.EPSILON) * 10000) / 10000
+        bookmakers.push(betData.bookmaker)
     }
+
     bookmakers = JSON.stringify(bookmakers)
 
     // * Create new tracker
     prisma.placedBets.create({
         data: {
             userId: req.user.authid,
+            type: type,
             matchName: betData.match_name,
             totalStake: stake,
             profitPercentage: profitPercentage,

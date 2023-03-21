@@ -40,7 +40,7 @@ export default function BetLoader({ bets, showBets }: props) {
             closeModal();
         }).catch((err) => {
             alertContext?.setAlert({
-                msg: 'Error deleting bet!',
+                msg: 'Failed to delete bet!',
                 error: true
             });
         });
@@ -110,6 +110,7 @@ export default function BetLoader({ bets, showBets }: props) {
                                                     <label htmlFor="checkbox-all" className="sr-only">checkbox</label>
                                                 </div>
                                             </th>
+                                            <th scope="col" className="px-4 py-3">Type</th>
                                             <th scope="col" className="px-4 py-3">Match Name</th>
                                             <th scope="col" className="px-4 py-3">Profit Percentage</th>
                                             <th scope="col" className="px-4 py-3">Total Stake</th>
@@ -129,12 +130,16 @@ export default function BetLoader({ bets, showBets }: props) {
                                                     </div>
                                                 </td>
                                                 <th scope="row" className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                    {bet.type.toUpperCase()}
+                                                </th>
+
+                                                <th scope="row" className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                     {bet.matchName}
                                                 </th>
         
                                                 <td className="px-4 py-2">
                                                     <span className="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-green-600 dark:text-green-300">
-                                                        {bet.profitPercentage * 100}%
+                                                        {(bet.profitPercentage * 100).toFixed(2)}%
                                                     </span>
                                                 </td>
                                                 
@@ -146,7 +151,7 @@ export default function BetLoader({ bets, showBets }: props) {
         
                                                 <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                     <div className="flex items-center">
-                                                        ${bet.totalStake * (bet.profitPercentage)}
+                                                        ${(bet.totalStake * (bet.profitPercentage)).toFixed(2)}
                                                     </div>
                                                 </td>
         

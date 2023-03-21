@@ -69,6 +69,7 @@ export type Bet = {
 }
 
 export type Tracker = {
+    type: string;
     matchName: string;
     bookmakers: string;
     totalStake: number;

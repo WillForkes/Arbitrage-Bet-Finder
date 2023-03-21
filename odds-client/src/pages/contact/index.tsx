@@ -9,56 +9,21 @@ export default function support() {
 
     return (
     <>
-        <div className="page-offset-x py-8 bg-gray-900">
-            <Card className="py-8 px-4 mx-auto max-w-screen-md sm:py-16 lg:px-6 md:px-12">
-                <form className="flex flex-col gap-4">
-                    <div>
-                        <div className="mb-2 block">
-                        <Label
-                            htmlFor="email1"
-                            value="Your email"
-                        />
-                        </div>
-                        <TextInput
-                        id="email1"
-                        type="email"
-                        placeholder="name@arbster.com"
-                        required={true}
-                        />
-                    </div>
-                    <div>
-                        <div className="mb-2 block">
-                        <Label
-                            htmlFor="title"
-                            value="Title"
-                        />
-                        </div>
-                        <TextInput
-                        id="title"
-                        type="text"
-                        required={true}
-                        />
-                    </div>
-                    <div id="textarea">
-                        <div className="mb-2 block">
-                            <Label
-                            htmlFor="comment"
-                            value="Your message"
-                            />
-                        </div>
-                        <Textarea
-                            id="comment"
-                            placeholder="Leave a comment..."
-                            required={true}
-                            rows={4}
-                        />
-                    </div>
-                    <Button type="submit">
-                        Submit
-                    </Button>
-                    </form>
-            </Card>
-        </div>
+        <section className="dark:bg-gray-900 py-4">
+            <div className="mx-auto max-w-screen-md text-center">
+                <span className="font-bold tracking-wider uppercase dark:text-primary-700">
+                Support
+                </span>
+                <h2 className="text-4xl font-bold lg:text-5xl">
+                Join our discord for support
+                </h2>
+            </div>
+            <div className="page-offset-x py-8 bg-gray-900">
+                <iframe className="mx-auto" src="https://discord.com/widget?id=1083067040673300480&theme=dark" width="600" height="500" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts">
+                    
+                </iframe>
+            </div>
+        </section>
     </>
     );
 }

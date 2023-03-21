@@ -14,6 +14,7 @@ export default function bets() {
   const user: User | null = useContext(UserContext).user;
   const showBets = user ? user.dbuser.plan != "free" : false;
   const alertContext = useContext(AlertContext);
+
   return (
     <div className="page-offset-x py-8 bg-gray-900">
       <div className="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
@@ -23,11 +24,7 @@ export default function bets() {
             <h2 className="text-4xl font-bold lg:text-5xl">
                 Risk free betting
             </h2> */}
-        <a
-          href="#"
-          className="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
-          role="alert"
-        >
+        <a href="#" className="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"role="alert">
           <span className="text-xs bg-primary-700 rounded-full text-white px-4 py-1.5 mr-3">
             Learn
           </span>{" "}
@@ -44,12 +41,11 @@ export default function bets() {
           </svg>
         </a>
       </div>
+      
       {data ? (
-        arbData.map((bet: Bet) => (
-          <div className="drop-shadow-md rounded-md grid py-1 gap-6 grid-cols-1 2xl:grid-cols-2 mb-2">
-            <BetLoader b={bet} key={bet.id} showBets={showBets} />
+          <div className="rounded-md gap-6 grid-cols-1 2xl:grid-cols-2 mb-2">
+            <BetLoader bets={arbData} showBets={showBets} />
           </div>
-        ))
       ) : (
         <div className="mx-auto max-w-screen-md p-64 text-center mb-8 lg:mb-12">
           <Spinner aria-label="Default status example" />

@@ -58,6 +58,7 @@ export type User = {
 export type Bet = {
     data: {
         match_name: string;
+        key: string;
         best_outcome_odds: OutcomeOdds;
         total_implied_odds: number;
         match_start_time: number;
@@ -70,6 +71,7 @@ export type Bet = {
 
 export type Tracker = {
     type: string;
+    status: number;
     matchName: string;
     bookmakers: string;
     totalStake: number;
@@ -83,6 +85,9 @@ export type EV = {
     data: {
         match_name: string;
         ev: number
+        team: string;
+        winProbability: number;
+        odds: number;
         league: string
         region: string
         match_start_time: number

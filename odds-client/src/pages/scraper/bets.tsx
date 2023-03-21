@@ -9,10 +9,12 @@ import { User } from "@/types";
 import Auth from "@/components/Auth";
 
 export default function bets() {
-  const { data, error } = useSWR("/scraper/all", getter);
+  const { data, error } = useSWR("/scraper/all", getter, {
+    refreshInterval: 10000
+  });
   const arbData = data?.arbitrage;
   const user: User | null = useContext(UserContext).user;
-  const showBets = user ? user.dbuser.plan != "free" : false;
+  const showBets = user ? user.dbuser.plan != "free" : true;
   const alertContext = useContext(AlertContext);
 
   return (

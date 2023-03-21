@@ -1,7 +1,7 @@
 import { Tracker } from "@/types";
 import { dateFormat } from "@/utils";
 import React, { useState, useContext } from "react";
-import {deleteTrackedBet} from "@/api";
+import {deleteTrackedBet, updateTrackerStatus} from "@/api";
 import Image from "next/image";
 import Modal from "./Modal";
 import { Table } from "flowbite-react";
@@ -26,9 +26,14 @@ export default function BetLoader({ bets, showBets }: props) {
     function calculateTotalProfit(bets: Tracker[]): number {
         let totalProfit = 0;
         bets.forEach((bet) => {
-            totalProfit += bet.totalStake * bet.profitPercentage;
+            if(bet.type == "ev" && bet.status == 2) { // if ev bots lost
+                totalProfit -= bet.totalStake;
+            } 
+            else if((bet.type == "ev" && bet.status == 1) || bet.type=="arbitrage") { // if ev bet won
+                totalProfit += bet.totalStake * bet.profitPercentage;
+            }
         });
-        return totalProfit;
+        return totalProfit.toFixed(2);
     }
 
     function deleteBet(betId: number): void {
@@ -138,9 +143,20 @@ export default function BetLoader({ bets, showBets }: props) {
                                                 </th>
         
                                                 <td className="px-4 py-2">
-                                                    <span className="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-green-600 dark:text-green-300">
-                                                        {(bet.profitPercentage * 100).toFixed(2)}%
-                                                    </span>
+
+                                                    {(bet.type == "ev" && bet.status == 2) ? (
+                                                        <span className="bg-red-100 text-red-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-red-600 dark:text-red-300">
+                                                            0% (lost)
+                                                        </span>
+                                                    ) : (bet.type == "ev" && bet.status == 0) ? (
+                                                        <span className="bg-red-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-primary-600 dark:text-primary-300">
+                                                            {(bet.profitPercentage * 100).toFixed(2)}%?
+                                                        </span>
+                                                    ) : (
+                                                        <span className="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-green-600 dark:text-green-300">
+                                                            {(bet.profitPercentage * 100).toFixed(2)}%
+                                                        </span>
+                                                    )}
                                                 </td>
                                                 
                                                 <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -150,8 +166,16 @@ export default function BetLoader({ bets, showBets }: props) {
                                                 </td>
         
                                                 <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    <div className="flex items-center">
-                                                        ${(bet.totalStake * (bet.profitPercentage)).toFixed(2)}
+                                                    {/* bunch of conditional shit for if the ev bet was lost or won or outcome not decided */}
+                                                    <div className={`flex items-center ${bet.type == "ev" && bet.status==2 ? "dark:text-red-700" : ""}`}>
+                                                        {(bet.type == "ev" && bet.status == 2) ? (
+                                                            <p>-${bet.totalStake}</p>
+                                                        ) : (bet.type == "ev" && bet.status == 0) ? (
+                                                            <p>?</p>
+                                                        ) : (
+                                                            (bet.totalStake * (bet.profitPercentage)).toFixed(2)
+                                                        )}
+                                                        
                                                     </div>
                                                 </td>
         
@@ -171,11 +195,41 @@ export default function BetLoader({ bets, showBets }: props) {
                                                 </td>
 
                                                 <td>
-                                                    <button onClick={() => {
-                                                        deleteBet(bet.id)
-                                                    }} className="flex items-center justify-center flex-shrink-0 px-2 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-red-700 dark:bg-red-800 dark:text-white dark:border-red-600 dark:hover:text-white dark:hover:bg-gray-700">
-                                                        Delete
-                                                    </button>
+                                                    <div className="py-1">
+                                                        <button onClick={() => {
+                                                            deleteBet(bet.id)
+                                                        }} className="flex items-center justify-center flex-shrink-0 px-2 py-1 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-red-700 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-red-700 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:text-white dark:hover:bg-red-700">
+                                                            Remove
+                                                        </button>
+                                                    </div>
+
+                                                    {(bet.type == "ev" && bet.status == 0) ? (
+                                                        <div>
+                                                            <div className="py-1">
+                                                                <button onClick={() => {
+                                                                    updateTrackerStatus(bet.id, 1)
+                                                                    alertContext?.setAlert({
+                                                                        msg: 'Bet status updated!',
+                                                                        error: false
+                                                                    });
+                                                                }} className="flex items-center justify-center flex-shrink-0 px-2 py-1 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-green-700 dark:bg-green-800 dark:text-white dark:border-green-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                                                    Bet Won
+                                                                </button>
+                                                            </div>
+
+                                                            <div className="py-1">
+                                                                <button onClick={() => {
+                                                                    updateTrackerStatus(bet.id, 2)
+                                                                    alertContext?.setAlert({
+                                                                        msg: 'Bet status updated!',
+                                                                        error: false
+                                                                    });
+                                                                }} className="flex items-center justify-center flex-shrink-0 px-2 py-1 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-red-700 dark:bg-red-800 dark:text-white dark:border-red-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                                                    Bet Lost
+                                                                </button>
+                                                                </div>
+                                                        </div>
+                                                    ) : null}
                                                 </td>
                                             </tr>
                                         ))}

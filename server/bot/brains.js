@@ -184,8 +184,9 @@ async function processPositiveEV(matches, includeStartedMatches = false) {
                     let amountWon = Math.abs(outcome.price) - 1
                     let amountLost = Math.abs(outcome.price);
                     let ev = (amountWon*probability)-(1*(1-probability));
+                    let toBetOn = outcome.name;
 
-                    if ((ev/1).toFixed(3) > 0.01) {
+                    if (ev.toFixed(3) > 0.03) {
 
                         const matchName = `${match.home_team} v. ${match.away_team}`;
                         const timeToStart = (startTime - Date.now() / 1000) / 3600;
@@ -194,6 +195,7 @@ async function processPositiveEV(matches, includeStartedMatches = false) {
                         positiveBets.push({
                             match_id: match.id,
                             match_name: matchName,
+                            team: toBetOn,
                             match_start_time: startTime,
                             hours_to_start: timeToStart,
                             league,

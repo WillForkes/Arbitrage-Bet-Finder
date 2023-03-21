@@ -8,6 +8,9 @@ import { Region } from '../types';
 import Logo from "/public/arbster.png";
 import { AlertContext } from "@/pages/_app";
 
+// example:
+// {"match_id":"d3015bfea46b4b86f2407a6845885393","match_name":"St. Louis Cardinals v. Washington Nationals","match_start_time":1679418300,"hours_to_start":3.7805919444561003,"league":"baseball_mlb_preseason","key":"h2h","best_outcome_odds":{"St. Louis Cardinals":["Pinnacle",1.69],"Washington Nationals":["MyBookie.ag",2.55]},"total_implied_odds":0.9839,"region":"eu"}
+
 interface props {
   bets: Bet[];
   showBets: boolean;
@@ -16,7 +19,7 @@ interface props {
 export default function BetLoader({ bets, showBets }: props) {
   const alertContext = useContext(AlertContext);
   const [modal, setModal] = useState(false);
-  
+
   function closeModal(): void {
     setModal(false);
   }
@@ -42,36 +45,56 @@ export default function BetLoader({ bets, showBets }: props) {
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" className="px-4 py-3">Match Name</th>
-                                <th scope="col" className="px-4 py-3">League</th>         
+                                <th scope="col" className="px-4 py-3">Market</th>
+                                    
+                                <th scope="col" className="px-4 py-3">League</th>
                                 <th scope="col" className="px-4 py-3">Profit Percentage</th>
                                 <th scope="col" className="px-4 py-3">Region</th>
                                 <th scope="col" className="px-4 py-3">Bookmakers</th>
                                 <th scope="col" className="px-4 py-3">Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className={`divide ${showBets ? "" : "blur"}`}>
                             {bets.map((bet) => (
                                 <tr className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <th scope="row" className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {bet.data.match_name}
+                                        {showBets ? bet.data.match_name : "HOME TEAM v AWAY TEAM"}
+                                    </th>
+
+                                    <th scope="row" className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        {showBets ? bet.data.key.toUpperCase() : "MARKET"}
                                     </th>
                                     
                                     <th scope="row" className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {bet.data.leagueFormatted}
+                                        {showBets ? bet.data.leagueFormatted : "SPORT LEAGUE"}
                                     </th>
 
                                     <th scope="row" className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         <span className="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-green-600 dark:text-green-300">
-                                            {((1-bet.data.total_implied_odds) * 100).toFixed(2)}%
+                                            {showBets ? ((1-bet.data.total_implied_odds) * 100).toFixed(2) : 0.00}%
                                         </span>
                                     </th>
 
                                     <td className="px-4 py-2">
-                                        {bet.data.region}
+                                        {showBets ? bet.data.region.toUpperCase() : "REGION"}
                                     </td>
                                     
                                     <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            { showBets ? Object.keys(bet.data.best_outcome_odds).map((key, index) => (
+                                        { showBets ? Object.keys(bet.data.best_outcome_odds).map((key, index) => (
+                                            <div className="flex items-center space-x-3">
+                                                <div className="flex-shrink-0">
+                                                    <div className="relative">
+                                                        <Image src={Logo} alt="Bookmaker Logo" width={20} height={20} />
+                                                    </div>
+                                                </div>
+                                                <div className="min-w-0 flex-1">
+                                                    <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                                        {bet.data.best_outcome_odds[key][0]}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )) : (
+                                            <div>
                                                 <div className="flex items-center space-x-3">
                                                     <div className="flex-shrink-0">
                                                         <div className="relative">
@@ -80,21 +103,41 @@ export default function BetLoader({ bets, showBets }: props) {
                                                     </div>
                                                     <div className="min-w-0 flex-1">
                                                         <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                                            {bet.data.best_outcome_odds[key][0]}
+                                                            BOOKMAKER1
                                                         </p>
                                                     </div>
                                                 </div>
-                                            )) : (
-                                                <p>Nothing here</p>
-                                            )}
+                                                <div className="flex items-center space-x-3">
+                                                <div className="flex-shrink-0">
+                                                    <div className="relative">
+                                                        <Image src={Logo} alt="Bookmaker Logo" width={20} height={20} />
+                                                    </div>
+                                                </div>
+                                                <div className="min-w-0 flex-1">
+                                                    <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                                        BOOKMAKER2
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        )}
                                     </td>
 
                                     <td>
-                                        <button onClick={() => {setModal(true)}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                                            Calculate Stake
-                                        </button>
-                                        <Modal isVisible={modal} closeModal={closeModal} id={bet.id} />
-
+                                        { showBets ? (
+                                            <div>
+                                                <button onClick={() => {setModal(true)}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                                    Calculate Stake
+                                                </button>
+                                                <Modal isVisible={modal} closeModal={closeModal} id={bet.id} />    
+                                            </div> 
+                                        ) : (
+                                            <button onClick={() => {}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                                Calculate Stake
+                                            </button>
+                                        )
+                                        }
+                                        
                                     </td>
                                 </tr>
                             ))}

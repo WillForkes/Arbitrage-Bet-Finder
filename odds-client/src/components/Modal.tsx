@@ -48,7 +48,7 @@ export default function Modal({
         <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
           <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-              Add a bet
+              Add to bet tracker
             </h3>
             <button
               onClick={() => closeModal()}

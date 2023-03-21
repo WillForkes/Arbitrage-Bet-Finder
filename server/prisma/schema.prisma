@@ -52,6 +52,7 @@ model PlacedBets {
   id                Int      @id @default(autoincrement())
   userId            String
   type              String   @default("arbitrage") // arbitrage, ev
+  status            Int      @default(0) // 0 pending, 1 won, 2 lost
   matchName         String
   totalStake        Float
   profitPercentage  Float

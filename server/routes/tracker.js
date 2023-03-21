@@ -84,11 +84,38 @@ router.get('/all', checkUser, async function(req, res, next) {
     const placedBets = await prisma.placedBets.findMany({
         where: {
             userId: req.user.authid
+        },
+        orderBy: {
+            createdAt: 'desc'
         }
     })
 
     res.json({"status": "ok", "data": placedBets});
 });
+
+router.post("/update", checkUser, async function(req, res, next) {
+    const { trackerId, status } = req.body;
+    // 0 = pending, 1 = won, 2 = lost
+    if(!trackerId || !status){
+        res.status(400).json({"error": "Missing required query params"});
+        return;
+    }
+
+    // * Update tracker
+    prisma.placedBets.updateMany({
+        where: {
+            id: trackerId,
+            userId: req.user.authid
+        },
+        data: {
+            status: status
+        }
+    }).then((tracker) => {
+        res.status(200).json({"status": "ok", "data": tracker});
+    }).catch(() => {
+        res.status(500).json({"error": "Failed to update tracker."});
+    })
+})
 
 router.delete("/:betId", checkUser, async function(req, res, next) {
     const { betId } = req.params;

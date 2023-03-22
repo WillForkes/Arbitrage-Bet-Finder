@@ -1,6 +1,6 @@
 import { User, Invoice } from "@/types";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Modal from "./Modal";
 import {
   Badge,
@@ -15,6 +15,7 @@ import Image from "next/image";
 import Logo from "../../public/arbster.png";
 import { createPortal, updateNotificationsA, updateProfileA } from "@/api";
 import ProfileEdit from "./ProfileEdit";
+import { AlertContext } from "@/pages/_app";
 
 interface props {
   user: User;
@@ -31,6 +32,7 @@ export default function ProfileLoader({ user, invoices }: props) {
     phone: user.dbuser.phone,
   });
 
+  const alertContext = useContext(AlertContext);
   async function gotoBillingPortal() {
     try {
       var response = await createPortal();
@@ -45,8 +47,8 @@ export default function ProfileLoader({ user, invoices }: props) {
       await updateProfileA(region);
       setEditProfile(false);
       console.log(editProfile);
-    } catch (e) {
-      console.error(e);
+    } catch (e: any) {
+      alertContext?.setAlert({ msg: e.toString(), error: true });
     }
   }
 
@@ -59,7 +61,7 @@ export default function ProfileLoader({ user, invoices }: props) {
     try {
       await updateNotificationsA(notifications);
     } catch (e) {
-      console.error(e);
+      alertContext?.setAlert({ msg: e.toString(), error: true });
     }
   }
 
@@ -67,7 +69,7 @@ export default function ProfileLoader({ user, invoices }: props) {
     try {
       window.location.assign(invoice.stripeInvoicePdfUrl);
     } catch (e) {
-      console.error(e);
+      alertContext?.setAlert({ msg: e.toString(), error: true });
     }
   }
 
@@ -146,11 +148,7 @@ export default function ProfileLoader({ user, invoices }: props) {
                           xmlns="http://www.w3.org/2000/svg"
                         >
                           <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path>
-                          <path
-                            
-                            d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
-                            
-                          ></path>
+                          <path d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"></path>
                         </svg>
                         Edit
                       </button>
@@ -167,11 +165,7 @@ export default function ProfileLoader({ user, invoices }: props) {
                       viewBox="0 0 20 20"
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      <path
-                        
-                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                        
-                      ></path>
+                      <path d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"></path>
                     </svg>
                     Delete
                   </button>

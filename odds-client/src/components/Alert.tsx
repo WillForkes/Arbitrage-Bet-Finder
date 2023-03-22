@@ -8,14 +8,16 @@ export default function AlertCom() {
   return (
     <div>
       <Alert
-        color="failure"
+        color={error?.error ? "failure" : "success"}
         onDismiss={function onDismiss() {
           error?.setAlert({ msg: "", error: null });
         }}
       >
         <span>
-          <span className="font-medium">Error!</span>
-          test
+          <span className="font-medium">
+            {error?.error ? "Error!" : "Success!"}
+          </span>
+          {" " + error?.msg}
         </span>
       </Alert>
     </div>

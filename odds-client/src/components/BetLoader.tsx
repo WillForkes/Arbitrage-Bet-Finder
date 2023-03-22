@@ -3,7 +3,7 @@ import { dateFormat } from "@/utils";
 import React, { useState, useContext } from "react";
 import Image from "next/image";
 import Modal from "./Modal";
-import { Table } from "flowbite-react";
+import { Dropdown } from "flowbite-react";
 import { Region } from '../types';
 import Logo from "/public/arbster.png";
 import { AlertContext } from "@/pages/_app";
@@ -20,6 +20,8 @@ export default function BetLoader({ bets, showBets }: props) {
   const alertContext = useContext(AlertContext);
   const [modal, setModal] = useState(false);
   const [modalBetId, setModalBetId] = useState(0);
+  const [regionFilter, setRegionFilter] = useState('UK');
+
 
   function closeModal(): void {
     setModal(false);
@@ -34,13 +36,26 @@ export default function BetLoader({ bets, showBets }: props) {
                     <div className="flex items-center flex-1 space-x-4">
                         <h5>
                             <span className="text-gray-500">Total bets:</span>
-                            <span className="dark:text-white"> {bets.length}</span>
-                        </h5>
-                        <h5>
-                            <span className="text-gray-500">???:</span>
-                            <span className="dark:text-white">???</span>
+                            <span className="dark:text-white">{showBets ? bets.length : " Login to view bets"}</span>
                         </h5>
                     </div>
+                    <Dropdown
+                    label="Region"
+                    className="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium  dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                    >
+                    <Dropdown.Item onClick={() => {setRegionFilter("UK")}}>
+                        UK
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => {setRegionFilter("EU")}}>
+                        EU
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => {setRegionFilter("AU")}}>
+                        AU
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => {setRegionFilter("US")}}>
+                        US
+                    </Dropdown.Item>
+                    </Dropdown>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">

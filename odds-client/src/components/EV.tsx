@@ -5,7 +5,7 @@ import Image from "next/image";
 import EVModal from "./EVModal";
 import { Table } from "flowbite-react";
 import Logo from "/public/arbster.png";
-
+import { Dropdown } from "flowbite-react";
 // example
 // {"match_id":"06f491453cb35e153d61c67257f3cb3b","match_name":"Bayern Munich v. Borussia Dortmund","match_start_time":1680366600,"hours_to_start":267.19723500000106,"league":"soccer_germany_bundesliga","key":"h2h","bookmaker":"Betsson","winProbability":0.18587360594795543,"odds":6,"ev":"0.115","region":"eu"}
 
@@ -18,6 +18,7 @@ export default function EVLoader({ bets, showBets }: props) {
   const [modal, setModal] = useState(false);
   const [modalBetId, setModalBetId] = useState(0);
   const [modalRecBetSize, setModalRecBetSize] = useState(0);
+  const [regionFilter, setRegionFilter] = useState('UK');
 
   function closeModal(): void {
     setModal(false);
@@ -41,13 +42,27 @@ export default function EVLoader({ bets, showBets }: props) {
                     <div className="flex items-center flex-1 space-x-4">
                         <h5>
                             <span className="text-gray-500">Total bets:</span>
-                            <span className="dark:text-white"> {bets.length}</span>
-                        </h5>
-                        <h5>
-                            <span className="text-gray-500">???:</span>
-                            <span className="dark:text-white">???</span>
+                            <span className="dark:text-white">{showBets ? bets.length : " Login to view bets"}</span>
                         </h5>
                     </div>
+
+                    <Dropdown
+                        label="Region"
+                        className="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium  dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                        >
+                        <Dropdown.Item onClick={() => {setRegionFilter("UK")}}>
+                            UK
+                        </Dropdown.Item>
+                        <Dropdown.Item onClick={() => {setRegionFilter("EU")}}>
+                            EU
+                        </Dropdown.Item>
+                        <Dropdown.Item onClick={() => {setRegionFilter("AU")}}>
+                            AU
+                        </Dropdown.Item>
+                        <Dropdown.Item onClick={() => {setRegionFilter("US")}}>
+                            US
+                        </Dropdown.Item>
+                        </Dropdown>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">

@@ -14,7 +14,7 @@ export default function bets() {
   });
   const arbData = data?.arbitrage;
   const user: User | null = useContext(UserContext).user;
-  const showBets = user ? user.dbuser.plan != "free" : true;
+  const showBets = user ? user.dbuser.plan != "free" : false;
   const alertContext = useContext(AlertContext);
 
   return (

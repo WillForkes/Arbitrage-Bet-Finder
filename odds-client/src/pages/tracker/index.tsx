@@ -10,7 +10,9 @@ import Auth from "@/components/Auth";
 import TrackedBetLoader from "@/components/TrackedBetLoader";
 
 export default function bets() {
-  const { data, error } = useSWR("/tracker/all", getter);
+  const { data, error } = useSWR("/tracker/all", getter, {
+    refreshInterval: 1000
+  });
   const trackedBets = data;
   const user: User | null = useContext(UserContext).user;
 

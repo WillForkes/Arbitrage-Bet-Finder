@@ -161,6 +161,9 @@ router.get("/all", freeStuff, async function(req, res, next){
                 type: "arbitrage"
             }
         })
+        arbBets.forEach(bet => {
+            bet.data = JSON.parse(bet.data);
+        });
         arbBets.sort((a, b) => {
             return a.data.total_implied_odds - b.data.total_implied_odds;
         })
@@ -171,6 +174,9 @@ router.get("/all", freeStuff, async function(req, res, next){
                 type: "ev"
             }
         })
+        evBets.forEach(bet => {
+            bet.data = JSON.parse(bet.data);
+        });
         evBets.sort((a, b) => {
             return b.data.ev - a.data.ev;
         })
@@ -181,8 +187,6 @@ router.get("/all", freeStuff, async function(req, res, next){
 
         // ! League formatting for arb bets
         for(let i = 0; i < arbBets.length; i++){
-            arbBets[i].data = JSON.parse(arbBets[i].data);
-
             // * Check to see if all bookmakers in bet are whitelisted on user account
             // * If not, remove bet from array
             // if(userWhitelist.length > 2) { // ! Must have ATLEAST 2 bookmakers whitelisted
@@ -205,8 +209,6 @@ router.get("/all", freeStuff, async function(req, res, next){
 
         // ! League formatting for ev bets
         for(let i = 0; i < evBets.length; i++){
-            evBets[i].data = JSON.parse(evBets[i].data);
-
             const leagueFormatted = evBets[i].data.league.replaceAll("_", " ").split(" ");
             for(let j = 0; j < leagueFormatted.length; j++){
                 leagueFormatted[j] = leagueFormatted[j].charAt(0).toUpperCase() + leagueFormatted[j].slice(1);

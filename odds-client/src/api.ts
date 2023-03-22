@@ -46,6 +46,10 @@ export async function updateProfileA(region: string): Promise<any> {
     return await sendApiRequest("POST", "profile/update", true, {region: region})
 }
 
+export async function updateTrackerStatus(trackerId: number, status: number): Promise<any> {
+    return await sendApiRequest("POST", "tracker/update", true, {trackerId: trackerId, status: status})
+}
+
 export async function updateNotificationsA(user: {
     email: boolean,
     emaila: string,

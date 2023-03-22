@@ -19,6 +19,7 @@ interface props {
 export default function BetLoader({ bets, showBets }: props) {
   const alertContext = useContext(AlertContext);
   const [modal, setModal] = useState(false);
+  const [modalBetId, setModalBetId] = useState(0);
 
   function closeModal(): void {
     setModal(false);
@@ -27,6 +28,7 @@ export default function BetLoader({ bets, showBets }: props) {
   return (
     <>
         <div className="px-4 mx-auto max-w-screen-2xl lg:px-4">
+            <Modal isVisible={modal} closeModal={closeModal} id={modalBetId} />    
             <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
                 <div className="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4">
                     <div className="flex items-center flex-1 space-x-4">
@@ -126,10 +128,12 @@ export default function BetLoader({ bets, showBets }: props) {
                                     <td>
                                         { showBets ? (
                                             <div>
-                                                <button onClick={() => {setModal(true)}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                                <button onClick={() => {
+                                                    setModal(true)
+                                                    setModalBetId(bet.id)
+                                                    }} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                                                     Calculate Stake
                                                 </button>
-                                                <Modal isVisible={modal} closeModal={closeModal} id={bet.id} />    
                                             </div> 
                                         ) : (
                                             <button onClick={() => {}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">

@@ -16,6 +16,9 @@ interface props {
 
 export default function EVLoader({ bets, showBets }: props) {
   const [modal, setModal] = useState(false);
+  const [modalBetId, setModalBetId] = useState(0);
+  const [modalRecBetSize, setModalRecBetSize] = useState(0);
+
   function closeModal(): void {
     setModal(false);
   }
@@ -24,7 +27,6 @@ export default function EVLoader({ bets, showBets }: props) {
     // kelly multiplier = (ev - probability of losing) / (decimal odds - 1)
     const kmultiplier = ( bet.data.ev - (1 - bet.data.winProbability) ) / ( (1 / bet.data.odds) - 1)
     let rec = (kmultiplier * totalBankroll).toFixed(2);
-    console.log([kmultiplier, rec])
     // round to nearest integer
     rec = Math.round(Number(rec)).toString();
     return rec;
@@ -32,6 +34,7 @@ export default function EVLoader({ bets, showBets }: props) {
 
   return (
     <>
+        <EVModal isVisible={modal} recBetSize={modalRecBetSize} closeModal={closeModal} id={modalBetId} />    
         <div className="px-4 mx-auto max-w-screen-2xl lg:px-4">
             <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
                 <div className="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4">
@@ -63,7 +66,7 @@ export default function EVLoader({ bets, showBets }: props) {
                         </thead>
                         <tbody className={`divide ${showBets ? "" : "blur"}`}>
                             {bets.map((bet) => (
-                                <tr className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <tr key={bet.id} className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <th scope="row" className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {showBets ? bet.data.match_name : "HOME TEAM v AWAY TEAM"}
                                     </th>
@@ -145,10 +148,15 @@ export default function EVLoader({ bets, showBets }: props) {
                                     <td>
                                         { showBets ? (
                                             <div>
-                                                <button onClick={() => {setModal(true)}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                                <button onClick={() => {
+                                                    setModalBetId(bet.id)
+                                                    setModalRecBetSize(calculateRecommendedBetSize(bet, 200))
+                                                    setModal(true)
+                                                    console.log(bet.id)
+                                                    console.log(modalRecBetSize)
+                                                    }} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                                                     Add to tracker
                                                 </button>
-                                                <EVModal isVisible={modal} recBetSize={calculateRecommendedBetSize(bet, 200)} closeModal={closeModal} id={bet.id} />    
                                             </div> 
                                         ) : (
                                             <button onClick={() => {}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
@@ -159,7 +167,6 @@ export default function EVLoader({ bets, showBets }: props) {
                                     </td>
                                 </tr>
                             ))}
-                    
                         </tbody>
                     </table>
                 </div>

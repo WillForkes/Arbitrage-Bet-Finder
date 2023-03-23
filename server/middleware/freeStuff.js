@@ -65,7 +65,8 @@ let freeStuff = async (req, res, next) => {
             return;
         }
         user = newUser
-    }
+    } else {
+
 
     // ! Check user plan has not expired
     let plan = user.subscription[0] ? user.subscription[0].plan : "free"
@@ -97,6 +98,7 @@ let freeStuff = async (req, res, next) => {
     req.user = user
 
     next();
+}
 }
 }
 

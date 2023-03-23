@@ -17,6 +17,7 @@ interface props {
 }
 
 export default function BetLoader({ bets, showBets }: props) {
+    console.log(showBets)
   const alertContext = useContext(AlertContext);
   const [modal, setModal] = useState(false);
 

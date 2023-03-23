@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { createBet} from "@/api";
+import { createBet } from "@/api";
 import { AlertContext } from "@/pages/_app";
 
 export default function EVModal({
@@ -14,28 +14,27 @@ export default function EVModal({
   closeModal: () => void;
 }) {
   const alertContext = useContext(AlertContext);
-  const [stake, setStake] = useState(recBetSize);
+  const [stake, setStake] = useState<null | number>(null);
 
   async function updateBetSize(e: any) {
     try {
-        setStake(e.target.value); // set stake variable to input value
-        
+      setStake(e.target.value); // set stake variable to input value
     } catch (e) {
-        alertContext?.setAlert({ msg: "Error updating bet size!", error: true });
+      alertContext?.setAlert({ msg: "Error updating bet size!", error: true });
     }
   }
 
   async function newBet(e: any) {
     e.preventDefault();
     try {
-        var data = await createBet(id, stake);
-        alertContext?.setAlert({ msg: "Bet created!", error: false });
+      var data = await createBet(id, stake);
+      alertContext?.setAlert({ msg: "Bet created!", error: false });
     } catch (e) {
-        console.error(e);
-        alertContext?.setAlert({ msg: "Error creating bet!", error: true });
+      console.error(e);
+      alertContext?.setAlert({ msg: "Error creating bet!", error: true });
     }
 
-    closeModal()
+    closeModal();
   }
 
   if (isVisible == false) return null;
@@ -69,8 +68,8 @@ export default function EVModal({
           <form action="" className="max-w-sm mx-auto p-4">
             <input
               type="number"
-              value={recBetSize}
-              placeholder="0.00"
+              value={stake}
+              placeholder={"Recommended: $" + recBetSize}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               onChange={(e) => updateBetSize(e)}
             />

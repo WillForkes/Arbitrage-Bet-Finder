@@ -8,7 +8,7 @@ export default function Timeline() {
             <span className="font-bold tracking-wider uppercase dark:text-primary-700">
             Timeline
             </span>
-            <h2 className="text-4xl font-bold lg:text-5xl">
+            <h2 className="text-4xl font-bold lg:text-5xl dark:text-white">
             What we have planned
             </h2>
         </div>

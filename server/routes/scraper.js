@@ -168,9 +168,7 @@ router.post("/clean", async function(req, res, next){
 })
 
 router.get("/all", freeStuff, async function(req, res, next){
-    const page = (req.query.page) ? parseInt(req.query.page) - 1 : 0;
     const perPage = 25;
-    const skip = page * perPage;
     let arbBets = []
     let evBets = []
     // const userWhitelist = JSON.parse(req.user.whitelist);
@@ -201,10 +199,6 @@ router.get("/all", freeStuff, async function(req, res, next){
         evBets.sort((a, b) => {
             return b.data.ev - a.data.ev;
         })
-
-        // Paginate - into 25 bets per page
-        arbBets = arbBets.slice(skip, skip + perPage);
-        evBets = evBets.slice(skip, skip + perPage);
 
         // ! League formatting for arb bets
         for(let i = 0; i < arbBets.length; i++){

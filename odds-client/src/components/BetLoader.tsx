@@ -8,6 +8,7 @@ import { Region } from '../types';
 import Logo from "/public/arbster.png";
 import { AlertContext } from "@/pages/_app";
 import Pagination from "./Pagination";
+import {getBookmakerLogo} from "@/utils";
 
 // example:
 // {"match_id":"d3015bfea46b4b86f2407a6845885393","match_name":"St. Louis Cardinals v. Washington Nationals","match_start_time":1679418300,"hours_to_start":3.7805919444561003,"league":"baseball_mlb_preseason","key":"h2h","best_outcome_odds":{"St. Louis Cardinals":["Pinnacle",1.69],"Washington Nationals":["MyBookie.ag",2.55]},"total_implied_odds":0.9839,"region":"eu"}
@@ -108,8 +109,8 @@ export default function BetLoader({ bets, showBets }: props) {
                                         { showBets ? Object.keys(bet.data.best_outcome_odds).map((key, index) => (
                                             <div key={index} className="flex items-center space-x-3">
                                                 <div className="flex-shrink-0">
-                                                    <div className="relative">
-                                                        <Image src={Logo} alt="Bookmaker Logo" width={20} height={20} />
+                                                    <div className="relative py-1">
+                                                        <img className="rounded-md" src={getBookmakerLogo(bet.data.best_outcome_odds[key][0])} alt="Bookmaker Logo" width={25} height={25} />
                                                     </div>
                                                 </div>
                                                 <div className="min-w-0 flex-1">

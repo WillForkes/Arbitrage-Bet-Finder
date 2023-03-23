@@ -1,3 +1,6 @@
+import Logo from "/public/arbster.png";
+
+
 var oneDay: number = 1000 * 60 * 60 * 24;
 
 function getMidnight(day: Date){
@@ -47,4 +50,50 @@ function currencyCode(code: string, europe: boolean): string {
     }
 }
 
-module.exports = { dateFormat, currencyCode }
+function getBookmakerLogo(bookmaker: string): string {
+    //const url = "https://www.top100bookmakers.com/buttons/" + bookmaker.toLowerCase().replace(/ /g, '-') + '-button.png';
+    let bookie = bookmaker.toLowerCase()
+    bookie = bookie.replace(/\(.*?\)/g, '')
+    bookie = bookie.replace(" sportsbook", "")
+
+    let url
+
+    switch (bookie) {
+        case 'sky bet':
+            url = "https://marcommnews.com/wp-content/uploads/2017/06/skybet-logo-300x300.png"
+            break;
+        case '1xbet':
+            url = "https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/072018/untitled-1_141.png?w0G_SAqF3m2_KjvfAH2qw1T9eJoF63Dy&itok=LJRdCj8Z"
+            break;
+        case 'virgin bet':
+            url = "https://www.betopin.com/wp-content/uploads/2020/11/Virgin-Bet-Logo.jpg"
+            break;
+        case 'marathon bet':
+            url = "https://is1-ssl.mzstatic.com/image/thumb/Purple115/v4/dd/b0/a4/ddb0a469-53d6-7ba9-b433-5e97dcac3c9b/source/512x512bb.jpg"
+            break;
+        case 'livescore bet':
+            url = "https://pbs.twimg.com/profile_images/1542057636857872384/Dq-nBCwZ_400x400.jpg"
+            break;
+        case 'nordic bet':
+            url = "https://www.onlinecasinoreports.com/images/nordicbet234.png"
+            break;
+        case 'matchbook':
+            url = "https://media.squawka.com/images/en/2022/05/17141643/1262572_1262572_matchbook-logo1.png"
+        case 'boylesports':
+            url = "https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,f_auto,q_auto:eco,dpr_1/v1452590072/enaew913algybfl7sada.png"
+            break;
+        case 'mybookie.ag':
+            url = "https://sportsbetting.legal/wp-content/uploads/2020/07/MB-icon.jpg"
+            break
+        case 'paddy power':
+            bookie = "paddy_power"
+        default:
+            bookie = bookie.replace(/ /g, '')
+            url = "https://storage.googleapis.com/oddsjam-static-assets/sportsbook-logos/" + bookie +".jpg"
+    } 
+    
+    return url
+
+}
+
+module.exports = { dateFormat, currencyCode, getBookmakerLogo }

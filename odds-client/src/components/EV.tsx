@@ -8,6 +8,8 @@ import Logo from "/public/arbster.png";
 import { Dropdown } from "flowbite-react";
 import FreeModal from "./FreeModal";
 import Pagination from "./Pagination";
+import {getBookmakerLogo} from "../utils";
+
 // example
 // {"match_id":"06f491453cb35e153d61c67257f3cb3b","match_name":"Bayern Munich v. Borussia Dortmund","match_start_time":1680366600,"hours_to_start":267.19723500000106,"league":"soccer_germany_bundesliga","key":"h2h","bookmaker":"Betsson","winProbability":0.18587360594795543,"odds":6,"ev":"0.115","region":"eu"}
 
@@ -200,11 +202,12 @@ export default function EVLoader({ bets, showBets }: props) {
                         <div className="flex items-center space-x-3">
                           <div className="flex-shrink-0">
                             <div className="relative">
-                              <Image
-                                src={Logo}
+                              <img
+                                src={getBookmakerLogo(bet.data.bookmaker)}
                                 alt="Bookmaker Logo"
-                                width={20}
-                                height={20}
+                                className="rounded-md"
+                                width={25}
+                                height={25}
                               />
                             </div>
                           </div>

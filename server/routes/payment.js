@@ -6,6 +6,7 @@ let { checkUser } = require('../middleware/checkUser');
 var router = express.Router();
 const Stripe = require('stripe');
 
+const environment = process.env.NODE_ENV || 'development';
 let stripe
 if(process.env.NODE_ENV == 'development') {
     stripe = Stripe(process.env.STRIPE_TEST_SECRET);
@@ -14,18 +15,35 @@ if(process.env.NODE_ENV == 'development') {
 }
 
 const plans = {
-    starter: {
-        product: "prod_NVYfBet3viHe4o",
-        price: "price_1MkXYIIHDYxT34IbkE19iCXo",
+    development: {
+        starter: {
+            product: "prod_NVYfBet3viHe4o",
+            price: "price_1MkXYIIHDYxT34IbkE19iCXo",
+        },
+        pro: {
+            product: "prod_NVqC83Czr0Jdd8",
+            price: "price_1MkoVfIHDYxT34Ib6l0gtszK"
+        },
+        plus: {
+            product: "prod_NVqDJv7gq5PcDY",
+            price: "price_1MkoWdIHDYxT34IbBmT9Sy8a"
+        }
     },
-    pro: {
-        product: "prod_NVqC83Czr0Jdd8",
-        price: "price_1MkoVfIHDYxT34Ib6l0gtszK"
-    },
-    plus: {
-        product: "prod_NVqDJv7gq5PcDY",
-        price: "price_1MkoWdIHDYxT34IbBmT9Sy8a"
+    production: {
+        starter: {
+            product: "prod_Na2rmk2tCbxeNT",
+            price: "price_1MoslhIHDYxT34Ib0J6WfI17",
+        },
+        pro: {
+            product: "prod_Na2sQ1ihM9ZPru",
+            price: "price_1Mosn2IHDYxT34IbYB1EtElA"
+        },
+        plus: {
+            product: "prod_Na2uAK0JaQGa47",
+            price: "price_1MosoaIHDYxT34Ib7dw5npCF"
+        }
     }
+
 }
 
 // * Get profile data
@@ -42,8 +60,8 @@ router.post('/create', checkUser, async (req, res) => {
     }
 
     const plan = req.body.plan
-    const productid = plans[plan].product
-    const priceid = plans[plan].price
+    const productid = plans[environment][plan].product
+    const priceid = plans[environment][plan].price
 
     if(!productid || !priceid){
         res.status(500).json({"error": "Error creating payment link. Invalid plan selected."})
@@ -61,8 +79,8 @@ router.post('/create', checkUser, async (req, res) => {
         // {CHECKOUT_SESSION_ID} is a string literal; do not change it!
         // the actual Session ID is returned in the query parameter when your customer
         // is redirected to the success page.
-        success_url: 'https://localhost:3000/subscription/success?session_id={CHECKOUT_SESSION_ID}',
-        cancel_url: 'https://localhost:3000/subscription/canceled',
+        success_url: 'https://localhost:3001/subscription/success?session_id={CHECKOUT_SESSION_ID}',
+        cancel_url: 'https://localhost:3001/subscription/failure',
     });
 
     const dbpayment = await prisma.subscription.create({

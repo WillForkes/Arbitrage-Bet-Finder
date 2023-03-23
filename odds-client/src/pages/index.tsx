@@ -8,6 +8,7 @@ import Features from "@/components/Home/Features";
 import Testimonials from "@/components/Home/Testimonials";
 import Tline from "@/components/Home/Timeline";
 import FreeTrial from "@/components/Home/FreeTrial";
+import Stats from "@/components/Home/Stats";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,6 +17,8 @@ export default function Home() {
     <>
         <Hero />
         <Pricing />
+        <Stats/>
+
         <Features />
         <Tline />
         <Testimonials />

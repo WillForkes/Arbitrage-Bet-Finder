@@ -7,6 +7,9 @@ import { Table } from "flowbite-react";
 import Logo from "/public/arbster.png";
 import { Dropdown } from "flowbite-react";
 import FreeModal from "./FreeModal";
+import Pagination from "./Pagination";
+import {getBookmakerLogo} from "../utils";
+
 // example
 // {"match_id":"06f491453cb35e153d61c67257f3cb3b","match_name":"Bayern Munich v. Borussia Dortmund","match_start_time":1680366600,"hours_to_start":267.19723500000106,"league":"soccer_germany_bundesliga","key":"h2h","bookmaker":"Betsson","winProbability":0.18587360594795543,"odds":6,"ev":"0.115","region":"eu"}
 
@@ -16,13 +19,21 @@ interface props {
 }
 
 export default function EVLoader({ bets, showBets }: props) {
+  const [paginatedBets, setPaginatedBets] = useState<EV[]>(bets.slice(0, 10));
   const [modal, setModal] = useState(false);
   const [modalBetId, setModalBetId] = useState(0);
   const [modalRecBetSize, setModalRecBetSize] = useState(0);
   const [regionFilter, setRegionFilter] = useState("UK");
+  
 
   function closeModal(): void {
     setModal(false);
+  }
+
+  function updateItems(page: number) {
+    const start = (page - 1) * 10;
+    const end = start + 10;
+    setPaginatedBets(bets.slice(start, end));
   }
 
   function calculateRecommendedBetSize(bet: EV, totalBankroll: number): number {
@@ -126,7 +137,7 @@ export default function EVLoader({ bets, showBets }: props) {
               </thead>
               {bets.length > 0 && !showBets ? <FreeModal /> : null}
               <tbody className={`divide ${showBets ? "" : "blur"}`}>
-                {bets.map((bet) => (
+                {paginatedBets.map((bet) => (
                   <tr
                     key={bet.id}
                     className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -191,11 +202,12 @@ export default function EVLoader({ bets, showBets }: props) {
                         <div className="flex items-center space-x-3">
                           <div className="flex-shrink-0">
                             <div className="relative">
-                              <Image
-                                src={Logo}
+                              <img
+                                src={getBookmakerLogo(bet.data.bookmaker)}
                                 alt="Bookmaker Logo"
-                                width={20}
-                                height={20}
+                                className="rounded-md"
+                                width={25}
+                                height={25}
                               />
                             </div>
                           </div>
@@ -265,98 +277,9 @@ export default function EVLoader({ bets, showBets }: props) {
               </tbody>
             </table>
           </div>
-          <nav
-            className="flex flex-col items-start justify-between p-4 space-y-3 md:flex-row md:items-center md:space-y-0"
-            aria-label="Table navigation"
-          >
-            <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-              Showing
-              <span className="font-semibold text-gray-900 dark:text-white">
-                1-10
-              </span>
-              of
-              <span className="font-semibold text-gray-900 dark:text-white">
-                1000
-              </span>
-            </span>
-            <ul className="inline-flex items-stretch -space-x-px">
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  <span className="sr-only">Previous</span>
-                  <svg
-                    className="w-5 h-5"
-                    aria-hidden="true"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" />
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  1
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  2
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  aria-current="page"
-                  className="z-10 flex items-center justify-center px-3 py-2 text-sm leading-tight border text-primary-600 bg-primary-50 border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
-                >
-                  3
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  ...
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  100
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  <span className="sr-only">Next</span>
-                  <svg
-                    className="w-5 h-5"
-                    aria-hidden="true"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
-                  </svg>
-                </a>
-              </li>
-            </ul>
-          </nav>
+          
+          <Pagination currentPage={1} itemsPerPage={10} maxItems={bets.length} updateItems={updateItems} />
+
         </div>
       </div>
     </>

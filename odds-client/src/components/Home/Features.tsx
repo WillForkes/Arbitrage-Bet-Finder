@@ -8,7 +8,7 @@ export default function Features() {
                 <span className="font-bold tracking-wider uppercase dark:text-primary-700">
                 Features
                 </span>
-                <h2 className="text-4xl font-bold lg:text-5xl">
+                <h2 className="text-4xl font-bold lg:text-5xl dark:text-white">
                 See our specialised features
                 </h2>
             </div>

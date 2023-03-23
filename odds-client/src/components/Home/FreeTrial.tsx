@@ -7,7 +7,8 @@ import { UserContext } from "@/pages/_app";
 import { User } from "@/types";
 import Link from "next/link";
 import { AlertContext } from "@/pages/_app";
-import { Toast, HiCheck } from "flowbite-react";
+import { Toast } from "flowbite-react";
+
 
 export default function FreeTrial() {
     const user: User | null = useContext(UserContext).user;

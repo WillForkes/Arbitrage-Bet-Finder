@@ -56,7 +56,7 @@ router.get('/hedgeStake', checkUser, async function(req, res, next) {
         odds[i].profit = Math.round((profit + Number.EPSILON) * 100) / 100;
     }
 
-    res.status(200).json({"status": "ok", "data": odds});
+    res.status(200).json({"status": "ok", "data": {"outcomes": odds}});
 });
 
 router.get('/spreadStake', checkUser, async function(req, res, next) {

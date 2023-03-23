@@ -10,13 +10,19 @@ var cors = require('cors');
 const { PrismaClient } = require('@prisma/client')
 const { auth } = require('express-openid-connect'); // * Auth0
 let { checkUser } = require('./middleware/checkUser');
-
+let { checkStaff } = require('./middleware/checkStaff');
 const prisma = new PrismaClient()
 var app = express();
+const { lookup } = require('geoip-lite'); // * Geolocation IP data
+
 
 // * Setup libaries for express
 app.use(logger('dev'));
-app.use(express.json());
+app.use(express.json({
+    verify: (req, res, buf) => {
+      req.rawBody = buf.toString();
+    }
+}));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -25,6 +31,8 @@ app.use(cors({
     credentials: true,
     origin: "http://localhost:3001"
 }))
+
+
 // * Auth0 Authenticaiton
 const config = {
     authRequired: false,
@@ -40,23 +48,60 @@ app.use(auth(config));
 var scraperRouter = require('./routes/scraper');
 var trackerRouter = require('./routes/tracker');
 var calculatorRouter = require('./routes/calculator');
-
+var profileRouter = require('./routes/profile');
+var paymentRouter = require('./routes/payment');
+var notificationRouter = require('./routes/notification');
+var adminRouter = require('./routes/admin');
 app.use('/scraper', scraperRouter);
 app.use('/tracker', trackerRouter);
 app.use('/calculator', calculatorRouter);
+app.use('/profile', profileRouter);
+app.use('/payment', paymentRouter);
+app.use('/notification', notificationRouter);
+app.use('/admin', adminRouter);
 
-// * Auth0 test
+
+// * Essential base routes
 app.get('/', (req, res) => {
-    res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
+    //res.json({"status":"ok", "data": "Welcome to the API"})
+    res.redirect('http://localhost:3001/')
 });
 
-app.get('/profile', checkUser, async (req, res) => {
-    const dbuser = await prisma.user.findUnique({
-        where: {
-            authid: req.oidc.user.sub
-        }
-    })
-    res.json({"auth0": req.oidc.user, "dbuser": dbuser})
+app.get('/region', (req, res) => {
+    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    const details = lookup(ip); // location of the user
+    res.json({"status":"ok", "data": details})
+
+    // * Example response
+    // { 
+    //     range: [ 3479298048, 3479300095 ],
+    //     country: 'US',
+    //     region: 'TX',
+    //     eu: '0',
+    //     timezone: 'America/Chicago',
+    //     city: 'San Antonio',
+    //     ll: [ 29.4969, -98.4032 ],
+    //     metro: 641,
+    //     area: 1000 
+    // }
+});
+
+app.get('/isAuth', (req, res) => {
+    // print cookies sent
+    console.log(req.cookies);
+    if(req.oidc.isAuthenticated()){
+        res.json({
+            "status": "ok",
+            "data": {
+                "authenticated":true
+        }})
+    }else{
+        res.json({
+            "status": "ok",
+            "data": {
+                "authenticated":false
+        }})    
+    }
 });
 
 // catch 404 and forward to error handler

@@ -11,35 +11,90 @@ datasource db {
 }
 
 model User {
-  authid        String       @id
-  plan          String       @default("Free")
-  whitelist     String       @default("[]") // whitelisted bookmakers to display
-  planExpiresAt DateTime?
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  apikey        String?      @unique
-  banned        Boolean      @default(false)
-  placedBets    PlacedBets[]
+  authid             String         @id
+  whitelist          String         @default("[]") // whitelisted bookmakers to display
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  region             String?        @default("UK")
+  phone              String?
+  email              String?        @unique // used only for email notis
+  smsNotifications    Boolean        @default(false)
+  emailNotifications Boolean        @default(false)
+  apikey             String?        @unique
+  banned             Boolean        @default(false)
+  staff              Boolean        @default(false)
+  trialActivated     Boolean        @default(false)
+  promotions         Boolean        @default(true)
+  afilliateCode      String?        @unique
+  placedBets         PlacedBets[]
+  subscription       Subscription[]
+}
+
+model Tickets {
+    id         Int      @id @default(autoincrement())
+    email      String
+    subject    String
+    message    String
+    status     String   @default("open") // open, closed
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
 }
 
 model Bet {
   id         Int          @id @default(autoincrement())
+  type       String       @default("arbitrage") // arv, ev
   data       String
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
-  placedBets PlacedBets[]
 }
 
 model PlacedBets {
   id                Int      @id @default(autoincrement())
   userId            String
-  betId             Int
+  type              String   @default("arbitrage") // arbitrage, ev
+  status            Int      @default(0) // 0 pending, 1 won, 2 lost
+  matchName         String
   totalStake        Float
   profitPercentage  Float
+  bookmakers        String   @default("[]")   // ["Betfair", "Bet365", etc...]
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   user              User     @relation(fields: [userId], references: [authid])
-  bet               Bet      @relation(fields: [betId], references: [id])
+}
+
+model Subscription {
+  id                   Int       @id @default(autoincrement())
+  userId               String
+  plan                 String
+  planExpiresAt        DateTime
+  stripePaymentId      String?   @unique
+  stripeSubscriptionId String?   @unique
+  stripeCustomerId     String?
+  status               String    @default("inactive") // inactive, active, paused, payment_failed, cancelled
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  user                 User      @relation(fields: [userId], references: [authid])
+  invoices             Invoice[]
+}
+
+model Invoice {
+  id                   Int          @id @default(autoincrement())
+  stripeSubscriptionId String
+  stripeInvoiceId      String
+  stripeInvoicePdfUrl  String?
+  status               String
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+  subscription         Subscription @relation(fields: [stripeSubscriptionId], references: [stripeSubscriptionId])
+}
+
+model SignupDeal {
+  id        Int      @id @default(autoincrement())
+  deal      String
+  link      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Plans

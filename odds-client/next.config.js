@@ -1,6 +1,25 @@
 /** @type {import('next').NextConfig} */
+
+
+
 const nextConfig = {
-  reactStrictMode: true,
+  async redirects() {
+    return [
+      {
+        source: '/auth/login',
+        destination: 'http://localhost:3000/login',
+        permanent: true,
+        basePath: false
+      },
+    ];
+  },
+  images: {
+    domains: ['oddsjam.com', 'flowbite.s3.amazonaws.com'],
+  },
 }
 
+
+
+
 module.exports = nextConfig
+  

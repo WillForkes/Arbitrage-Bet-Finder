@@ -65,6 +65,9 @@ export default function EVModal({
               <span className="sr-only">Close modal</span>
             </button>
           </div>
+          <span className="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-green-600 dark:text-green-300">
+            Recommended bet size: ${recBetSize}
+          </span>
           <form action="" className="max-w-sm mx-auto p-4">
             <input
               type="number"

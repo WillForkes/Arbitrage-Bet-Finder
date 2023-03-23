@@ -6,7 +6,7 @@ export default function AlertCom() {
   const error = useContext(AlertContext);
   if (error?.msg == "") return null;
   return (
-    <div className="px-64 py-4 dark:bg-gray-900">
+    <div className="px-64 py-4 dark:bg-gray-900 sticky">
       <Alert
         color={error?.error ? "failure" : "success"}
         onDismiss={function onDismiss() {

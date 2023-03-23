@@ -50,6 +50,10 @@ export async function updateTrackerStatus(trackerId: number, status: number): Pr
     return await sendApiRequest("POST", "tracker/update", true, {trackerId: trackerId, status: status})
 }
 
+export async function startFreeTrial(): Promise<any> {
+    return await sendApiRequest("POST", "profile/startTrial", true)
+}
+
 export async function updateNotificationsA(user: {
     email: boolean,
     emaila: string,

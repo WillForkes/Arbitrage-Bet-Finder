@@ -11,16 +11,27 @@ const axios = require('axios');
 
 router.get('/run', checkUser ,async function(req, res, next) {
     // * Check for required querys params and set defaults
-
-    // variables
     const cutoff = (req.query.cutoff) ? req.query.cutoff : 0.01; // in percentage
+
+    // * Get most recently updated bet
+    const mostRecentBet = await prisma.bet.findFirst({
+        orderBy: {
+            updatedAt: 'desc'
+        },
+    })
+    const lastUpdated = (mostRecentBet) ? new Date(mostRecentBet.updatedAt) : new Date(0);
 
     // * Get arbitrage data
     let data
-    try {
-        data = await returnBettingOpportunities(cutoff)
-    } catch(err) { 
-        res.status(500).json({"error": "Failed to get data: " + err});
+    await returnBettingOpportunities(cutoff, lastUpdated).then((response) => {
+        data = response;
+    }).catch((error) => {
+        res.status(500).json({"error": "Failed to run scraper"});
+        return;
+    })
+
+    if(!data) {
+        res.status(200).json({"status": "ok", "message": "Data already up to date."});
         return;
     }
 
@@ -28,7 +39,9 @@ router.get('/run', checkUser ,async function(req, res, next) {
     let betsToInsert = [];
     let updatedCount = 0;
     const arbitrageData = data.data.arbitrage;
+    let newArbBets = 0
     const evData = data.data.ev;
+    let newEVBets = 0
 
     await prisma.bet.findMany().then(async (existingBets) => {
 
@@ -61,6 +74,7 @@ router.get('/run', checkUser ,async function(req, res, next) {
             }
 
             if(!found){
+                newArbBets++;
                 betsToInsert.push([JSON.stringify(arbitrageData[i]), "arbitrage"]);
             }
         }
@@ -94,6 +108,7 @@ router.get('/run', checkUser ,async function(req, res, next) {
             }
 
             if(!found){
+                newEVBets++;
                 betsToInsert.push([JSON.stringify(evData[i]), "ev"]);
             }
         }            
@@ -115,7 +130,13 @@ router.get('/run', checkUser ,async function(req, res, next) {
         return;
     }
 
-    res.json({"status": "ok", "Message": `${betsToInsert.length} new bets found. ${updatedCount} bets updated.`});
+    res.json({"status": "ok", "data":{
+        "new_arb_bets": newArbBets,
+        "new_ev_bets": newEVBets,
+        "total_new_bets": betsToInsert.length,
+        "updated_bets": updatedCount
+
+    }, "Message": `${betsToInsert.length} new bets found. ${updatedCount} bets updated.`});
 
     // send notifications
     //await sendBatchNotifications();

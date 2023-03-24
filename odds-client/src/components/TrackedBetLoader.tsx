@@ -1,5 +1,5 @@
 import { Tracker } from "@/types";
-import { dateFormat } from "@/utils";
+import { dateFormat, getBookmakerLogo } from "@/utils";
 import React, { useState, useContext } from "react";
 import { deleteTrackedBet, updateTrackerStatus } from "@/api";
 import Image from "next/image";
@@ -194,7 +194,10 @@ export default function BetLoader({ bets, showBets }: props) {
                   </thead>
                   <tbody>
                     {bets.map((bet) => (
-                      <tr key={bet.id} className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                      <tr
+                        key={bet.id}
+                        className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      >
                         <td className="w-4 px-4 py-3">
                           <div className="flex items-center">
                             <input
@@ -260,6 +263,7 @@ export default function BetLoader({ bets, showBets }: props) {
                             ) : bet.type == "ev" && bet.status == 0 ? (
                               <p>?</p>
                             ) : (
+                              "$" +
                               (bet.totalStake * bet.profitPercentage).toFixed(2)
                             )}
                           </div>
@@ -267,10 +271,27 @@ export default function BetLoader({ bets, showBets }: props) {
 
                         <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                           {JSON.parse(bet.bookmakers).map(
-                            (bookmaker: string) => (
-                              <div className="flex items-center">
-                                <div className="inline-block w-4 h-4 mr-2 bg-primary-700 rounded-full"></div>
-                                {bookmaker}
+                            (bookmaker: string, index: number) => (
+                              <div
+                                key={index}
+                                className="flex items-center space-x-3"
+                              >
+                                <div className="flex-shrink-0">
+                                  <div className="relative py-1">
+                                    <img
+                                      className="rounded-md"
+                                      src={getBookmakerLogo(bookmaker)}
+                                      alt="Bookmaker Logo"
+                                      width={25}
+                                      height={25}
+                                    />
+                                  </div>
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                    {bookmaker}
+                                  </p>
+                                </div>
                               </div>
                             )
                           )}
@@ -334,8 +355,12 @@ export default function BetLoader({ bets, showBets }: props) {
                 </table>
               </div>
 
-            <Pagination currentPage={1} itemsPerPage={10} maxItems={bets.length} updateItems={updateItems} />
-
+              <Pagination
+                currentPage={1}
+                itemsPerPage={10}
+                maxItems={bets.length}
+                updateItems={updateItems}
+              />
             </div>
           </div>
         </section>

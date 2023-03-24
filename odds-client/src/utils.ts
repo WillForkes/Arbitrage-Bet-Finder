@@ -135,5 +135,9 @@ export function transformChartData(data: TrackedBet[]) {
       monthlyDates,
       yearlyDates,
     };
-  }
+}
+
+export function filterRegion(region: string, data: any) {
+    return data.filter(d => d.data.region == region.toLowerCase())
+}
   

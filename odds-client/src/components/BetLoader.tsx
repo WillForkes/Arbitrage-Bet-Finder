@@ -1,5 +1,5 @@
 import { Bet } from "@/types";
-import { dateFormat } from "@/utils";
+import { dateFormat, filterRegion } from "@/utils";
 import React, { useState, useContext } from "react";
 import Image from "next/image";
 import Modal from "./Modal";
@@ -23,6 +23,7 @@ export default function BetLoader({ bets, showBets }: props) {
   const [modal, setModal] = useState(false);
   const [modalBetId, setModalBetId] = useState(0);
   const [regionFilter, setRegionFilter] = useState("UK");
+  bets = filterRegion(regionFilter, bets);
   const [paginatedBets, setPaginatedBets] = useState<Bet[]>(bets.slice(0, 10));
 
   function closeModal(): void {
@@ -35,6 +36,9 @@ export default function BetLoader({ bets, showBets }: props) {
     setPaginatedBets(bets.slice(start, end));
   }
 
+  if (bets && showBets) {
+    bets = filterRegion(regionFilter, bets);
+  }
   return (
     <>
       <div className="px-4 mx-auto max-w-screen-2xl lg:px-4">
@@ -112,7 +116,7 @@ export default function BetLoader({ bets, showBets }: props) {
                 </tr>
               </thead>
               <tbody className={`divide ${showBets ? "" : "blur"}`}>
-                {bets.map((bet) => (
+                {paginatedBets.map((bet) => (
                   <tr
                     key={bet.id}
                     className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"

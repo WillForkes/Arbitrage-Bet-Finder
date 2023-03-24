@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -15,9 +15,10 @@ import "date-fns";
 import { Line } from "react-chartjs-2";
 
 import { TrackedBet, Tracker } from "@/types";
+import { dateFormat, transformChartData } from "@/utils";
+import { Dropdown } from "flowbite-react";
 
 ChartJS.register(
-  CategoryScale,
   TimeScale,
   LinearScale,
   PointElement,
@@ -35,29 +36,64 @@ export const options = {
     },
     title: {
       display: true,
-      text: "Chart.js Line Chart",
+      text: "Profit",
     },
   },
   scales: {
+    x: {
+      display: true,
+      type: "time",
+      time: {
+        parser: "MM/dd/yyyy hh:mm",
+        tooltipFormat: "MM/dd/yyyy hh:mm",
+        unit: "day",
+        unitStepSize: 1,
+        displayFormats: {
+          day: "MM/dd/yyyy",
+        },
+      },
+    },
     y: {
       beginAtZero: true,
     },
   },
 };
 
-const labels = ["2022-11-01", "2022-11-02"];
-
 export function ChartLoader({ d }: { d: TrackedBet[] }) {
+  const [chartLength, setChartLength] = useState<
+    "monthly" | "allTime" | "yearly"
+  >("monthly");
+  var p = transformChartData(d);
+  var labels = p[chartLength + "Dates"];
+  console.log(p);
   const data = {
     labels,
     datasets: [
       {
-        label: "Dataset 1",
-        data: d ? d.map((bet) => bet.profitPercentage * bet.totalStake) : null,
+        label: "Profit",
+        data: p[chartLength + "Profits"],
         borderColor: "rgb(255, 99, 132)",
         backgroundColor: "rgba(255, 99, 132, 0.5)",
       },
     ],
   };
-  return <Line options={options} data={data} />;
+  return (
+    <div className="px-4">
+      <Dropdown label={chartLength}>
+        <Dropdown.Header>
+          <Dropdown.Item onClick={() => setChartLength("allTime")}>
+            All Time
+          </Dropdown.Item>
+          <Dropdown.Item onClick={() => setChartLength("monthly")}>
+            Monthly
+          </Dropdown.Item>
+          <Dropdown.Item onClick={() => setChartLength("yearly")}>
+            Yearly
+          </Dropdown.Item>
+        </Dropdown.Header>
+      </Dropdown>
+
+      <Line options={options} data={data} />
+    </div>
+  );
 }

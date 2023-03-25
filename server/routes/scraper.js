@@ -241,6 +241,73 @@ router.get("/all", freeStuff, async function(req, res, next){
     }});
 });
 
+router.post("/ev/simulate", async function(req, res, next){
+    const {betId, bets} = req.body;
+    const bet = await prisma.bet.findUnique({      
+        where: {
+            id: betId
+        }
+    })
+
+    const betdata = JSON.parse(bet.data);
+
+    const simRes = simulateBet(bets, betdata);
+
+    res.json({"status": "ok", "data": simRes});
+
+})
+
+function simulateBet(n, data) {
+    // * calculate kelly multiplier
+    // get odds
+    const odds = data.odds;
+    const noVigOdds = data.noVigOdds; // without bookie fee (vigorish)
+
+    let betsWon = 0;
+    let betsLost = 0;
+    let amountWon = 0;
+    let amountLost = 0;
+    let totalBet = 0;
+    let roiPercent = 0;
+
+    for(let i=0; i < n; i++){
+        const kmul = calculateKellyMultiplier(data.winProbability, odds - 1);
+        const betAmount = 1 * kmul;
+        const betResult = Math.random() <= data.winProbability ? "win" : "lose";
+        totalBet += betAmount;
+
+        if(betResult == "win"){
+            const w = (betAmount * odds) - betAmount;
+            betsWon++;
+            amountWon += w;
+        } else {
+            const l = betAmount;
+            betsLost++;
+            amountLost += l;
+        }
+    }
+
+    amountWon = amountWon.toFixed(2);
+    amountLost = amountLost.toFixed(2);
+    const netGain = amountWon - amountLost;
+    roiPercent = ((netGain / totalBet) * 100).toFixed(2);
+
+    return {
+        "betData": data,
+        "simulatedBets": n,
+        "betsWon": betsWon,
+        "betsLost": betsLost,
+        "roiPercent": roiPercent + "%"
+    }
+
+}
+
+function calculateKellyMultiplier(winProb, netOdds) {
+    // kelly multiplier =  (win prob * net odds of bet) - (lose prob) / net odds of bet
+    const loseProb = 1 - winProb;
+    const kmultiplier = ((netOdds * winProb) - loseProb) / netOdds;
+    return kmultiplier;
+}
 
 async function sendBatchNotifications(){
     // Get all users with sms notifications enabled

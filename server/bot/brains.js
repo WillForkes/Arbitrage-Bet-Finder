@@ -231,7 +231,7 @@ function processPositiveEV(matches, includeStartedMatches = true) {
                 (outcome) => outcome.name === match.home_team || market.key === "totals" && outcome.name === "Over"
             );
             let awayTeamOutcome = market.outcomes.find(
-                (outcome) => outcome.name === match.away_team || market.key === "totals" && outcome.name === "Over"
+                (outcome) => outcome.name === match.away_team || market.key === "totals" && outcome.name === "Under"
             );
             let drawOutcome = market.outcomes.find(
                 (outcome) => outcome.name.toLowerCase() === "draw"
@@ -239,6 +239,7 @@ function processPositiveEV(matches, includeStartedMatches = true) {
 
             const hasDraw = drawOutcome? true : false;
 
+            // * this is the implied probability of the outcome, with the bookmaker's vig included (so not accurate)
             ht_impliedProbability = 1 / homeTeamOutcome.price;
             at_impliedProbability = 1 / awayTeamOutcome.price;
             draw_impliedProbability = hasDraw ? 1 / drawOutcome.price : 0;
@@ -252,6 +253,7 @@ function processPositiveEV(matches, includeStartedMatches = true) {
             ht_noVig_odds = 1 / ht_noVig;
             at_noVig_odds = 1 / at_noVig;
             draw_noVig_odds = hasDraw ? 1 / draw_noVig : 0;
+            
 
             // (Amount won per bet * probability of winning) – (Amount lost per bet * probability of losing)
             ht_EV = ((homeTeamOutcome.price - 1) * ht_noVig) - (1*(1-ht_noVig))

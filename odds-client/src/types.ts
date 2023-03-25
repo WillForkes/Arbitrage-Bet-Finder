@@ -81,6 +81,18 @@ export type Tracker = {
     updatedAt: string;
 }
 
+export type HedgeOutcome = {
+    outcome: string;
+    profit: number;
+    stake: number;
+    odds: number
+    book: string;
+}
+
+export type Hedge = {
+    outcomes: HedgeOutcome[]
+}
+
 export type EV = {
     data: {
         match_name: string;

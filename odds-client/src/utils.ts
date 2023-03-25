@@ -1,3 +1,4 @@
+import { TrackedBet, Tracker } from "./types";
 import Logo from "/public/arbster.png";
 
 
@@ -35,7 +36,7 @@ export function dateFormat(date: number): string {
     }
 }
 
-function currencyCode(code: string, europe: boolean): string {
+export function currencyCode(code: string, europe: boolean): string {
     if (europe) {
         return '€'
     }
@@ -50,7 +51,7 @@ function currencyCode(code: string, europe: boolean): string {
     }
 }
 
-function getBookmakerLogo(bookmaker: string): string {
+export function getBookmakerLogo(bookmaker: string): string {
     //const url = "https://www.top100bookmakers.com/buttons/" + bookmaker.toLowerCase().replace(/ /g, '-') + '-button.png';
     let bookie = bookmaker.toLowerCase()
     bookie = bookie.replace(/\(.*?\)/g, '')
@@ -93,7 +94,50 @@ function getBookmakerLogo(bookmaker: string): string {
     } 
     
     return url
-
 }
 
-module.exports = { dateFormat, currencyCode, getBookmakerLogo }
+export function transformChartData(data: TrackedBet[]) {
+    const allTimeProfits: number[] = [];
+    const monthlyProfits: number[] = [];
+    const yearlyProfits: number[] = [];
+    const monthlyDates: Date[] = [];
+    const yearlyDates: Date[] = [];
+    const allTimeDates: Date[] = [];
+    const today = new Date();
+  
+    data.forEach((bet) => {
+      const betDate = new Date(bet.createdAt);
+      const betProfit = bet.profitPercentage * bet.totalStake;
+      
+      // all time profits
+      allTimeProfits.push(betProfit);
+      allTimeDates.push(betDate);
+      
+      // monthly profits
+      if (betDate.getFullYear() === today.getFullYear() &&
+          betDate.getMonth() === today.getMonth()) {
+        monthlyProfits.push(betProfit);
+        monthlyDates.push(betDate)
+      }
+      
+      // yearly profits
+      if (betDate.getFullYear() === today.getFullYear()) {
+        yearlyProfits.push(betProfit);
+        yearlyDates.push(betDate);
+      }
+    });
+    
+    return {
+      allTimeProfits,
+      monthlyProfits,
+      yearlyProfits,
+      allTimeDates,
+      monthlyDates,
+      yearlyDates,
+    };
+}
+
+export function filterRegion(region: string, data: any) {
+    return data.filter(d => d.data.region == region.toLowerCase())
+}
+  

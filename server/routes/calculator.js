@@ -31,7 +31,7 @@ router.get('/hedgeStake', checkUser, async function(req, res, next) {
     const totalImpliedOdds = betData.total_implied_odds; //e.g 0.983...etc
     let odds = []
     for (var outcome in betData.best_outcome_odds) {
-        odds.push({"outcome": outcome, "odds": betData.best_outcome_odds[outcome][1]})
+        odds.push({"outcome": outcome, "odds": betData.best_outcome_odds[outcome][1], "book": betData.best_outcome_odds[outcome][0]})
     }
 
     // * Calculate hedge stake

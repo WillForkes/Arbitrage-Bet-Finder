@@ -1,6 +1,6 @@
 import { Bet, EV } from "@/types";
-import { dateFormat } from "@/utils";
-import React, { useState } from "react";
+import { dateFormat, filterRegion } from "@/utils";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import EVModal from "./EVModal";
 import { Table } from "flowbite-react";
@@ -8,7 +8,7 @@ import Logo from "/public/arbster.png";
 import { Dropdown } from "flowbite-react";
 import FreeModal from "./FreeModal";
 import Pagination from "./Pagination";
-import {getBookmakerLogo} from "../utils";
+import { getBookmakerLogo } from "../utils";
 
 // example
 // {"match_id":"06f491453cb35e153d61c67257f3cb3b","match_name":"Bayern Munich v. Borussia Dortmund","match_start_time":1680366600,"hours_to_start":267.19723500000106,"league":"soccer_germany_bundesliga","key":"h2h","bookmaker":"Betsson","winProbability":0.18587360594795543,"odds":6,"ev":"0.115","region":"eu"}
@@ -19,12 +19,12 @@ interface props {
 }
 
 export default function EVLoader({ bets, showBets }: props) {
-  const [paginatedBets, setPaginatedBets] = useState<EV[]>(bets.slice(0, 10));
   const [modal, setModal] = useState(false);
   const [modalBetId, setModalBetId] = useState(0);
   const [modalRecBetSize, setModalRecBetSize] = useState(0);
   const [regionFilter, setRegionFilter] = useState("UK");
-  
+  bets = filterRegion(regionFilter, bets);
+  const [paginatedBets, setPaginatedBets] = useState<EV[]>(bets.slice(0, 10));
 
   function closeModal(): void {
     setModal(false);
@@ -277,9 +277,13 @@ export default function EVLoader({ bets, showBets }: props) {
               </tbody>
             </table>
           </div>
-          
-          <Pagination currentPage={1} itemsPerPage={10} maxItems={bets.length} updateItems={updateItems} />
 
+          <Pagination
+            currentPage={1}
+            itemsPerPage={10}
+            maxItems={bets.length}
+            updateItems={updateItems}
+          />
         </div>
       </div>
     </>

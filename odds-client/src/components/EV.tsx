@@ -9,6 +9,7 @@ import { Dropdown } from "flowbite-react";
 import FreeModal from "./FreeModal";
 import Pagination from "./Pagination";
 import { getBookmakerLogo } from "../utils";
+import {Badge} from "flowbite-react";
 
 // example
 // {"match_id":"06f491453cb35e153d61c67257f3cb3b","match_name":"Bayern Munich v. Borussia Dortmund","match_start_time":1680366600,"hours_to_start":267.19723500000106,"league":"soccer_germany_bundesliga","key":"h2h","bookmaker":"Betsson","winProbability":0.18587360594795543,"odds":6,"ev":"0.115","region":"eu"}
@@ -36,14 +37,19 @@ export default function EVLoader({ bets, showBets }: props) {
     setPaginatedBets(bets.slice(start, end));
   }
 
-  function calculateRecommendedBetSize(bet: EV, totalBankroll: number): number {
-    // kelly multiplier = (ev - probability of losing) / (decimal odds - 1)
-    const kmultiplier =
-      (bet.data.ev - (1 - bet.data.winProbability)) / (1 / bet.data.odds - 1);
+  function calculateRecommendedBetSize(bet: EV, totalBankroll: number): string {
+    // kelly multiplier =  (win prob * net odds of bet) - (lose prob) / net odds of bet
+    const winProb = bet.data.winProbability;
+    const loseProb = 1 - winProb;
+    const netOdds = bet.data.odds - 1;
+
+    const kmultiplier = ((netOdds * winProb) - loseProb) / netOdds;
+
     let rec = (kmultiplier * totalBankroll).toFixed(2);
     // round to nearest integer
     rec = Math.round(Number(rec)).toString();
     return rec;
+    //return (kmultiplier * 100).toFixed(0);
   }
 
   return (
@@ -106,26 +112,36 @@ export default function EVLoader({ bets, showBets }: props) {
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                  <th scope="col" className="px-4 py-3">
+                <th scope="col" className="px-4 py-3">
                     Match Name
+                  </th>
+                  <th scope="col" className="px-4 py-3">
+                    Market
                   </th>
                   <th scope="col" className="px-4 py-3">
                     Bet On
                   </th>
-                  <th scope="col" className="px-4 py-3">
+                  {/* <th scope="col" className="px-4 py-3">
                     League
-                  </th>
-                  <th scope="col" className="px-4 py-3">
+                  </th> */}
+                  {/* <th scope="col" className="px-4 py-3">
                     Win Odds
-                  </th>
+                  </th> */}
                   <th scope="col" className="px-4 py-3">
-                    Profit Percentage
+                    Expected Value
                   </th>
                   <th scope="col" className="px-4 py-3">
                     Region
                   </th>
+                  
                   <th scope="col" className="px-4 py-3">
                     Bookmakers
+                  </th>
+                  <th scope="col" className="px-4 py-3">
+                    Odds
+                  </th>
+                  <th scope="col" className="px-4 py-3">
+                    No vig-odds
                   </th>
                   <th scope="col" className="px-4 py-3">
                     Rec. Bet Size
@@ -138,15 +154,24 @@ export default function EVLoader({ bets, showBets }: props) {
               {bets.length > 0 && !showBets ? <FreeModal /> : null}
               <tbody className={`divide ${showBets ? "" : "blur"}`}>
                 {paginatedBets.map((bet) => (
-                  <tr
-                    key={bet.id}
-                    className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
+                  <tr key={bet.id} className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <th scope="row" className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        {bet.data.winProbability > 0.6 ? (
+                            <div className="inline-block w-4 h-4 mr-2 bg-green-700 rounded-full"></div>
+                          ) : bet.data.winProbability > 0.4 ? (
+                            <div className="inline-block w-4 h-4 mr-2 bg-blue-700 rounded-full"></div>
+                          ) : (
+                            <div className="inline-block w-4 h-4 mr-2 bg-red-700 rounded-full"></div>
+                          )}
+
+                        {showBets ? bet.data.match_name : "HOME TEAM v AWAY TEAM"}
+                        <div className=" text-xs dark:text-primary-600">{bet.data.leagueFormatted}</div>
+                    </th>
                     <th
                       scope="row"
                       className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                      {showBets ? bet.data.match_name : "HOME TEAM v AWAY TEAM"}
+                      {showBets ? bet.data.key : "MARKET"}
                     </th>
                     <th
                       scope="row"
@@ -155,14 +180,8 @@ export default function EVLoader({ bets, showBets }: props) {
                       {showBets ? bet.data.team : "TEAM NAME"}
                     </th>
 
-                    <th
-                      scope="row"
-                      className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                    >
-                      {showBets ? bet.data.leagueFormatted : "SPORT LEAGUE"}
-                    </th>
 
-                    <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {/* <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       {showBets ? (
                         <div>
                           {bet.data.winProbability > 0.6 ? (
@@ -182,18 +201,18 @@ export default function EVLoader({ bets, showBets }: props) {
                           </span>
                         </div>
                       )}
-                    </td>
+                    </td> */}
 
                     <th
                       scope="row"
                       className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
                       <span className="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-green-600 dark:text-green-300">
-                        {showBets ? (bet.data.ev * 100).toFixed(2) : 0.0}%
+                        +{showBets ? (bet.data.ev * 100).toFixed(2) : 0.0}%
                       </span>
                     </th>
 
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-2 text-white">
                       {showBets ? bet.data.region.toUpperCase() : "REGION"}
                     </td>
 
@@ -239,10 +258,24 @@ export default function EVLoader({ bets, showBets }: props) {
                     </td>
 
                     <td className="px-4 py-2">
-                      $
                       {showBets
-                        ? calculateRecommendedBetSize(bet, 200)
+                        ? bet.data.odds
+                        : "0"}
+                    </td>
+
+                    <td className="px-4 py-2">
+                      {showBets
+                        ? bet.data.noVigOdds.toFixed(2)
                         : "0.00"}
+                    </td>
+
+                    <td className="px-10 py-2" >
+                        <Badge color="success">
+                        $
+                            {showBets
+                            ? calculateRecommendedBetSize(bet, 200) + ".00"
+                            : "0.00"}
+                        </Badge> 
                     </td>
 
                     <td>
@@ -255,8 +288,6 @@ export default function EVLoader({ bets, showBets }: props) {
                                 calculateRecommendedBetSize(bet, 200)
                               );
                               setModal(true);
-                              console.log(bet.id);
-                              console.log(modalRecBetSize);
                             }}
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                           >

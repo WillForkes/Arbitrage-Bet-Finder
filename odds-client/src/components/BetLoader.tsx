@@ -171,6 +171,19 @@ export default function BetLoader({ bets, showBets }: props) {
                                                         {bet.data.best_outcome_odds[key][0]}
                                                     </p>
                                                 </div>
+                                                {(bet.data.best_outcome_odds[key].length > 1) ? (
+                                                    <div className="min-w-0 flex-1">
+                                                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                                            {key} {bet.data.best_outcome_odds[key][2]}
+                                                        </p>
+                                                    </div>
+                                                ) : (
+                                                    <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                                        {key}
+                                                    </p>
+                                                )}
+                                                
+                                                
                                             </div>
                                         )) : (
                                             <div>

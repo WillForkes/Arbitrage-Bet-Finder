@@ -354,7 +354,7 @@ async function getArbitrageOpportunities(cutoff) {
 
     // filter opportunities
     const arbitrageOpportunities = Array.from(arbResults).filter(x => 0 < x.total_implied_odds && x.total_implied_odds < 1 - cutoff && x.total_implied_odds > 0.7);
-    const EVOpportunities = Array.from(evResults).filter(x => x.ev > 0.1);
+    const EVOpportunities = Array.from(evResults).filter(x => x.ev < 0.4 && x.ev > 0.05);
 
     // sort array by hours_to_start in ascending order
     arbitrageOpportunities.sort((a, b) => a.hours_to_start - b.hours_to_start);

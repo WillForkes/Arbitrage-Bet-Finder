@@ -81,7 +81,7 @@ export default function BetLoader({ bets, showBets }: props) {
                             </tr>
                         </thead>
                         <tbody className={`divide ${showBets ? "" : "blur"}`}>
-                            {bets.map((bet) => (
+                            {paginatedBets.map((bet) => (
                                 <tr key={bet.id} className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <th scope="row" className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {showBets ? bet.data.match_name : "HOME TEAM v AWAY TEAM"}
@@ -118,6 +118,14 @@ export default function BetLoader({ bets, showBets }: props) {
                                                         {bet.data.best_outcome_odds[key][0]}
                                                     </p>
                                                 </div>
+                                                {bet.data.best_outcome_odds[key][2] ? (
+                                                    <div className="min-w-0 flex-1">
+                                                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                                            {key} {bet.data.best_outcome_odds[key][2]}
+                                                        </p>
+                                                    </div>
+                                                ) : (null)}
+                                                
                                             </div>
                                         )) : (
                                             <div>
@@ -145,7 +153,7 @@ export default function BetLoader({ bets, showBets }: props) {
                                                     </p>
                                                 </div>
                                             </div>
-                                        </div>
+                                            </div>
                                         )}
                                     </td>
 

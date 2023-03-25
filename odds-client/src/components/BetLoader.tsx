@@ -3,7 +3,7 @@ import { dateFormat, filterRegion } from "@/utils";
 import React, { useState, useContext } from "react";
 import Image from "next/image";
 import Modal from "./Modal";
-import { Dropdown } from "flowbite-react";
+import { Dropdown, TextInput } from "flowbite-react";
 import { Region } from "../types";
 import Logo from "/public/arbster.png";
 import { AlertContext } from "@/pages/_app";
@@ -36,6 +36,19 @@ export default function BetLoader({ bets, showBets }: props) {
     setPaginatedBets(bets.slice(start, end));
   }
 
+  function searchBetsByMatch(e: any) {
+    console.log(e);
+    if (e != "" || e != null) {
+      setPaginatedBets(
+        bets.filter((bet) =>
+          bet.data.match_name.toLowerCase().includes(e.toLowerCase())
+        )
+      );
+    } else {
+      setPaginatedBets(bets);
+    }
+  }
+
   if (bets && showBets) {
     bets = filterRegion(regionFilter, bets);
   }
@@ -52,6 +65,12 @@ export default function BetLoader({ bets, showBets }: props) {
                   {showBets ? bets.length : " Login to view bets"}
                 </span>
               </h5>
+              <TextInput
+                className="w-full lg:w-3/4 md:w-7/8 sm:w-3/4"
+                type="text"
+                placeholder="Search Match"
+                onChange={(e) => searchBetsByMatch(e.target.value)}
+              />
             </div>
             <Dropdown
               label="Region"
@@ -155,64 +174,88 @@ export default function BetLoader({ bets, showBets }: props) {
                     </th>
 
                     <td className="px-4 py-2">
-                        {showBets ? bet.data.region.toUpperCase() : "REGION"}
+                      {showBets ? bet.data.region.toUpperCase() : "REGION"}
                     </td>
-                    
+
                     <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        { showBets ? Object.keys(bet.data.best_outcome_odds).map((key, index) => (
-                            <div key={index} className="flex items-center space-x-3">
-                                <div className="flex-shrink-0">
-                                    <div className="relative py-1">
-                                        <img className="rounded-md" src={getBookmakerLogo(bet.data.best_outcome_odds[key][0])} alt="Bookmaker Logo" width={25} height={25} />
-                                    </div>
+                      {showBets ? (
+                        Object.keys(bet.data.best_outcome_odds).map(
+                          (key, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center space-x-3"
+                            >
+                              <div className="flex-shrink-0">
+                                <div className="relative py-1">
+                                  <img
+                                    className="rounded-md"
+                                    src={getBookmakerLogo(
+                                      bet.data.best_outcome_odds[key][0]
+                                    )}
+                                    alt="Bookmaker Logo"
+                                    width={25}
+                                    height={25}
+                                  />
                                 </div>
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                  {bet.data.best_outcome_odds[key][0]} -{" "}
+                                  {bet.data.best_outcome_odds[key][1]}
+                                </p>
+                              </div>
+                              {bet.data.best_outcome_odds[key].length > 1 ? (
                                 <div className="min-w-0 flex-1">
-                                    <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                        {bet.data.best_outcome_odds[key][0]} - {bet.data.best_outcome_odds[key][1]}
-                                    </p>
+                                  <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                    {key} {bet.data.best_outcome_odds[key][2]}
+                                  </p>
                                 </div>
-                                {(bet.data.best_outcome_odds[key].length > 1) ? (
-                                    <div className="min-w-0 flex-1">
-                                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                            {key} {bet.data.best_outcome_odds[key][2]}
-                                        </p>
-                                    </div>
-                                ) : (
-                                    <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                        {key}
-                                    </p>
-                                )}
-                                
-                                
+                              ) : (
+                                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                  {key}
+                                </p>
+                              )}
                             </div>
-                        )) : (
-                            <div>
-                                <div className="flex items-center space-x-3">
-                                    <div className="flex-shrink-0">
-                                        <div className="relative">
-                                            <Image src={Logo} alt="Bookmaker Logo" width={20} height={20} />
-                                        </div>
-                                    </div>
-                                    <div className="min-w-0 flex-1">
-                                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                            BOOKMAKER1
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center space-x-3">
-                                <div className="flex-shrink-0">
-                                    <div className="relative">
-                                        <Image src={Logo} alt="Bookmaker Logo" width={20} height={20} />
-                                    </div>
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                    <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                        BOOKMAKER2
-                                    </p>
-                                </div>
+                          )
+                        )
+                      ) : (
+                        <div>
+                          <div className="flex items-center space-x-3">
+                            <div className="flex-shrink-0">
+                              <div className="relative">
+                                <Image
+                                  src={Logo}
+                                  alt="Bookmaker Logo"
+                                  width={20}
+                                  height={20}
+                                />
+                              </div>
                             </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                BOOKMAKER1
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <div className="flex-shrink-0">
+                              <div className="relative">
+                                <Image
+                                  src={Logo}
+                                  alt="Bookmaker Logo"
+                                  width={20}
+                                  height={20}
+                                />
+                              </div>
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                BOOKMAKER2
+                              </p>
+                            </div>
+                          </div>
                         </div>
-                        )}
+                      )}
                     </td>
 
                     <td>

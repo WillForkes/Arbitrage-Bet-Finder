@@ -9,7 +9,7 @@ var router = express.Router();
 const axios = require('axios');
 
 
-router.get('/run', checkUser ,async function(req, res, next) {
+router.get('/run' ,async function(req, res, next) {
     // * Check for required querys params and set defaults
     const cutoff = (req.query.cutoff) ? req.query.cutoff : 0.01; // in percentage
 
@@ -125,35 +125,25 @@ router.get('/run', checkUser ,async function(req, res, next) {
                 }
             })
 
+            // ! TEMPORARY ////////////////////////////////////
             var book = [];
             const pjson = JSON.parse(toput[0]);
             toput[1] == "ev" ? 
             book.push(pjson.bookmaker) : 
             Object.keys(pjson.best_outcome_odds).map(key => book.push(pjson.best_outcome_odds[key][0]));
-            
-            var newBook = []
+
             for (const x of book) {
-                const existingRecords = await prisma.bookmaker.findMany({ 
-                    where: {
-                        bookName: x 
-                    } 
-                })
-                if (existingRecords.length == 0) {
-                    newBook.push(x);
+                try {
+                    await prisma.bookmaker.create({
+                        data: {
+                            bookName: bookieNameToPut
+                        }
+                    })
+                } catch {
+                    continue;
                 }
             }
-            
-            
-            // If no record with the same name exists, create a new one with an auto-incremented ID
-            for (let p=0; p<newBook.length; p++) {
-                const bookieNameToPut = newBook[p];
-                await prisma.bookmaker.create({
-                    data: {
-                        bookName: bookieNameToPut
-                    }
-                })
-                
-            }
+            // ! TEMPORARY ////////////////////////////////////
             
         }
     } catch(e){ 

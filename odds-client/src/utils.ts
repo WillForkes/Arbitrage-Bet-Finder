@@ -1,4 +1,4 @@
-import { TrackedBet, Tracker } from "./types";
+import { Bet, EV, TrackedBet, Tracker } from "./types";
 import Logo from "/public/arbster.png";
 
 
@@ -137,7 +137,7 @@ export function transformChartData(data: TrackedBet[]) {
     };
 }
 
-export function filterRegion(region: string, data: any) {
+export function filterRegion(region: string, data: EV[] | Bet[]) {
     return data.filter(d => d.data.region == region.toLowerCase())
 }
   

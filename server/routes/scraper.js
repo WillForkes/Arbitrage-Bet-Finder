@@ -124,8 +124,29 @@ router.get('/run', checkUser ,async function(req, res, next) {
                     type: toput[1]
                 }
             })
+            var book = [];
+            toput[1] == "ev" ? book.push(JSON.parse(toput[0].bookmaker)): Object.keys(JSON.parse(toput[0]).best_outcome_odds).map(key => book.push(JSON.parse(toput[0]).best_outcome_odds[key][0])); 
+            var newBook = []
+            for (const x of book) {
+                const existingRecord = await prisma.bookmaker.findUnique({ where: { bookName: x } })
+                if (!existingRecord) {
+                    newBook.push(x);
+                }
+            }
+            
+            
+            // If no record with the same name exists, create a new one with an auto-incremented ID
+            for (const r in new Set(newBook).values()) {
+                console.log(r);
+                await prisma.bookmaker.create({
+                    data: {bookName: r}
+                })
+                
+            }
+            
         }
-    } catch{ 
+    } catch(e){ 
+        console.log(e);
         res.status(500).json({"error": "Failed to create new bet records in database."});
         return;
     }

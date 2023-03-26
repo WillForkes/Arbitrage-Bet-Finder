@@ -9,7 +9,7 @@ import { Dropdown } from "flowbite-react";
 import FreeModal from "./FreeModal";
 import Pagination from "./Pagination";
 import { getBookmakerLogo } from "../utils";
-import { Badge } from "flowbite-react";
+import { Tooltip, Badge } from "flowbite-react";
 
 // example
 // {"match_id":"06f491453cb35e153d61c67257f3cb3b","match_name":"Bayern Munich v. Borussia Dortmund","match_start_time":1680366600,"hours_to_start":267.19723500000106,"league":"soccer_germany_bundesliga","key":"h2h","bookmaker":"Betsson","winProbability":0.18587360594795543,"odds":6,"ev":"0.115","region":"eu"}
@@ -105,7 +105,7 @@ export default function EVLoader({ bets, showBets }: props) {
               <TextInput
                 className="w-full lg:w-3/4 md:w-7/8 sm:w-3/4"
                 type="number"
-                placeholder="Bankroll"
+                placeholder="Total Bankroll"
                 onChange={(e) => setBankroll(parseInt(e.target.value))}
               />
             </div>
@@ -157,19 +157,9 @@ export default function EVLoader({ bets, showBets }: props) {
                   <th scope="col" className="px-4 py-3">
                     Bet On
                   </th>
-                  {/* <th scope="col" className="px-4 py-3">
-                    League
-                  </th> */}
-                  {/* <th scope="col" className="px-4 py-3">
-                    Win Odds
-                  </th> */}
                   <th scope="col" className="px-4 py-3">
                     Expected Value
                   </th>
-                  <th scope="col" className="px-4 py-3">
-                    Region
-                  </th>
-
                   <th scope="col" className="px-4 py-3">
                     Bookmakers
                   </th>
@@ -177,6 +167,9 @@ export default function EVLoader({ bets, showBets }: props) {
                     Odds
                   </th>
                   <th scope="col" className="px-4 py-3">
+                    <Tooltip content="No vig odds">
+                    ?
+                    </Tooltip>
                     No vig-odds
                   </th>
                   <th scope="col" className="px-4 py-3">
@@ -191,20 +184,22 @@ export default function EVLoader({ bets, showBets }: props) {
               <tbody className={`divide ${showBets ? "" : "blur"}`}>
                 {paginatedBets.map((bet) => (
                   <tr key={bet.id} className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Tooltip content={`Win probability: ${(bet.data.winProbability * 100).toFixed(2)}%`}>
                     <th scope="row" className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         {bet.data.winProbability > 0.6 ? (
                             <div className="inline-block w-4 h-4 mr-2 bg-green-700 rounded-full"></div>
-                          ) : bet.data.winProbability > 0.35 ? (
+                        ) : bet.data.winProbability > 0.35 ? (
                             <div className="inline-block w-4 h-4 mr-2 bg-blue-700 rounded-full"></div>
-                          ) : (
+                        ) : (
                             <div className="inline-block w-4 h-4 mr-2 bg-red-700 rounded-full"></div>
-                          )}
+                        )}
 
-                      {showBets ? bet.data.match_name : "HOME TEAM v AWAY TEAM"}
+                      {showBets ? bet.data.match_name : "HOME TEAM v AWAY TEAM"} - {bet.data.region.toUpperCase()}
                       <div className=" text-xs dark:text-primary-600">
                         {bet.data.leagueFormatted}
                       </div>
                     </th>
+                    </Tooltip>
                     <th
                       scope="row"
                       className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
@@ -218,28 +213,6 @@ export default function EVLoader({ bets, showBets }: props) {
                       {showBets ? bet.data.team : "TEAM NAME"}
                     </th>
 
-                    {/* <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      {showBets ? (
-                        <div>
-                          {bet.data.winProbability > 0.6 ? (
-                            <div className="inline-block w-4 h-4 mr-2 bg-green-700 rounded-full"></div>
-                          ) : bet.data.winProbability > 0.4 ? (
-                            <div className="inline-block w-4 h-4 mr-2 bg-blue-700 rounded-full"></div>
-                          ) : (
-                            <div className="inline-block w-4 h-4 mr-2 bg-red-700 rounded-full"></div>
-                          )}
-                          {(bet.data.winProbability * 100).toFixed(2)}%
-                        </div>
-                      ) : (
-                        <div>
-                          <div className="inline-block w-4 h-4 mr-2 bg-red-700 rounded-full"></div>
-                          <span className="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-green-600 dark:text-green-300">
-                            0.00%
-                          </span>
-                        </div>
-                      )}
-                    </td> */}
-
                     <th
                       scope="row"
                       className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
@@ -248,10 +221,6 @@ export default function EVLoader({ bets, showBets }: props) {
                         +{showBets ? (bet.data.ev * 100).toFixed(2) : 0.0}%
                       </span>
                     </th>
-
-                    <td className="px-4 py-2 text-white">
-                      {showBets ? bet.data.region.toUpperCase() : "REGION"}
-                    </td>
 
                     <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       {showBets ? (

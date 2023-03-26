@@ -24,8 +24,8 @@ export default function EVLoader({ bets, showBets }: props) {
   const [modalBetId, setModalBetId] = useState(0);
   const [modalRecBetSize, setModalRecBetSize] = useState(0);
   const [regionFilter, setRegionFilter] = useState("UK");
-  bets = filterRegion(regionFilter, bets);
-  const [paginatedBets, setPaginatedBets] = useState<EV[]>(bets.slice(0, 10));
+  var b: EV[] = filterRegion(regionFilter, bets);
+  const [paginatedBets, setPaginatedBets] = useState<EV[]>(b.slice(0, 10));
   const [bankroll, setBankroll] = useState(0);
   const [matchSearch, setMatchSearch] = useState("");
 
@@ -33,7 +33,7 @@ export default function EVLoader({ bets, showBets }: props) {
     setMatchSearch(e);
     if (e != "") {
       setPaginatedBets(
-        bets.filter((bet) =>
+        b.filter((bet) =>
           bet.data.match_name.toLowerCase().includes(e.toLowerCase())
         )
       );
@@ -49,7 +49,13 @@ export default function EVLoader({ bets, showBets }: props) {
   function updateItems(page: number) {
     const start = (page - 1) * 10;
     const end = start + 10;
-    setPaginatedBets(bets.slice(start, end));
+    setPaginatedBets(b.slice(start, end));
+  }
+
+  function updateRegion(region: string) {
+    setRegionFilter(region);
+    b = filterRegion(region, bets);
+    setPaginatedBets(b);
   }
 
   function calculateRecommendedBetSize(bet: EV, totalBankroll: number): string {
@@ -110,28 +116,28 @@ export default function EVLoader({ bets, showBets }: props) {
             >
               <Dropdown.Item
                 onClick={() => {
-                  setRegionFilter("UK");
+                  updateRegion("UK");
                 }}
               >
                 UK
               </Dropdown.Item>
               <Dropdown.Item
                 onClick={() => {
-                  setRegionFilter("EU");
+                  updateRegion("EU");
                 }}
               >
                 EU
               </Dropdown.Item>
               <Dropdown.Item
                 onClick={() => {
-                  setRegionFilter("AU");
+                  updateRegion("AU");
                 }}
               >
                 AU
               </Dropdown.Item>
               <Dropdown.Item
                 onClick={() => {
-                  setRegionFilter("US");
+                  updateRegion("US");
                 }}
               >
                 US

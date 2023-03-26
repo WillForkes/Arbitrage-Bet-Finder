@@ -23,34 +23,38 @@ export default function BetLoader({ bets, showBets }: props) {
   const [modal, setModal] = useState(false);
   const [modalBetId, setModalBetId] = useState(0);
   const [regionFilter, setRegionFilter] = useState("UK");
-  bets = filterRegion(regionFilter, bets);
-  const [paginatedBets, setPaginatedBets] = useState<Bet[]>(bets.slice(0, 10));
+  var b: Bet[] = filterRegion(regionFilter, bets);
+  console.log(b);
+
+  const [paginatedBets, setPaginatedBets] = useState<Bet[]>(b.slice(0, 10));
 
   function closeModal(): void {
     setModal(false);
   }
 
+  function updateRegion(region: string) {
+    setRegionFilter(region);
+    b = filterRegion(region, bets);
+    setPaginatedBets(b);
+  }
+
   function updateItems(page: number) {
     const start = (page - 1) * 10;
     const end = start + 10;
-    setPaginatedBets(bets.slice(start, end));
+    setPaginatedBets(b.slice(start, end));
   }
 
   function searchBetsByMatch(e: any) {
     console.log(e);
     if (e != "" || e != null) {
       setPaginatedBets(
-        bets.filter((bet) =>
+        b.filter((bet) =>
           bet.data.match_name.toLowerCase().includes(e.toLowerCase())
         )
       );
     } else {
-      setPaginatedBets(bets);
+      setPaginatedBets(b);
     }
-  }
-
-  if (bets && showBets) {
-    bets = filterRegion(regionFilter, bets);
   }
   return (
     <>
@@ -78,28 +82,28 @@ export default function BetLoader({ bets, showBets }: props) {
             >
               <Dropdown.Item
                 onClick={() => {
-                  setRegionFilter("UK");
+                  updateRegion("UK");
                 }}
               >
                 UK
               </Dropdown.Item>
               <Dropdown.Item
                 onClick={() => {
-                  setRegionFilter("EU");
+                  updateRegion("EU");
                 }}
               >
                 EU
               </Dropdown.Item>
               <Dropdown.Item
                 onClick={() => {
-                  setRegionFilter("AU");
+                  updateRegion("AU");
                 }}
               >
                 AU
               </Dropdown.Item>
               <Dropdown.Item
                 onClick={() => {
-                  setRegionFilter("US");
+                  updateRegion("US");
                 }}
               >
                 US

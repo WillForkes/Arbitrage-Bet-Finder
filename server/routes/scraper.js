@@ -174,6 +174,15 @@ router.get('/run', checkUser ,async function(req, res, next) {
     //await sendBatchNotifications();
 });
 
+router.get("/bookmakers", async function(req, res) {
+    try {
+        var bookmakers = await prisma.bookmaker.findMany()
+        res.json({"status": "ok", data: bookmakers});
+    } catch(e) {
+        res.json({"status": "error", error: e})
+    }
+})
+
 router.post("/clean", async function(req, res, next){
     const threshold = (req.body.threshold) ? parseInt(req.body.threshold) : 10; // in minutes
 

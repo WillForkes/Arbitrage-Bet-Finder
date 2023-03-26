@@ -251,6 +251,17 @@ router.get("/all", freeStuff, async function(req, res, next){
     }});
 });
 
+router.get("/bet/:id", checkUser, async function(req, res, next){
+    const betId = parseInt(req.params.id);
+    const bet = await prisma.bet.findUnique({
+        where: {
+            id: betId
+        }
+    })
+
+    res.json({"status": "ok", "data": {"bet":bet}});
+})
+
 router.post("/ev/simulate", async function(req, res, next){
     const {betId, bets} = req.body;
     const bet = await prisma.bet.findUnique({      

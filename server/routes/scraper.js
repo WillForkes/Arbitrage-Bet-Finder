@@ -416,6 +416,7 @@ async function sendBatchNotifications(notifications) {
         userids_sms = userids_sms.filter(item => item);
         userids_email = userids_email.filter(item => item);
 
+        // ! Send BULK SMS
         axios.post("http://localhost:3000/notification/sms", {
             userids: userids_sms,
             betid: noti.id
@@ -426,7 +427,8 @@ async function sendBatchNotifications(notifications) {
             console.log(err);
         })
 
-        axios.post("http://localhost:3000/notification/sms", {
+        // ! Send BULK EMAIL
+        axios.post("http://localhost:3000/notification/email", {
             userids: userids_sms,
             betid: noti.id
         }).then((res) => {

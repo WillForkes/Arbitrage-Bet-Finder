@@ -137,7 +137,6 @@ router.get('/run', checkUser ,async function(req, res, next) {
             
             // If no record with the same name exists, create a new one with an auto-incremented ID
             for (const r in new Set(newBook).values()) {
-                console.log(r);
                 await prisma.bookmaker.create({
                     data: {bookName: r}
                 })

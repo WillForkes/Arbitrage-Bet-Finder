@@ -190,21 +190,15 @@ export default function EVLoader({ bets, showBets }: props) {
               {bets.length > 0 && !showBets ? <FreeModal /> : null}
               <tbody className={`divide ${showBets ? "" : "blur"}`}>
                 {paginatedBets.map((bet) => (
-                  <tr
-                    key={bet.id}
-                    className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    <th
-                      scope="row"
-                      className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                    >
-                      {bet.data.winProbability > 0.6 ? (
-                        <div className="inline-block w-4 h-4 mr-2 bg-green-700 rounded-full"></div>
-                      ) : bet.data.winProbability > 0.4 ? (
-                        <div className="inline-block w-4 h-4 mr-2 bg-blue-700 rounded-full"></div>
-                      ) : (
-                        <div className="inline-block w-4 h-4 mr-2 bg-red-700 rounded-full"></div>
-                      )}
+                  <tr key={bet.id} className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <th scope="row" className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        {bet.data.winProbability > 0.6 ? (
+                            <div className="inline-block w-4 h-4 mr-2 bg-green-700 rounded-full"></div>
+                          ) : bet.data.winProbability > 0.35 ? (
+                            <div className="inline-block w-4 h-4 mr-2 bg-blue-700 rounded-full"></div>
+                          ) : (
+                            <div className="inline-block w-4 h-4 mr-2 bg-red-700 rounded-full"></div>
+                          )}
 
                       {showBets ? bet.data.match_name : "HOME TEAM v AWAY TEAM"}
                       <div className=" text-xs dark:text-primary-600">

@@ -96,6 +96,7 @@ export type Hedge = {
 export type EV = {
     data: {
         match_name: string;
+        key: string;
         ev: number
         team: string;
         winProbability: number;

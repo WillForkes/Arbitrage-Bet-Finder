@@ -124,22 +124,33 @@ router.get('/run', checkUser ,async function(req, res, next) {
                     type: toput[1]
                 }
             })
+
             var book = [];
-            toput[1] == "ev" ? book.push(JSON.parse(toput[0].bookmaker)): Object.keys(JSON.parse(toput[0]).best_outcome_odds).map(key => book.push(JSON.parse(toput[0]).best_outcome_odds[key][0])); 
+            const pjson = JSON.parse(toput[0]);
+            toput[1] == "ev" ? 
+            book.push(pjson.bookmaker) : 
+            Object.keys(pjson.best_outcome_odds).map(key => book.push(pjson.best_outcome_odds[key][0]));
+            
             var newBook = []
             for (const x of book) {
-                const existingRecord = await prisma.bookmaker.findUnique({ where: { bookName: x } })
-                if (!existingRecord) {
+                const existingRecords = await prisma.bookmaker.findMany({ 
+                    where: {
+                        bookName: x 
+                    } 
+                })
+                if (existingRecords.length == 0) {
                     newBook.push(x);
                 }
             }
             
             
             // If no record with the same name exists, create a new one with an auto-incremented ID
-            for (const r in new Set(newBook).values()) {
-                console.log(r);
+            for (let p=0; p<newBook.length; p++) {
+                const bookieNameToPut = newBook[p];
                 await prisma.bookmaker.create({
-                    data: {bookName: r}
+                    data: {
+                        bookName: bookieNameToPut
+                    }
                 })
                 
             }
@@ -168,11 +179,11 @@ router.post("/clean", async function(req, res, next){
 
     // Get all bets that are older than 10 minutes
     const betsToDelete = await prisma.bet.findMany({
-        where: {
-            updatedAt: {
-                lt: new Date(Date.now() - (threshold * 60 * 1000))
-            }
-        }
+        // where: {
+        //     updatedAt: {
+        //         lt: new Date(Date.now() - (threshold * 60 * 1000))
+        //     }
+        // }
     })
 
     // Delete all bets that are older than 10 minutes
@@ -223,18 +234,6 @@ router.get("/all", freeStuff, async function(req, res, next){
 
         // ! League formatting for arb bets
         for(let i = 0; i < arbBets.length; i++){
-            // * Check to see if all bookmakers in bet are whitelisted on user account
-            // * If not, remove bet from array
-            // if(userWhitelist.length > 2) { // ! Must have ATLEAST 2 bookmakers whitelisted
-            //     if(arbBets[i].type == "arbitrage"){
-            //         arbBets[i].data.best_outcome_odds.forEach(bookmakerArray => {
-            //             if(!userWhitelist.includes(bookmakerArray[0].toLowerCase()))
-            //                 arbBets.splice(i, 1)
-            //         }); 
-            //     }
-            // }
-
-
             // * Add formatted league name to the object
             const leagueFormatted = arbBets[i].data.league.replaceAll("_", " ").split(" ");
             for(let j = 0; j < leagueFormatted.length; j++){
@@ -463,12 +462,12 @@ async function sendBatchNotifications(notifications) {
     });
 }
 
-getNotifications().then((res) => {
-    console.log(res);
-    sendBatchNotifications(res).then((res) => {
-        console.log("Done!");
-    })
-})
+// getNotifications().then((res) => {
+//     console.log(res);
+//     sendBatchNotifications(res).then((res) => {
+//         console.log("Done!");
+//     })
+// })
 
 
 

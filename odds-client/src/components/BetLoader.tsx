@@ -25,8 +25,8 @@ export default function BetLoader({ bets, showBets, user }: props) {
   const [modal, setModal] = useState(false);
   const [modalBetId, setModalBetId] = useState(0);
   const [regionFilter, setRegionFilter] = useState("UK");
-  
-  var b: Bet[] = filterRegion(regionFilter, bets, user ? true : false);
+
+  var b: any[] = filterRegion(regionFilter, bets, user ? true : false);
 
   const [paginatedBets, setPaginatedBets] = useState<Bet[]>(b.slice(0, 10));
 
@@ -40,20 +40,20 @@ export default function BetLoader({ bets, showBets, user }: props) {
     setPaginatedBets(b);
   }
 
-//   function updateItems(page: number) {
-//     const start = (page - 1) * 10;
-//     const end = start + 10;
-//     setPaginatedBets(b.slice(start, end));
-//   }
+  //   function updateItems(page: number) {
+  //     const start = (page - 1) * 10;
+  //     const end = start + 10;
+  //     setPaginatedBets(b.slice(start, end));
+  //   }
 
   function searchBetsByMatch(e: any) {
-    if(user) {
-        if (e != "" || e != null) {
-            b = b.filter((bet) =>
-              bet.data.match_name.toLowerCase().includes(e.toLowerCase())
-            );
-            setPaginatedBets(b);
-          }
+    if (user) {
+      if (e != "" || e != null) {
+        b = b.filter((bet) =>
+          bet.data.match_name.toLowerCase().includes(e.toLowerCase())
+        );
+        setPaginatedBets(b);
+      }
     }
   }
 

@@ -16,7 +16,7 @@ export default function Modal({
   closeModal: () => void;
 }) {
   const alertContext = useContext(AlertContext);
-  const [stake, setStake] = useState(null);
+  const [stake, setStake] = useState<number | null>(null);
   const [outcome, setOutcome] = useState<SpreadStake | Hedge | null>(null);
   const [calculator, setCalculator] = useState("Spread");
 
@@ -47,7 +47,9 @@ export default function Modal({
   async function newBet(e: any) {
     e.preventDefault();
     try {
-      var data = await createBet(id, stake);
+      if (stake) {
+        await createBet(id, stake);
+      }
       alertContext?.setAlert({ msg: "Bet created!", error: false });
     } catch (e) {
       console.error(e);
@@ -109,15 +111,15 @@ export default function Modal({
           <form action="" className="max-w-sm mx-auto p-4">
             <input
               type="number"
-              value={stake}
+              value={stake ? stake : ""}
               placeholder="0.00"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               onChange={(e) => getProfit(e)}
             />
             {calculator == "Spread" ? (
-              <SpreadOutcome c={outcome} />
+              <SpreadOutcome c={outcome as SpreadStake} />
             ) : (
-              <HedgeOutcome c={outcome} />
+              <HedgeOutcome c={outcome as Hedge} />
             )}
             <button
               onClick={(e) => newBet(e)}

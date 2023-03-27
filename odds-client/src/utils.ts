@@ -133,7 +133,7 @@ export function transformChartData(data: TrackedBet[]) {
     };
 }
 
-export function filterRegion(region: string, data: EV[] | Bet[], isAuthenticated: boolean) {
+export function filterRegion(region: string, data: (EV | Bet)[], isAuthenticated: boolean) {
     if(!isAuthenticated) return data;
     try {
         const filtered = data.filter(d => d.data.region == region.toLowerCase())
@@ -143,4 +143,48 @@ export function filterRegion(region: string, data: EV[] | Bet[], isAuthenticated
         return data;
     }
 }
+
+export function calculateStats(data: Tracker[], timePeriod?: string) {
+    const now = new Date();
+    const timeCutoff =
+      timePeriod === "Week"
+        ? new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+        : timePeriod === "Month"
+        ? new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+        : timePeriod === "Year"
+        ? new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000)
+        : new Date(0);
+    const filteredData = data.filter((bet) => new Date(bet.createdAt) > timeCutoff);
+  
+    const totalStake = filteredData.reduce((acc, bet) => acc + bet.totalStake, 0);
+    const settledBets = filteredData.filter((bet) => bet.status === 1 || bet.type === "arbitrage").length;
+    const potentialEarnings = filteredData.reduce((acc, bet) => {
+      if (bet.status == 0 && bet.type == "ev") {
+        return acc + bet.totalStake * bet.profitPercentage;
+      } else {
+        return acc;
+      }
+    }, 0);
+    const totalProfit = filteredData.reduce((acc, bet) => {
+      if (bet.status == 1 || bet.type == "arbitrage") {
+        return acc + bet.totalStake * bet.profitPercentage;
+      } else if (bet.status === 2) {
+        return acc - bet.totalStake;
+       } else {
+        return acc;
+      }
+    }, 0);
+    const pendingBets = filteredData.length - settledBets;
+    const ROI = ((totalProfit / totalStake) * 100).toFixed(2);
+  
+    return {
+      totalProfit: totalProfit.toFixed(2),
+      totalStake: totalStake.toFixed(2),
+      pendingBets,
+      settledBets,
+      potentialEarnings: potentialEarnings.toFixed(2),
+      ROI: `${ROI}%`,
+      totalBets: filteredData.length,
+    };
+  }
   

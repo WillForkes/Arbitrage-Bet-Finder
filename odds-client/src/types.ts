@@ -143,6 +143,5 @@ export type Outcome = {
 }
 
 type OutcomeOdds = {
-    [team1:string]: [string, number, number]
-    [team2: string]: [string, number, number]
+    [key: string]: [string, number, number]
 }

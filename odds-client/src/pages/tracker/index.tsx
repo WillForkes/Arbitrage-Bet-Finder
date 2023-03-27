@@ -8,9 +8,9 @@ import { UserContext } from "@/pages/_app";
 import { User } from "@/types";
 import Auth from "@/components/Auth";
 import TrackedBetLoader from "@/components/TrackedBetLoader";
-import { ChartLoader } from "@/components/ChartLoader";
+import ChartLoader from "@/components/ChartLoader";
 
-export default function bets() {
+export default function TrackerPage() {
   const { data, error } = useSWR("/tracker/all", getter, {
     refreshInterval: 1000,
   });

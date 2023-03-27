@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { createBet } from "@/api";
 import { AlertContext } from "@/pages/_app";
+import { currencyCode } from "@/utils";
 
 export default function EVModal({
   isVisible,

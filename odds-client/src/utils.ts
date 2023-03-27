@@ -36,18 +36,14 @@ export function dateFormat(date: number): string {
     }
 }
 
-export function currencyCode(code: string, europe: boolean): string {
-    if (europe) {
-        return '€'
-    }
-
+export function currencyCode(code: string): string {
     switch (code) {
         case 'US':
             return '$'
         case 'UK':
             return '£'
         default:
-            return '$'
+            return '€'
     }
 }
 

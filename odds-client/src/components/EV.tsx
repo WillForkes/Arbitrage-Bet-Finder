@@ -55,7 +55,7 @@ export default function EVLoader({ bets, showBets }: props) {
   function updateRegion(region: string) {
     setRegionFilter(region);
     b = filterRegion(region, bets);
-    setPaginatedBets(b);
+    setPaginatedBets(b.slice(0, 10));
   }
 
   function calculateRecommendedBetSize(bet: EV, totalBankroll: number): string {
@@ -167,9 +167,7 @@ export default function EVLoader({ bets, showBets }: props) {
                     Odds
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    <Tooltip content="No vig odds">
-                    ?
-                    </Tooltip>
+                    <Tooltip content="No vig odds">?</Tooltip>
                     No vig-odds
                   </th>
                   <th scope="col" className="px-4 py-3">
@@ -183,22 +181,34 @@ export default function EVLoader({ bets, showBets }: props) {
               {bets.length > 0 && !showBets ? <FreeModal /> : null}
               <tbody className={`divide ${showBets ? "" : "blur"}`}>
                 {paginatedBets.map((bet) => (
-                  <tr key={bet.id} className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <Tooltip content={`Win probability: ${(bet.data.winProbability * 100).toFixed(2)}%`}>
-                    <th scope="row" className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                  <tr
+                    key={bet.id}
+                    className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <Tooltip
+                      content={`Win probability: ${(
+                        bet.data.winProbability * 100
+                      ).toFixed(2)}%`}
+                    >
+                      <th
+                        scope="row"
+                        className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
                         {bet.data.winProbability > 0.6 ? (
-                            <div className="inline-block w-4 h-4 mr-2 bg-green-700 rounded-full"></div>
+                          <div className="inline-block w-4 h-4 mr-2 bg-green-700 rounded-full"></div>
                         ) : bet.data.winProbability > 0.35 ? (
-                            <div className="inline-block w-4 h-4 mr-2 bg-blue-700 rounded-full"></div>
+                          <div className="inline-block w-4 h-4 mr-2 bg-blue-700 rounded-full"></div>
                         ) : (
-                            <div className="inline-block w-4 h-4 mr-2 bg-red-700 rounded-full"></div>
+                          <div className="inline-block w-4 h-4 mr-2 bg-red-700 rounded-full"></div>
                         )}
-
-                      {showBets ? bet.data.match_name : "HOME TEAM v AWAY TEAM"} - {bet.data.region.toUpperCase()}
-                      <div className=" text-xs dark:text-primary-600">
-                        {bet.data.leagueFormatted}
-                      </div>
-                    </th>
+                        {showBets
+                          ? bet.data.match_name
+                          : "HOME TEAM v AWAY TEAM"}{" "}
+                        - {bet.data.region.toUpperCase()}
+                        <div className=" text-xs dark:text-primary-600">
+                          {bet.data.leagueFormatted}
+                        </div>
+                      </th>
                     </Tooltip>
                     <th
                       scope="row"

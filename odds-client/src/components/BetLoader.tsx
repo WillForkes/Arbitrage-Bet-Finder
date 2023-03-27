@@ -24,8 +24,6 @@ export default function BetLoader({ bets, showBets }: props) {
   const [modalBetId, setModalBetId] = useState(0);
   const [regionFilter, setRegionFilter] = useState("UK");
   var b: Bet[] = filterRegion(regionFilter, bets);
-  console.log(b);
-
   const [paginatedBets, setPaginatedBets] = useState<Bet[]>(b.slice(0, 10));
 
   function closeModal(): void {
@@ -35,7 +33,7 @@ export default function BetLoader({ bets, showBets }: props) {
   function updateRegion(region: string) {
     setRegionFilter(region);
     b = filterRegion(region, bets);
-    setPaginatedBets(b);
+    setPaginatedBets(b.slice(0, 10));
   }
 
   function updateItems(page: number) {
@@ -47,11 +45,10 @@ export default function BetLoader({ bets, showBets }: props) {
   function searchBetsByMatch(e: any) {
     console.log(e);
     if (e != "" || e != null) {
-      setPaginatedBets(
-        b.filter((bet) =>
-          bet.data.match_name.toLowerCase().includes(e.toLowerCase())
-        )
+      b = b.filter((bet) =>
+        bet.data.match_name.toLowerCase().includes(e.toLowerCase())
       );
+      setPaginatedBets(b.slice(0, 10));
     } else {
       setPaginatedBets(b);
     }

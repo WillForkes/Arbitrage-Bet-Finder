@@ -9,7 +9,7 @@ var router = express.Router();
 const axios = require('axios');
 
 
-router.get('/run' ,async function(req, res, next) {
+router.get("/run" ,async function(req, res, next) {
     // * Check for required querys params and set defaults
     const cutoff = (req.query.cutoff) ? req.query.cutoff : 0.01; // in percentage
 

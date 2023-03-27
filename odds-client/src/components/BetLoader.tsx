@@ -1,4 +1,4 @@
-import { Bet } from "@/types";
+import { Bet, User } from "@/types";
 import { dateFormat, filterRegion } from "@/utils";
 import React, { useState, useContext } from "react";
 import Image from "next/image";
@@ -16,26 +16,28 @@ import { getBookmakerLogo } from "@/utils";
 interface props {
   bets: Bet[];
   showBets: boolean;
+  user: User;
 }
 
-export default function BetLoader({ bets, showBets }: props) {
+export default function BetLoader({ bets, showBets, user }: props) {
   const alertContext = useContext(AlertContext);
+
   const [modal, setModal] = useState(false);
   const [modalBetId, setModalBetId] = useState(0);
   const [regionFilter, setRegionFilter] = useState("UK");
   var b: Bet[] = filterRegion(regionFilter, bets);
-  console.log(b);
-
   const [paginatedBets, setPaginatedBets] = useState<Bet[]>(b.slice(0, 10));
+
+
 
   function closeModal(): void {
     setModal(false);
   }
 
   function updateRegion(region: string) {
-    setRegionFilter(region);
-    b = filterRegion(region, bets);
-    setPaginatedBets(b);
+    setRegionFilter(region); // ui
+    b = filterRegion(region, bets); // bets with region filter
+    setPaginatedBets(b); // reset paginated bets
   }
 
   function updateItems(page: number) {
@@ -56,6 +58,8 @@ export default function BetLoader({ bets, showBets }: props) {
       setPaginatedBets(b);
     }
   }
+
+
   return (
     <>
       <div className="px-4 mx-auto max-w-screen-2xl lg:px-4">
@@ -172,7 +176,7 @@ export default function BetLoader({ bets, showBets }: props) {
                       <span className="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-green-600 dark:text-green-300">
                         {showBets
                           ? ((1 - bet.data.total_implied_odds) * 100).toFixed(2)
-                          : 0.0}
+                          : 0.00}
                         %
                       </span>
                     </th>

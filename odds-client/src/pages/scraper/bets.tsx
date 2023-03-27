@@ -4,7 +4,7 @@ import React, { useState, useContext } from "react";
 import useSWR from "swr";
 import { getter } from "@/api";
 import { Spinner } from "flowbite-react";
-import { AlertContext, UserContext } from "@/pages/_app";
+import { UserContext } from "@/pages/_app";
 import { User } from "@/types";
 import Auth from "@/components/Auth";
 
@@ -17,7 +17,6 @@ export default function bets() {
   const showBets = user
     ? user.dbuser.plan == "pro" || user.dbuser.plan == "plus"
     : false;
-  const alertContext = useContext(AlertContext);
 
   return (
     <div className="page-offset-x py-8 bg-gray-900">
@@ -52,7 +51,7 @@ export default function bets() {
 
       {data ? (
         <div className="rounded-md gap-6 grid-cols-1 2xl:grid-cols-2 mb-2">
-          <BetLoader bets={arbData} showBets={showBets} />
+          <BetLoader bets={arbData} showBets={showBets} user={user} />
         </div>
       ) : (
         <div className="mx-auto max-w-screen-md p-64 text-center mb-8 lg:mb-12">

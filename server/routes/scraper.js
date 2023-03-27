@@ -9,7 +9,7 @@ var router = express.Router();
 const axios = require('axios');
 
 
-router.get('/run' ,async function(req, res, next) {
+router.get("/run" ,async function(req, res, next) {
     // * Check for required querys params and set defaults
     const cutoff = (req.query.cutoff) ? req.query.cutoff : 0.01; // in percentage
 
@@ -169,7 +169,7 @@ router.get("/bookmakers", async function(req, res) {
         var bookmakers = await prisma.bookmaker.findMany()
         res.json({"status": "ok", data: bookmakers});
     } catch(e) {
-        res.json({"status": "error", error: e})
+        res.status(500).json({"error": "Failed to get bookmakers from database."});
     }
 })
 
@@ -259,6 +259,17 @@ router.get("/all", freeStuff, async function(req, res, next){
         "ev": evBets
     }});
 });
+
+router.get("/bet/:id", checkUser, async function(req, res, next){
+    const betId = parseInt(req.params.id);
+    const bet = await prisma.bet.findUnique({
+        where: {
+            id: betId
+        }
+    })
+
+    res.json({"status": "ok", "data": {"bet":bet}});
+})
 
 router.post("/ev/simulate", async function(req, res, next){
     const {betId, bets} = req.body;

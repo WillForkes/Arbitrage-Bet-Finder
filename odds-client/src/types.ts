@@ -67,6 +67,7 @@ export type Bet = {
         leagueFormatted: string;
     } 
     id: number;
+    type: string;
 }
 
 export type Tracker = {
@@ -109,6 +110,7 @@ export type EV = {
         leagueFormatted: string
     }
     id: number
+    type: string
 }
 
 export enum Plan {

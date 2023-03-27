@@ -1,4 +1,4 @@
-import { Bet } from "@/types";
+import { Bet, User } from "@/types";
 import { dateFormat, filterRegion } from "@/utils";
 import React, { useState, useContext } from "react";
 import Image from "next/image";
@@ -16,10 +16,12 @@ import { getBookmakerLogo } from "@/utils";
 interface props {
   bets: Bet[];
   showBets: boolean;
+  user: User | null;
 }
 
-export default function BetLoader({ bets, showBets }: props) {
+export default function BetLoader({ bets, showBets, user }: props) {
   const alertContext = useContext(AlertContext);
+
   const [modal, setModal] = useState(false);
   const [modalBetId, setModalBetId] = useState(0);
   const [regionFilter, setRegionFilter] = useState("UK");
@@ -31,9 +33,9 @@ export default function BetLoader({ bets, showBets }: props) {
   }
 
   function updateRegion(region: string) {
-    setRegionFilter(region);
-    b = filterRegion(region, bets);
-    setPaginatedBets(b.slice(0, 10));
+    setRegionFilter(region); // ui
+    b = filterRegion(region, bets, user ? true : false); // bets with region filter
+    setPaginatedBets(b.slice(0, 10)); // reset paginated bets
   }
 
   function updateItems(page: number) {
@@ -53,6 +55,7 @@ export default function BetLoader({ bets, showBets }: props) {
       setPaginatedBets(b);
     }
   }
+
   return (
     <>
       <div className="px-4 mx-auto max-w-screen-2xl lg:px-4">
@@ -143,7 +146,7 @@ export default function BetLoader({ bets, showBets }: props) {
                   >
                     <th
                       scope="row"
-                      className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      className="items-center px-4 py-12 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
                       {showBets ? bet.data.match_name : "HOME TEAM v AWAY TEAM"}
                     </th>

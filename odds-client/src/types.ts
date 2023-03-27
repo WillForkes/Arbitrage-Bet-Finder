@@ -37,7 +37,7 @@ export type User = {
         authid: string;
         plan: string;
         planExpiresAt: string;
-        whitelist: string[];
+        whitelist: string;
         createdAt: string;
         updatedAt: string;
         apikey: string;
@@ -51,7 +51,7 @@ export type User = {
         },
         smsNotifications: boolean,
         emailNotifications: boolean,
-        phone: number
+        phone: string
     }
 }
 

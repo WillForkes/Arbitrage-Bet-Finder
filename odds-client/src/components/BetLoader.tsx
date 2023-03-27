@@ -28,16 +28,14 @@ export default function BetLoader({ bets, showBets, user }: props) {
   var b: Bet[] = filterRegion(regionFilter, bets);
   const [paginatedBets, setPaginatedBets] = useState<Bet[]>(b.slice(0, 10));
 
-
-
   function closeModal(): void {
     setModal(false);
   }
 
   function updateRegion(region: string) {
     setRegionFilter(region); // ui
-    b = filterRegion(region, bets, (user ? true : false)); // bets with region filter
-    setPaginatedBets(b); // reset paginated bets
+    b = filterRegion(region, bets, user ? true : false); // bets with region filter
+    setPaginatedBets(b.slice(0, 10)); // reset paginated bets
   }
 
   function updateItems(page: number) {
@@ -49,16 +47,14 @@ export default function BetLoader({ bets, showBets, user }: props) {
   function searchBetsByMatch(e: any) {
     console.log(e);
     if (e != "" || e != null) {
-      setPaginatedBets(
-        b.filter((bet) =>
-          bet.data.match_name.toLowerCase().includes(e.toLowerCase())
-        )
+      b = b.filter((bet) =>
+        bet.data.match_name.toLowerCase().includes(e.toLowerCase())
       );
+      setPaginatedBets(b.slice(0, 10));
     } else {
       setPaginatedBets(b);
     }
   }
-
 
   return (
     <>
@@ -176,7 +172,7 @@ export default function BetLoader({ bets, showBets, user }: props) {
                       <span className="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-green-600 dark:text-green-300">
                         {showBets
                           ? ((1 - bet.data.total_implied_odds) * 100).toFixed(2)
-                          : 0.00}
+                          : 0.0}
                         %
                       </span>
                     </th>

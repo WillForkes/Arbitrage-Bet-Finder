@@ -25,22 +25,22 @@ export default function EVLoader({ bets, showBets, user }: props) {
   const [modalBetId, setModalBetId] = useState(0);
   const [modalRecBetSize, setModalRecBetSize] = useState(0);
   const [regionFilter, setRegionFilter] = useState("UK");
-  var b: EV[] = filterRegion(regionFilter, bets);
+  var b: EV[] = filterRegion(regionFilter, bets, user ? true : false);
   const [paginatedBets, setPaginatedBets] = useState<EV[]>(b.slice(0, 10));
   const [bankroll, setBankroll] = useState(0);
   const [matchSearch, setMatchSearch] = useState("");
 
   function searchBetsByMatch(e: any) {
     setMatchSearch(e);
-    if(e == "") {
-        setPaginatedBets(bets); 
-        return;
+    if (e == "") {
+      setPaginatedBets(bets);
+      return;
     }
 
     setPaginatedBets(
-        b.filter((bet) =>
-            bet.data.match_name.toLowerCase().includes(e.toLowerCase())
-        )
+      b.filter((bet) =>
+        bet.data.match_name.toLowerCase().includes(e.toLowerCase())
+      )
     );
   }
 
@@ -56,8 +56,8 @@ export default function EVLoader({ bets, showBets, user }: props) {
 
   function updateRegion(region: string) {
     setRegionFilter(region);
-    b = filterRegion(region, bets, (user ? true : false));
-    setPaginatedBets(b);
+    b = filterRegion(region, bets, user ? true : false);
+    setPaginatedBets(b.slice(0, 10));
   }
 
   function calculateRecommendedBetSize(bet: EV, totalBankroll: number): string {
@@ -169,16 +169,43 @@ export default function EVLoader({ bets, showBets, user }: props) {
                     Odds
                   </th>
                   <th scope="col" className="px-4 py-3">
-                   
                     No Vig
                     <Tooltip content="Sports bettors use no-vig odds to determine what the sportsbooks think the true probability of an outcome is.">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="w-4 h-4 mt-1 ml-0.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"></path></svg>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                        className="w-4 h-4 mt-1 ml-0.5"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
+                        ></path>
+                      </svg>
                     </Tooltip>
                   </th>
                   <th scope="col" className="px-4 py-3">
                     Rec. Bet Size
                     <Tooltip content="This is calculated using the Kelly Criterion based from your total bankroll and the win probabilty of the match. ">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="w-4 h-4 mt-1 ml-0.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"></path></svg>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                        className="w-4 h-4 mt-1 ml-0.5"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
+                        ></path>
+                      </svg>
                     </Tooltip>
                   </th>
                   <th scope="col" className="px-4 py-3">
@@ -189,24 +216,40 @@ export default function EVLoader({ bets, showBets, user }: props) {
               {bets.length > 0 && !showBets ? <FreeModal /> : null}
               <tbody className={`divide ${showBets ? "" : "blur"}`}>
                 {paginatedBets.map((bet) => (
-                  <tr key={bet.id} className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <Tooltip content={`Win probability: ${showBets ? (bet.data.winProbability * 100).toFixed(2) : "?.??%"}%`}>
-                    <th scope="row" className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                  <tr
+                    key={bet.id}
+                    className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <Tooltip
+                      content={`Win probability: ${
+                        showBets
+                          ? (bet.data.winProbability * 100).toFixed(2)
+                          : "?.??%"
+                      }%`}
+                    >
+                      <th
+                        scope="row"
+                        className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
                         {bet.data?.winProbability > 0.6 ? (
-                            <div className="inline-block w-4 h-4 mr-2 bg-green-700 rounded-full"></div>
+                          <div className="inline-block w-4 h-4 mr-2 bg-green-700 rounded-full"></div>
                         ) : bet.data?.winProbability > 0.35 ? (
-                            <div className="inline-block w-4 h-4 mr-2 bg-blue-700 rounded-full"></div>
+                          <div className="inline-block w-4 h-4 mr-2 bg-blue-700 rounded-full"></div>
                         ) : bet.data?.winProbability < 0.35 ? (
-                            <div className="inline-block w-4 h-4 mr-2 bg-red-700 rounded-full"></div>
+                          <div className="inline-block w-4 h-4 mr-2 bg-red-700 rounded-full"></div>
                         ) : (
-                            <div className="inline-block w-4 h-4 mr-2 bg-green-700 rounded-full"></div>
+                          <div className="inline-block w-4 h-4 mr-2 bg-green-700 rounded-full"></div>
                         )}
-
-                        {showBets ? bet.data.match_name : "HOME TEAM v AWAY TEAM"} - {showBets ? bet.data.region.toUpperCase() : "REGION"}
+                        {showBets
+                          ? bet.data.match_name
+                          : "HOME TEAM v AWAY TEAM"}{" "}
+                        - {showBets ? bet.data.region.toUpperCase() : "REGION"}
                         <div className=" text-xs dark:text-primary-600">
-                            {showBets ? bet.data.leagueFormatted : "LEAGUE_FORMATTED"}
+                          {showBets
+                            ? bet.data.leagueFormatted
+                            : "LEAGUE_FORMATTED"}
                         </div>
-                    </th>
+                      </th>
                     </Tooltip>
                     <th
                       scope="row"
@@ -296,7 +339,9 @@ export default function EVLoader({ bets, showBets, user }: props) {
                             onClick={() => {
                               setModalBetId(bet.id);
                               setModalRecBetSize(
-                                calculateRecommendedBetSize(bet, bankroll)
+                                parseInt(
+                                  calculateRecommendedBetSize(bet, bankroll)
+                                )
                               );
                               setModal(true);
                             }}

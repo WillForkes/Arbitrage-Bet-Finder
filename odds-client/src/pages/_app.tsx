@@ -37,7 +37,6 @@ export default function App({ Component, pageProps }: AppProps) {
     isAuth = true;
   } else if (!isLoading) {
     isAuth = false;
-    console.log("not logged in");
   }
 
   return (

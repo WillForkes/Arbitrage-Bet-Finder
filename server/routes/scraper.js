@@ -199,36 +199,45 @@ router.post("/clean", async function(req, res, next){
 })
 
 router.get("/all", freeStuff, async function(req, res, next){
-    const perPage = 25;
     let arbBets = []
     let evBets = []
-    // const userWhitelist = JSON.parse(req.user.whitelist);
+    const userWhitelist = JSON.parse(req.user.whitelist);
+    const betType = req.query.type; // * "arbitrage" or "ev"
 
-    if(req.user.plan != "free") {
-        // ! get and sort arb bets by lowest implied odds
-        arbBets = await prisma.bet.findMany({
-            where: {
-                type: "arbitrage"
-            }
-        })
-        arbBets.forEach(bet => {
-            bet.data = JSON.parse(bet.data);
-        });
-        arbBets.sort((a, b) => {
-            return a.data.total_implied_odds - b.data.total_implied_odds;
-        })
+    if(!betType){
+        res.status(400).json({"error": "Missing bet type."});
+        return;
+    }
+    
+    if(req.user.plan == "free") {
+        arbBets = [{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:7},{id:8},{id:9},{id:10}]
+        evBets = [{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:7},{id:8},{id:9},{id:10}]
+        res.json({"status": "ok", "data": {
+            "arbitrage": arbBets,
+            "ev": evBets
+        }});
+        return
+    }
 
-        // ! get an sort ev bets by highest %
-        evBets = await prisma.bet.findMany({
-            where: {
-                type: "ev"
+    // ! get and sort arb bets by lowest implied odds
+    if(betType == "arbitrage"){
+        arbBets = await prisma.bet.findMany({ where: {type: "arbitrage"}})
+        arbBets.forEach(bet => { bet.data = JSON.parse(bet.data); });
+        arbBets.sort((a, b) => {return a.data.total_implied_odds - b.data.total_implied_odds;})
+
+        // ! Sort through arb bets, if bookmaker is not in whitelist, remove it
+        arbBets = arbBets.filter(bet => {
+            const bestOutcomeOdds = bet.data.best_outcome_odds;
+            const bestOutcomeOddsKeys = Object.keys(bestOutcomeOdds);
+            
+            for(let i = 0; i < bestOutcomeOddsKeys.length; i++){
+                const key = bestOutcomeOddsKeys[i];
+                const bookmaker = bestOutcomeOdds[key][0];
+                if(!userWhitelist.includes(bookmaker)){
+                    return false;
+                }
             }
-        })
-        evBets.forEach(bet => {
-            bet.data = JSON.parse(bet.data);
-        });
-        evBets.sort((a, b) => {
-            return b.data.ev - a.data.ev;
+            return true;
         })
 
         // ! League formatting for arb bets
@@ -240,6 +249,22 @@ router.get("/all", freeStuff, async function(req, res, next){
             }
             arbBets[i].data.leagueFormatted = leagueFormatted.join(" ");
         }
+    }
+
+    if(betType == "ev") {
+        // ! get an sort ev bets by highest %
+        evBets = await prisma.bet.findMany({ where: { type: "ev" } })
+        evBets.forEach(bet => { bet.data = JSON.parse(bet.data); });
+        evBets.sort((a, b) => { return b.data.ev - a.data.ev; })
+
+        // ! Sort through ev bets, if bookmaker is not in whitelist, remove it
+        evBets = evBets.filter(bet => {
+            const bookmaker = bet.data.bookmaker;
+            if(!userWhitelist.includes(bookmaker)){
+                return false;
+            }
+            return true;
+        })
 
         // ! League formatting for ev bets
         for(let i = 0; i < evBets.length; i++){
@@ -249,11 +274,8 @@ router.get("/all", freeStuff, async function(req, res, next){
             }
             evBets[i].data.leagueFormatted = leagueFormatted.join(" ");
         }
-        
-    } else {
-        arbBets = [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]
-        evBets = [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]
     }
+        
     res.json({"status": "ok", "data": {
         "arbitrage": arbBets,
         "ev": evBets
@@ -447,7 +469,7 @@ async function sendBatchNotifications(notifications) {
         userids_email = userids_email.filter(item => item);
 
         // ! Send BULK SMS
-        axios.post("http://localhost:3000/notification/sms", {
+        axios.post(process.env.BASEURL + "/notification/sms", {
             userids: userids_sms,
             betid: noti.id
         }).then((res) => {
@@ -458,7 +480,7 @@ async function sendBatchNotifications(notifications) {
         })
 
         // ! Send BULK EMAIL
-        axios.post("http://localhost:3000/notification/email", {
+        axios.post(process.env.BASEURL + "/notification/email", {
             userids: userids_sms,
             betid: noti.id
         }).then((res) => {

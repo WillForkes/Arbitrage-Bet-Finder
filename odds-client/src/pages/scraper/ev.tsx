@@ -10,7 +10,7 @@ import { UserContext } from "@/pages/_app";
 import { User } from "@/types";
 
 export default function ev() {
-  const { data, error } = useSWR("/scraper/all", getter, {
+  const { data, error } = useSWR("/scraper/all?type=ev", getter, {
     refreshInterval: 10000
   });
   const evData = data?.ev;

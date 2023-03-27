@@ -18,10 +18,11 @@ import {
   getter,
   updateNotificationsA,
   updateProfileA,
+  updateWhitelist,
 } from "@/api";
 import ProfileEdit from "./ProfileEdit";
 import { AlertContext } from "@/pages/_app";
-import useSWR from "swr";
+import Select from "react-tailwindcss-select";
 
 interface props {
   user: User;
@@ -38,6 +39,12 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
     sms: user.dbuser.smsNotifications,
     phone: user.dbuser.phone,
   });
+  const [whiteList, setWhitelist] = useState(
+    JSON.parse(user.dbuser.whitelist).map((x: string) => ({
+      label: x,
+      value: x,
+    }))
+  );
 
   const alertContext = useContext(AlertContext);
   async function gotoBillingPortal() {
@@ -59,24 +66,20 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
     }
   }
 
-  async function updateNotifications(notifications: {
-    email: boolean;
-    emaila: string;
-    sms: boolean;
-    phone: string;
-  }) {
+  async function updateNotifications() {
     try {
       await updateNotificationsA(notifications);
+      await updateWhitelist(whiteList);
     } catch (e) {
-      alertContext?.setAlert({ msg: e.toString(), error: true });
+      alertContext?.setAlert({ msg: "Error updating user", error: true });
     }
   }
 
   async function gotoPDF(invoice: Invoice) {
     try {
       window.location.assign(invoice.stripeInvoicePdfUrl);
-    } catch (e) {
-      alertContext?.setAlert({ msg: e.toString(), error: true });
+    } catch (e: unknown) {
+      alertContext?.setAlert({ msg: "Error getting pdf", error: true });
     }
   }
 
@@ -320,20 +323,22 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
 
                 <div>
                   <Label htmlFor="email">Whitelisted bookmakers</Label>
-                  <select
-                    multiple
-                    id="countries_multiple"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  >
-                    {bookMakers.map((book) => (
-                      <option value={book.bookName}>{book.bookName}</option>
-                    ))}
-                  </select>
+                  <Select
+                    options={
+                      bookMakers
+                        ? bookMakers.map((obj) => ({
+                            value: obj.bookName,
+                            label: obj.bookName,
+                          }))
+                        : []
+                    }
+                    onChange={(e) => setWhitelist(e)}
+                    primaryColor="gray"
+                    value={whiteList}
+                    isMultiple={true}
+                  />
                 </div>
-                <Button
-                  onClick={() => updateNotifications(notifications)}
-                  type="submit"
-                >
+                <Button onClick={() => updateNotifications()} type="submit">
                   Save account settings
                 </Button>
               </div>

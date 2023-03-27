@@ -16,10 +16,10 @@ export default function Home() {
   return (
     <>
         <Hero />
+        <Features />
         <Pricing />
         <Stats/>
 
-        <Features />
         <Tline />
         <Testimonials />
         <FreeTrial />

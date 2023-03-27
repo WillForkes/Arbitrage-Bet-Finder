@@ -10,7 +10,7 @@ export default function FAQ() {
                 <div className="font-light text-gray-500 sm:text-lg dark:text-gray-400">
                     <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">We didn't reinvent the wheel</h2>
                     <p className="mb-4">
-                    Instead, we use provable math and statistics to help you make the most of arbitrage and sports betting. Our platform systematically scans hundreds of bookmakers to find the best odds available, allowing you to identify and capitalize on arbitrage opportunities. Our calculations are based on proven mathematical models and statistical analysis, ensuring that you can make informed decisions and secure a healthy profit.
+                    Instead, we use provable math and statistics to help you make the most of sports betting. Our platform systematically scans hundreds of bookmakers to find the best odds available, allowing you to identify and capitalize on arbitrage opportunities. Our calculations are based on proven mathematical models and statistical analysis, ensuring that you can make informed decisions and secure a healthy profit.
                     </p>
                     <p>
                     With our platform, you can rest assured that your bets are based on sound mathematical principles, giving you the edge you need to succeed in the worlds of arbitrage and positive EV betting. 
@@ -52,7 +52,7 @@ export default function FAQ() {
                         </Accordion.Title>
                         <Accordion.Content>
                             <p className="mb-2 text-gray-500 dark:text-gray-400">
-                            Our arbitrage betting service uses advanced algorithms to scan and compare odds from multiple bookmakers in real-time. It identifies any discrepancies and highlights profitable opportunities. It is extremely beginner friendly and can obtain very large amounts of profit. 
+                            Our service uses advanced algorithms to scan and compare odds from multiple bookmakers in real-time. It identifies any discrepancies and highlights profitable opportunities. It is extremely beginner friendly and helps our users to make informed decisions and secure a healthy profit.
                             </p>
                         </Accordion.Content>
                     </Accordion.Panel>

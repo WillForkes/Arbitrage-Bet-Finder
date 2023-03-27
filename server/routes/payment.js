@@ -304,7 +304,8 @@ async function getSub(subid){
     const productid = subscription.plan?.product;
     
     // see which key this is for in the plans object
-    for (const [key, value] of Object.entries(plans)) {
+    const _plan = plans[environment]
+    for (const [key, value] of Object.entries(_plan)) {
         if(value.product == productid){
             return key;
         }

@@ -135,7 +135,12 @@ export function transformChartData(data: TrackedBet[]) {
 
 export function filterRegion(region: string, data: EV[] | Bet[], isAuthenticated: boolean) {
     if(!isAuthenticated) return data;
-
-    return data.filter(d => d.data.region == region.toLowerCase())
+    try {
+        const filtered = data.filter(d => d.data.region == region.toLowerCase())
+        return filtered;
+    }
+    catch {
+        return data;
+    }
 }
   

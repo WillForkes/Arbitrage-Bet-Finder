@@ -92,7 +92,7 @@ export default function EVLoader({ bets, showBets, user }: props) {
               <h5>
                 {!showBets ? (
                     <span className="dark:text-white">
-                        Login to view bets
+                        Paid Tier Only
                     </span>
                 ) : (null)}
                 

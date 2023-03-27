@@ -66,7 +66,7 @@ export default function BetLoader({ bets, showBets, user }: props) {
             <div className="flex items-center flex-1 space-x-4">
                 {!showBets ? (
                     <span className="dark:text-white">
-                        Login to view bets
+                        Paid Tier Only
                     </span>
                 ) : (null)}
                 

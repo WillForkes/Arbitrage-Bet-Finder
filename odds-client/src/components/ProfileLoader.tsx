@@ -13,16 +13,24 @@ import {
 } from "flowbite-react";
 import Image from "next/image";
 import Logo from "../../public/arbster.png";
-import { createPortal, updateNotificationsA, updateProfileA } from "@/api";
+import {
+  createPortal,
+  getter,
+  updateNotificationsA,
+  updateProfileA,
+  updateWhitelist,
+} from "@/api";
 import ProfileEdit from "./ProfileEdit";
 import { AlertContext } from "@/pages/_app";
+import Select from "react-tailwindcss-select";
 
 interface props {
   user: User;
   invoices: Invoice[];
+  bookMakers: { id: number; bookName: string }[];
 }
 
-export default function ProfileLoader({ user, invoices }: props) {
+export default function ProfileLoader({ user, invoices, bookMakers }: props) {
   const [editProfile, setEditProfile] = useState(false);
   const [region, setRegion] = useState(user.dbuser.region);
   const [notifications, setNotifications] = useState({
@@ -31,6 +39,12 @@ export default function ProfileLoader({ user, invoices }: props) {
     sms: user.dbuser.smsNotifications,
     phone: user.dbuser.phone,
   });
+  const [whiteList, setWhitelist] = useState(
+    JSON.parse(user.dbuser.whitelist).map((x: string) => ({
+      label: x,
+      value: x,
+    }))
+  );
 
   const alertContext = useContext(AlertContext);
   async function gotoBillingPortal() {
@@ -46,30 +60,25 @@ export default function ProfileLoader({ user, invoices }: props) {
     try {
       await updateProfileA(region);
       setEditProfile(false);
-      console.log(editProfile);
     } catch (e: any) {
       alertContext?.setAlert({ msg: e.toString(), error: true });
     }
   }
 
-  async function updateNotifications(notifications: {
-    email: boolean;
-    emaila: string;
-    sms: boolean;
-    phone: string;
-  }) {
+  async function updateNotifications() {
     try {
       await updateNotificationsA(notifications);
+      await updateWhitelist(whiteList);
     } catch (e) {
-      alertContext?.setAlert({ msg: e.toString(), error: true });
+      alertContext?.setAlert({ msg: "Error updating user", error: true });
     }
   }
 
   async function gotoPDF(invoice: Invoice) {
     try {
       window.location.assign(invoice.stripeInvoicePdfUrl);
-    } catch (e) {
-      alertContext?.setAlert({ msg: e.toString(), error: true });
+    } catch (e: unknown) {
+      alertContext?.setAlert({ msg: "Error getting pdf", error: true });
     }
   }
 
@@ -181,21 +190,20 @@ export default function ProfileLoader({ user, invoices }: props) {
                 <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
                   Latest invoices
                 </h5>
-                {/* CREATE BILLING PORTAL LINK AND REDIRECT TO IT from GET localhost:3000/payments/portal */}
                 <button
                   onClick={() => {
                     gotoBillingPortal();
                   }}
                   className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
                 >
-                  View all
+                  Goto Billing Portal
                 </button>
               </div>
               <div className="flow-root">
                 <ul className="divide-y divide-gray-200 dark:divide-gray-700">
                   {/* foreach invoice */}
                   {invoices.map((invoice: Invoice) => (
-                    <li className="py-3 sm:py-4">
+                    <li key={invoice.id} className="py-3 sm:py-4">
                       <div className="flex items-center space-x-4">
                         <div className="shrink-0">
                           <Image
@@ -263,6 +271,8 @@ export default function ProfileLoader({ user, invoices }: props) {
                       })
                     }
                     checked={notifications.email}
+                    disabled={user.dbuser.plan == "pro" || user.dbuser.plan == "plus" || user.dbuser.plan == "starter" ? false : true}
+
                   />
                   <Label htmlFor="email">Email notifications</Label>
                 </div>
@@ -273,6 +283,7 @@ export default function ProfileLoader({ user, invoices }: props) {
                     placeholder="name@arbster.com"
                     required={true}
                     value={notifications.emaila}
+                    disabled={user.dbuser.plan == "pro" || user.dbuser.plan == "plus" || user.dbuser.plan == "starter" ? false : true}
                     onChange={(e) =>
                       setNotifications({
                         ...notifications,
@@ -282,54 +293,58 @@ export default function ProfileLoader({ user, invoices }: props) {
                   />
                 </div>
 
-                <div className="flex items-center gap-2 p-2">
-                  <Checkbox
-                    id="email"
-                    onClick={() =>
-                      setNotifications({
-                        ...notifications,
-                        sms: !notifications.sms,
-                      })
-                    }
-                    checked={notifications.sms}
-                  />
-                  <Label htmlFor="email">Phone notifications</Label>
-                </div>
                 <div>
-                  <TextInput
-                    id="email4"
-                    type="text"
-                    placeholder="+11234567890"
-                    required={true}
-                    value={notifications.phone}
-                    onChange={(e) =>
-                      setNotifications({
-                        ...notifications,
-                        phone: e.target.value,
-                      })
-                    }
-                  />
+                    <div className="flex items-center gap-2 p-2">
+                        <Checkbox
+                        id="email"
+                        onClick={() =>
+                            setNotifications({
+                            ...notifications,
+                            sms: !notifications.sms,
+                            })
+                        }
+                        checked={notifications.sms}
+                        disabled={user.dbuser.plan == "pro" || user.dbuser.plan == "plus" ? false : true}
+                        />
+                        <Label htmlFor="email">Phone notifications</Label>
+                    </div>
+                    <div>
+                        <TextInput
+                        id="email4"
+                        type="text"
+                        placeholder="+11234567890"
+                        required={true}
+                        value={notifications.phone}
+                        disabled={user.dbuser.plan == "pro" || user.dbuser.plan == "plus" ? false : true}
+                        onChange={(e) =>
+                            setNotifications({
+                            ...notifications,
+                            phone: e.target.value,
+                            })
+                        }
+                        />
+                    </div>
                 </div>
+
 
                 <div>
                   <Label htmlFor="email">Whitelisted bookmakers</Label>
-                  <select
-                    multiple
-                    id="countries_multiple"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  >
-                    <option value="BOOKMAKER">Bookmaker 1</option>
-                    <option value="BOOKMAKER">Bookmaker 2</option>
-                    <option value="BOOKMAKER">Bookmaker 4</option>
-                    <option value="BOOKMAKER">Bookmaker 4</option>
-                    <option value="BOOKMAKER">Bookmaker 5</option>
-                    <option value="BOOKMAKER">Bookmaker 6</option>
-                  </select>
+                  <Select
+                    options={
+                      bookMakers
+                        ? bookMakers.map((obj) => ({
+                            value: obj.bookName,
+                            label: obj.bookName,
+                          }))
+                        : []
+                    }
+                    onChange={(e) => setWhitelist(e)}
+                    primaryColor="gray"
+                    value={whiteList}
+                    isMultiple={true}
+                  />
                 </div>
-                <Button
-                  onClick={() => updateNotifications(notifications)}
-                  type="submit"
-                >
+                <Button onClick={() => updateNotifications()} type="submit">
                   Save account settings
                 </Button>
               </div>

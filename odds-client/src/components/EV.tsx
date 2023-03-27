@@ -1,38 +1,80 @@
-import { Bet, EV } from "@/types";
-import { dateFormat } from "@/utils";
-import React, { useState } from "react";
+import { Bet, EV, User } from "@/types";
+import { dateFormat, filterRegion } from "@/utils";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import EVModal from "./EVModal";
-import { Table } from "flowbite-react";
+import { Button, Table, TextInput } from "flowbite-react";
 import Logo from "/public/arbster.png";
 import { Dropdown } from "flowbite-react";
 import FreeModal from "./FreeModal";
+import Pagination from "./Pagination";
+import { getBookmakerLogo } from "../utils";
+import { Tooltip, Badge } from "flowbite-react";
+
 // example
 // {"match_id":"06f491453cb35e153d61c67257f3cb3b","match_name":"Bayern Munich v. Borussia Dortmund","match_start_time":1680366600,"hours_to_start":267.19723500000106,"league":"soccer_germany_bundesliga","key":"h2h","bookmaker":"Betsson","winProbability":0.18587360594795543,"odds":6,"ev":"0.115","region":"eu"}
 
 interface props {
   bets: EV[];
   showBets: boolean;
+  user: User | null;
 }
 
-export default function EVLoader({ bets, showBets }: props) {
+export default function EVLoader({ bets, showBets, user }: props) {
   const [modal, setModal] = useState(false);
   const [modalBetId, setModalBetId] = useState(0);
   const [modalRecBetSize, setModalRecBetSize] = useState(0);
   const [regionFilter, setRegionFilter] = useState("UK");
+  var b: any = filterRegion(regionFilter, bets, user ? true : false);
+  const [paginatedBets, setPaginatedBets] = useState<EV[]>(b.slice(0, 10));
+  const [bankroll, setBankroll] = useState(0);
+  const [matchSearch, setMatchSearch] = useState("");
+
+  function searchBetsByMatch(e: any) {
+    if (user) {
+      setMatchSearch(e);
+      if (e == "") {
+        setPaginatedBets(bets);
+        return;
+      }
+
+      setPaginatedBets(
+        b.filter((bet: any) =>
+          bet.data.match_name.toLowerCase().includes(e.toLowerCase())
+        )
+      );
+    }
+  }
 
   function closeModal(): void {
     setModal(false);
   }
 
-  function calculateRecommendedBetSize(bet: EV, totalBankroll: number): number {
-    // kelly multiplier = (ev - probability of losing) / (decimal odds - 1)
-    const kmultiplier =
-      (bet.data.ev - (1 - bet.data.winProbability)) / (1 / bet.data.odds - 1);
+  function updateItems(page: number) {
+    const start = (page - 1) * 10;
+    const end = start + 10;
+    setPaginatedBets(b.slice(start, end));
+  }
+
+  function updateRegion(region: string) {
+    setRegionFilter(region);
+    b = filterRegion(region, bets, user ? true : false);
+    setPaginatedBets(b.slice(0, 10));
+  }
+
+  function calculateRecommendedBetSize(bet: EV, totalBankroll: number): string {
+    // kelly multiplier =  (win prob * net odds of bet) - (lose prob) / net odds of bet
+    const winProb = bet.data.winProbability;
+    const loseProb = 1 - winProb;
+    const netOdds = bet.data.odds - 1;
+
+    const kmultiplier = (netOdds * winProb - loseProb) / netOdds;
+
     let rec = (kmultiplier * totalBankroll).toFixed(2);
     // round to nearest integer
     rec = Math.round(Number(rec)).toString();
     return rec;
+    //return (kmultiplier * 100).toFixed(0);
   }
 
   return (
@@ -48,13 +90,28 @@ export default function EVLoader({ bets, showBets }: props) {
           <div className="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4">
             <div className="flex items-center flex-1 space-x-4">
               <h5>
-                <span className="text-gray-500">Total bets:</span>
-                <span className="dark:text-white">
-                  {showBets || bets.length > 0
-                    ? bets.length + " "
-                    : " Login to view bets"}
-                </span>
+                {!showBets ? (
+                    <span className="dark:text-white">
+                        Paid Tier Only
+                    </span>
+                ) : (null)}
+                
               </h5>
+              <TextInput
+                className="w-full lg:w-3/4 md:w-7/8 sm:w-3/4"
+                type="text"
+                placeholder="Search Match"
+                onChange={(e) => searchBetsByMatch(e.target.value)}
+              />
+            </div>
+            <div className="flex items-center justify-start"></div>
+            <div className="flex items-center justify-start">
+              <TextInput
+                className="w-full lg:w-3/4 md:w-7/8 sm:w-3/4"
+                type="number"
+                placeholder="Total Bankroll"
+                onChange={(e) => setBankroll(parseInt(e.target.value))}
+              />
             </div>
 
             <Dropdown
@@ -63,28 +120,28 @@ export default function EVLoader({ bets, showBets }: props) {
             >
               <Dropdown.Item
                 onClick={() => {
-                  setRegionFilter("UK");
+                  updateRegion("UK");
                 }}
               >
                 UK
               </Dropdown.Item>
               <Dropdown.Item
                 onClick={() => {
-                  setRegionFilter("EU");
+                  updateRegion("EU");
                 }}
               >
                 EU
               </Dropdown.Item>
               <Dropdown.Item
                 onClick={() => {
-                  setRegionFilter("AU");
+                  updateRegion("AU");
                 }}
               >
                 AU
               </Dropdown.Item>
               <Dropdown.Item
                 onClick={() => {
-                  setRegionFilter("US");
+                  updateRegion("US");
                 }}
               >
                 US
@@ -93,49 +150,120 @@ export default function EVLoader({ bets, showBets }: props) {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <thead className="text-xs text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="px-4 py-3">
-                    Match Name
+                    MATCH NAME
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Bet On
+                    MARKET
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    League
+                    BET ON
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Win Odds
+                    EXPECTED VALUE
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Profit Percentage
+                    BOOKMAKERS
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Region
+                    ODDS
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Bookmakers
+                    NO-VIG ODDS
+                    <Tooltip
+                      animation="duration-300"
+                      content="Sports bettors use no-vig odds to determine what the sportsbooks think the true probability of an outcome is."
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                        className="w-4 h-4 mt-1 ml-0.5"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
+                        ></path>
+                      </svg>
+                    </Tooltip>
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Rec. Bet Size
+                    REC. BET SIZE
+                    <Tooltip
+                      animation="duration-300"
+                      content="This is calculated using the Kelly Criterion based from your total bankroll and the win probabilty of the match. "
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                        className="w-4 h-4 mt-1 ml-0.5"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
+                        ></path>
+                      </svg>
+                    </Tooltip>
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Actions
+                    ACTIONS
                   </th>
                 </tr>
               </thead>
               {bets.length > 0 && !showBets ? <FreeModal /> : null}
               <tbody className={`divide ${showBets ? "" : "blur"}`}>
-                {bets.map((bet) => (
+                {paginatedBets.map((bet) => (
                   <tr
                     key={bet.id}
                     className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
+                    <Tooltip
+                      content={`Win probability: ${
+                        showBets
+                          ? (bet.data.winProbability * 100).toFixed(2)
+                          : "?.??%"
+                      }%`}
+                    >
+                      <th
+                        scope="row"
+                        className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        {bet.data?.winProbability > 0.6 ? (
+                          <div className="inline-block w-4 h-4 mr-2 bg-green-700 rounded-full"></div>
+                        ) : bet.data?.winProbability > 0.35 ? (
+                          <div className="inline-block w-4 h-4 mr-2 bg-blue-700 rounded-full"></div>
+                        ) : bet.data?.winProbability < 0.35 ? (
+                          <div className="inline-block w-4 h-4 mr-2 bg-red-700 rounded-full"></div>
+                        ) : (
+                          <div className="inline-block w-4 h-4 mr-2 bg-green-700 rounded-full"></div>
+                        )}
+                        {showBets
+                          ? bet.data.match_name
+                          : "HOME TEAM v AWAY TEAM"}{" "}
+                        - {showBets ? bet.data.region.toUpperCase() : "REGION"}
+                        <div className=" text-xs dark:text-primary-600">
+                          {showBets
+                            ? bet.data.leagueFormatted
+                            : "LEAGUE_FORMATTED"}
+                        </div>
+                      </th>
+                    </Tooltip>
                     <th
                       scope="row"
                       className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                      {showBets ? bet.data.match_name : "HOME TEAM v AWAY TEAM"}
+                      {showBets ? bet.data.key : "MARKET"}
                     </th>
                     <th
                       scope="row"
@@ -148,54 +276,22 @@ export default function EVLoader({ bets, showBets }: props) {
                       scope="row"
                       className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                      {showBets ? bet.data.leagueFormatted : "SPORT LEAGUE"}
-                    </th>
-
-                    <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      {showBets ? (
-                        <div>
-                          {bet.data.winProbability > 0.6 ? (
-                            <div className="inline-block w-4 h-4 mr-2 bg-green-700 rounded-full"></div>
-                          ) : bet.data.winProbability > 0.4 ? (
-                            <div className="inline-block w-4 h-4 mr-2 bg-blue-700 rounded-full"></div>
-                          ) : (
-                            <div className="inline-block w-4 h-4 mr-2 bg-red-700 rounded-full"></div>
-                          )}
-                          {(bet.data.winProbability * 100).toFixed(2)}%
-                        </div>
-                      ) : (
-                        <div>
-                          <div className="inline-block w-4 h-4 mr-2 bg-red-700 rounded-full"></div>
-                          <span className="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-green-600 dark:text-green-300">
-                            0.00%
-                          </span>
-                        </div>
-                      )}
-                    </td>
-
-                    <th
-                      scope="row"
-                      className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                    >
                       <span className="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-green-600 dark:text-green-300">
-                        {showBets ? (bet.data.ev * 100).toFixed(2) : 0.0}%
+                        +{showBets ? (bet.data.ev * 100).toFixed(2) : 0.0}%
                       </span>
                     </th>
-
-                    <td className="px-4 py-2">
-                      {showBets ? bet.data.region.toUpperCase() : "REGION"}
-                    </td>
 
                     <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       {showBets ? (
                         <div className="flex items-center space-x-3">
                           <div className="flex-shrink-0">
                             <div className="relative">
-                              <Image
-                                src={Logo}
+                              <img
+                                src={getBookmakerLogo(bet.data.bookmaker)}
                                 alt="Bookmaker Logo"
-                                width={20}
-                                height={20}
+                                className="rounded-md"
+                                width={25}
+                                height={25}
                               />
                             </div>
                           </div>
@@ -227,10 +323,21 @@ export default function EVLoader({ bets, showBets }: props) {
                     </td>
 
                     <td className="px-4 py-2">
-                      $
-                      {showBets
-                        ? calculateRecommendedBetSize(bet, 200)
-                        : "0.00"}
+                      {showBets ? bet.data.odds : "0"}
+                    </td>
+
+                    <td className="px-4 py-2">
+                      {showBets ? bet.data.noVigOdds.toFixed(2) : "0.00"}
+                    </td>
+
+                    <td className="px-10 py-2 pl-2">
+                      {showBets && bankroll != 0 && !Number.isNaN(bankroll) ? (
+                        <Badge color="success">
+                          ${calculateRecommendedBetSize(bet, bankroll) + ".00"}
+                        </Badge>
+                      ) : (
+                        <Badge color="warning">Input Bankroll</Badge>
+                      )}
                     </td>
 
                     <td>
@@ -240,11 +347,11 @@ export default function EVLoader({ bets, showBets }: props) {
                             onClick={() => {
                               setModalBetId(bet.id);
                               setModalRecBetSize(
-                                calculateRecommendedBetSize(bet, 200)
+                                parseInt(
+                                  calculateRecommendedBetSize(bet, bankroll)
+                                )
                               );
                               setModal(true);
-                              console.log(bet.id);
-                              console.log(modalRecBetSize);
                             }}
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                           >
@@ -265,98 +372,13 @@ export default function EVLoader({ bets, showBets }: props) {
               </tbody>
             </table>
           </div>
-          <nav
-            className="flex flex-col items-start justify-between p-4 space-y-3 md:flex-row md:items-center md:space-y-0"
-            aria-label="Table navigation"
-          >
-            <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-              Showing
-              <span className="font-semibold text-gray-900 dark:text-white">
-                1-10
-              </span>
-              of
-              <span className="font-semibold text-gray-900 dark:text-white">
-                1000
-              </span>
-            </span>
-            <ul className="inline-flex items-stretch -space-x-px">
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  <span className="sr-only">Previous</span>
-                  <svg
-                    className="w-5 h-5"
-                    aria-hidden="true"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" />
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  1
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  2
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  aria-current="page"
-                  className="z-10 flex items-center justify-center px-3 py-2 text-sm leading-tight border text-primary-600 bg-primary-50 border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
-                >
-                  3
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  ...
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  100
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  <span className="sr-only">Next</span>
-                  <svg
-                    className="w-5 h-5"
-                    aria-hidden="true"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
-                  </svg>
-                </a>
-              </li>
-            </ul>
-          </nav>
+
+          <Pagination
+            currentPage={1}
+            itemsPerPage={10}
+            maxItems={bets.length}
+            updateItems={updateItems}
+          />
         </div>
       </div>
     </>

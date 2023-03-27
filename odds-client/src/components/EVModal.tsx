@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { createBet } from "@/api";
 import { AlertContext } from "@/pages/_app";
+import { currencyCode } from "@/utils";
 
 export default function EVModal({
   isVisible,
@@ -27,7 +28,10 @@ export default function EVModal({
   async function newBet(e: any) {
     e.preventDefault();
     try {
-      var data = await createBet(id, stake);
+      if (stake) {
+        await createBet(id, stake);
+      }
+
       alertContext?.setAlert({ msg: "Bet created!", error: false });
     } catch (e) {
       console.error(e);
@@ -71,7 +75,7 @@ export default function EVModal({
           <form action="" className="max-w-sm mx-auto p-4">
             <input
               type="number"
-              value={stake}
+              value={stake ? stake : ""}
               placeholder={"Recommended: $" + recBetSize}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               onChange={(e) => updateBetSize(e)}

@@ -12,7 +12,7 @@ router.post('/whitelist', checkUser, async function(req, res, next) {
     
     let currentWhitelist = JSON.parse(req.user.whitelist)
     let newWhitelist = currentWhitelist.concat(add)
-
+    console.log(newWhitelist)
     // remove duplicates
     newWhitelist = [...new Set(newWhitelist)]
 

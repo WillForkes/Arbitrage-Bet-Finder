@@ -37,7 +37,7 @@ export type User = {
         authid: string;
         plan: string;
         planExpiresAt: string;
-        whitelist: string[];
+        whitelist: string;
         createdAt: string;
         updatedAt: string;
         apikey: string;
@@ -51,7 +51,7 @@ export type User = {
         },
         smsNotifications: boolean,
         emailNotifications: boolean,
-        phone: number
+        phone: string
     }
 }
 
@@ -67,6 +67,7 @@ export type Bet = {
         leagueFormatted: string;
     } 
     id: number;
+    type: string;
 }
 
 export type Tracker = {
@@ -81,13 +82,27 @@ export type Tracker = {
     updatedAt: string;
 }
 
+export type HedgeOutcome = {
+    outcome: string;
+    profit: number;
+    stake: number;
+    odds: number
+    book: string;
+}
+
+export type Hedge = {
+    outcomes: HedgeOutcome[]
+}
+
 export type EV = {
     data: {
         match_name: string;
+        key: string;
         ev: number
         team: string;
         winProbability: number;
         odds: number;
+        noVigOdds: number;
         league: string
         region: string
         match_start_time: number
@@ -95,6 +110,7 @@ export type EV = {
         leagueFormatted: string
     }
     id: number
+    type: string
 }
 
 export enum Plan {
@@ -127,6 +143,5 @@ export type Outcome = {
 }
 
 type OutcomeOdds = {
-    [team1:string]: [string, number]
-    [team2: string]: [string, number]
+    [key: string]: [string, number, number]
 }

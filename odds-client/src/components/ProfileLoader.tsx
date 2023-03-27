@@ -13,16 +13,23 @@ import {
 } from "flowbite-react";
 import Image from "next/image";
 import Logo from "../../public/arbster.png";
-import { createPortal, updateNotificationsA, updateProfileA } from "@/api";
+import {
+  createPortal,
+  getter,
+  updateNotificationsA,
+  updateProfileA,
+} from "@/api";
 import ProfileEdit from "./ProfileEdit";
 import { AlertContext } from "@/pages/_app";
+import useSWR from "swr";
 
 interface props {
   user: User;
   invoices: Invoice[];
+  bookMakers: { id: number; bookName: string }[];
 }
 
-export default function ProfileLoader({ user, invoices }: props) {
+export default function ProfileLoader({ user, invoices, bookMakers }: props) {
   const [editProfile, setEditProfile] = useState(false);
   const [region, setRegion] = useState(user.dbuser.region);
   const [notifications, setNotifications] = useState({
@@ -318,12 +325,9 @@ export default function ProfileLoader({ user, invoices }: props) {
                     id="countries_multiple"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   >
-                    <option value="BOOKMAKER">Bookmaker 1</option>
-                    <option value="BOOKMAKER">Bookmaker 2</option>
-                    <option value="BOOKMAKER">Bookmaker 4</option>
-                    <option value="BOOKMAKER">Bookmaker 4</option>
-                    <option value="BOOKMAKER">Bookmaker 5</option>
-                    <option value="BOOKMAKER">Bookmaker 6</option>
+                    {bookMakers.map((book) => (
+                      <option value={book.bookName}>{book.bookName}</option>
+                    ))}
                   </select>
                 </div>
                 <Button

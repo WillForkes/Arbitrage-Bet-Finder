@@ -25,7 +25,7 @@ export default function BetLoader({ bets, showBets, user }: props) {
   const [modal, setModal] = useState(false);
   const [modalBetId, setModalBetId] = useState(0);
   const [regionFilter, setRegionFilter] = useState("UK");
-  var b: Bet[] = filterRegion(regionFilter, bets);
+  var b: Bet[] = filterRegion(regionFilter, bets, user ? true : false);
   const [paginatedBets, setPaginatedBets] = useState<Bet[]>(b.slice(0, 10));
 
   function closeModal(): void {

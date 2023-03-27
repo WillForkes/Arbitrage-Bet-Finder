@@ -31,7 +31,7 @@ export default function betPage() {
     return (
     <>
         <section className="bg-white dark:bg-gray-900"> 
-            <div className="mx-auto max-w-screen-sm">
+            <div className="mx-auto max-w-screen-sm py-12">
                 <Card>
                     {bet ? (
                         <div className="py-8 px-4 mx-auto max-w-md lg:py-8">

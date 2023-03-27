@@ -1,4 +1,4 @@
-import { Bet, EV } from "@/types";
+import { Bet, EV, User } from "@/types";
 import { dateFormat, filterRegion } from "@/utils";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
@@ -17,9 +17,10 @@ import { Tooltip, Badge } from "flowbite-react";
 interface props {
   bets: EV[];
   showBets: boolean;
+  user: User | null;
 }
 
-export default function EVLoader({ bets, showBets }: props) {
+export default function EVLoader({ bets, showBets, user }: props) {
   const [modal, setModal] = useState(false);
   const [modalBetId, setModalBetId] = useState(0);
   const [modalRecBetSize, setModalRecBetSize] = useState(0);
@@ -31,15 +32,16 @@ export default function EVLoader({ bets, showBets }: props) {
 
   function searchBetsByMatch(e: any) {
     setMatchSearch(e);
-    if (e != "") {
-      setPaginatedBets(
-        b.filter((bet) =>
-          bet.data.match_name.toLowerCase().includes(e.toLowerCase())
-        )
-      );
-    } else {
-      setPaginatedBets(bets);
+    if(e == "") {
+        setPaginatedBets(bets); 
+        return;
     }
+
+    setPaginatedBets(
+        b.filter((bet) =>
+            bet.data.match_name.toLowerCase().includes(e.toLowerCase())
+        )
+    );
   }
 
   function closeModal(): void {
@@ -54,7 +56,7 @@ export default function EVLoader({ bets, showBets }: props) {
 
   function updateRegion(region: string) {
     setRegionFilter(region);
-    b = filterRegion(region, bets);
+    b = filterRegion(region, bets, (user ? true : false));
     setPaginatedBets(b);
   }
 

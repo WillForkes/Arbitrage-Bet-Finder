@@ -23,7 +23,7 @@ export default function ev() {
     <div className="page-offset-x py-8 bg-gray-900">
       {data ? (
           <div className="rounded-md gap-6 grid-cols-1 2xl:grid-cols-2 mb-2">
-              <EVLoader bets={evData} showBets={showBets} />
+              <EVLoader bets={evData} showBets={showBets} user={user} />
           </div>
       ) : (
         <div className="mx-auto max-w-screen-md p-64 text-center mb-8 lg:mb-12">

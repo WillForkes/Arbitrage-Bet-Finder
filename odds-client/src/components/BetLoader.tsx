@@ -16,7 +16,7 @@ import { getBookmakerLogo } from "@/utils";
 interface props {
   bets: Bet[];
   showBets: boolean;
-  user: User;
+  user: User | null;
 }
 
 export default function BetLoader({ bets, showBets, user }: props) {
@@ -36,7 +36,7 @@ export default function BetLoader({ bets, showBets, user }: props) {
 
   function updateRegion(region: string) {
     setRegionFilter(region); // ui
-    b = filterRegion(region, bets); // bets with region filter
+    b = filterRegion(region, bets, (user ? true : false)); // bets with region filter
     setPaginatedBets(b); // reset paginated bets
   }
 

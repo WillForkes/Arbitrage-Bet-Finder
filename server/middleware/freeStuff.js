@@ -8,81 +8,77 @@ let freeStuff = async (req, res, next) => {
 
     // ! If no api key and is not authenticated
     if(!isAuthenticated){
-        req.user = {plan: "free", whiteList: []}
+        req.user = {plan: "free", whitelist: "[]"}
         next()
     } else {
-
-
-    // ! Get user data from local db
-    let user = await prisma.user.findUnique({
-        where: {
-            authid: req.oidc.user.sub
-        },
-        include: {
-            subscription: {
-                where: {
-                    status: "active"
-                }
-            }
-        }  
-    })
-
-    // ! If no user, create user
-    if(!user){
-        // create user
-        // generate api key
-        const apikey = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-        const afilliateCode = makeid(8)
-
-        const newUser = await prisma.user.create({
-            data: {
-                email: req.oidc.user.email,
-                afilliateCode: afilliateCode,
-                authid: req.oidc.user.sub,
-                apikey: apikey
-            }
-        })
-
-        if(!newUser){
-            res.status(500).json({"error": "Error creating user"})
-            return;
-        }
-        user = newUser
-    } else {
-
-
-    // ! Check user plan has not expired
-    let plan = user.subscription[0] ? user.subscription[0].plan : "free"
-    const planExpiresAt = user.subscription[0] ? new Date(user.subscription[0].planExpiresAt) : new Date()
-    const planId = user.subscription[0] ? user.subscription[0].id : null
-
-    if(plan != "free" && planExpiresAt < new Date()){
-        // ! Update user plan to free and set subscription to inactive
-        plan = "free"
-
-        await prisma.subscription.update({
+        // ! Get user data from local db
+        let user = await prisma.user.findUnique({
             where: {
-                id: planId
+                authid: req.oidc.user.sub
             },
-            data: {
-                status: "inactive"
-            }
+            include: {
+                subscription: {
+                    where: {
+                        status: "active"
+                    }
+                }
+            }  
         })
+
+        // ! If no user, create user
+        if(!user){
+            // create user
+            // generate api key
+            const apikey = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            const afilliateCode = makeid(8)
+
+            const newUser = await prisma.user.create({
+                data: {
+                    email: req.oidc.user.email,
+                    afilliateCode: afilliateCode,
+                    authid: req.oidc.user.sub,
+                    apikey: apikey
+                }
+            })
+
+            if(!newUser){
+                res.status(500).json({"error": "Error creating user"})
+                return;
+            }
+            user = newUser
+        } else {
+            // ! Check user plan has not expired
+            let plan = user.subscription[0] ? user.subscription[0].plan : "free"
+            const planExpiresAt = user.subscription[0] ? new Date(user.subscription[0].planExpiresAt) : new Date()
+            const planId = user.subscription[0] ? user.subscription[0].id : null
+
+            if(plan != "free" && planExpiresAt < new Date()){
+                // ! Update user plan to free and set subscription to inactive
+                plan = "free"
+
+                await prisma.subscription.update({
+                    where: {
+                        id: planId
+                    },
+                    data: {
+                        status: "inactive"
+                    }
+                })
+            }
+
+            // ! attach user to request
+            user.plan = plan
+            user.planExpiresAt = planExpiresAt
+            user.subId = user.subscription.subId
+            delete user.subscription
+            user.email = req.oidc.user.email
+
+            // * attach user to request
+            req.user = user
+
+            next();
+        }
     }
-
-    // ! attach user to request
-    user.plan = plan
-    user.planExpiresAt = planExpiresAt
-    user.subId = user.subscription.subId
-    delete user.subscription
-    user.email = req.oidc.user.email
-
-    // * attach user to request
-    req.user = user
-
-    next();
-}
-}
 }
 
 function makeid(length) {

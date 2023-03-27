@@ -31,17 +31,19 @@ export default function EVLoader({ bets, showBets, user }: props) {
   const [matchSearch, setMatchSearch] = useState("");
 
   function searchBetsByMatch(e: any) {
-    setMatchSearch(e);
-    if (e == "") {
-      setPaginatedBets(bets);
-      return;
+    if(user) {
+        setMatchSearch(e);
+        if (e == "") {
+          setPaginatedBets(bets);
+          return;
+        }
+    
+        setPaginatedBets(
+          b.filter((bet) =>
+            bet.data.match_name.toLowerCase().includes(e.toLowerCase())
+          )
+        );
     }
-
-    setPaginatedBets(
-      b.filter((bet) =>
-        bet.data.match_name.toLowerCase().includes(e.toLowerCase())
-      )
-    );
   }
 
   function closeModal(): void {
@@ -88,12 +90,12 @@ export default function EVLoader({ bets, showBets, user }: props) {
           <div className="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4">
             <div className="flex items-center flex-1 space-x-4">
               <h5>
-                <span className="text-gray-500">Total bets:</span>
-                <span className="dark:text-white">
-                  {showBets || bets.length > 0
-                    ? bets.length + " "
-                    : " Login to view bets"}
-                </span>
+                {!showBets ? (
+                    <span className="dark:text-white">
+                        Login to view bets
+                    </span>
+                ) : (null)}
+                
               </h5>
               <TextInput
                 className="w-full lg:w-3/4 md:w-7/8 sm:w-3/4"
@@ -175,14 +177,14 @@ export default function EVLoader({ bets, showBets, user }: props) {
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
-                        stroke-width="1.5"
+                        strokeWidth="1.5"
                         stroke="currentColor"
                         aria-hidden="true"
                         className="w-4 h-4 mt-1 ml-0.5"
                       >
                         <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                           d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
                         ></path>
                       </svg>
@@ -195,14 +197,14 @@ export default function EVLoader({ bets, showBets, user }: props) {
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
-                        stroke-width="1.5"
+                        strokeWidth="1.5"
                         stroke="currentColor"
                         aria-hidden="true"
                         className="w-4 h-4 mt-1 ml-0.5"
                       >
                         <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                           d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
                         ></path>
                       </svg>

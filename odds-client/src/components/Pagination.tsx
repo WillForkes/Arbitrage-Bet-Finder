@@ -33,7 +33,6 @@ export default function Pagination({
             if(i < 1 || i > maxPage) continue;
             numbers.push(i.toString());
         }
-        console.log(numbers)
 
         return numbers;
     }
@@ -48,7 +47,7 @@ export default function Pagination({
                 <span className="font-semibold text-gray-900 dark:text-white"> {maxPage}</span>
             </span>
             <ul className="inline-flex items-stretch -space-x-px">
-                <li>
+                {/* <li>
                     <button onClick={() => {
                         handlePageChange(1)
                     }} className="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
@@ -60,7 +59,7 @@ export default function Pagination({
                             <path  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"  />
                         </svg>
                     </button>
-                </li>
+                </li> */}
                 <li>
                     <button onClick={() => {
                         handlePageChange(page - 1)
@@ -71,11 +70,9 @@ export default function Pagination({
                         </svg>
                     </button>
                 </li>
-                {/* aria-current="page" */}
-                
                 
                 {/* for each item in getPageNumbers */}
-                {pageNumbers.map((num) => (
+                {/* {pageNumbers.map((num) => (
                     <li key={num}>
                         <button onClick={() => {
                         handlePageChange(parseInt(num))
@@ -103,7 +100,7 @@ export default function Pagination({
                             </button>
                         </li>
                     </>
-                ) : (null)}
+                ) : (null)} */}
 
 
                 <li>

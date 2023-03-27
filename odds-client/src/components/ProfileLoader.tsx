@@ -60,7 +60,6 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
     try {
       await updateProfileA(region);
       setEditProfile(false);
-      console.log(editProfile);
     } catch (e: any) {
       alertContext?.setAlert({ msg: e.toString(), error: true });
     }
@@ -191,7 +190,6 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                 <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
                   Latest invoices
                 </h5>
-                {/* CREATE BILLING PORTAL LINK AND REDIRECT TO IT from GET localhost:3000/payments/portal */}
                 <button
                   onClick={() => {
                     gotoBillingPortal();

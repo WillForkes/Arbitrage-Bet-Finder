@@ -9,7 +9,7 @@ import { User } from "@/types";
 import Auth from "@/components/Auth";
 
 export default function bets() {
-  const { data, error } = useSWR("/scraper/all", getter, {
+  const { data, error } = useSWR("/scraper/all?type=arbitrage", getter, {
     refreshInterval: 10000,
   });
   const arbData = data?.arbitrage;

@@ -25,7 +25,9 @@ export default function BetLoader({ bets, showBets, user }: props) {
   const [modal, setModal] = useState(false);
   const [modalBetId, setModalBetId] = useState(0);
   const [regionFilter, setRegionFilter] = useState("UK");
+  
   var b: Bet[] = filterRegion(regionFilter, bets, user ? true : false);
+
   const [paginatedBets, setPaginatedBets] = useState<Bet[]>(b.slice(0, 10));
 
   function closeModal(): void {
@@ -35,24 +37,23 @@ export default function BetLoader({ bets, showBets, user }: props) {
   function updateRegion(region: string) {
     setRegionFilter(region); // ui
     b = filterRegion(region, bets, user ? true : false); // bets with region filter
-    setPaginatedBets(b.slice(0, 10)); // reset paginated bets
+    setPaginatedBets(b);
   }
 
-  function updateItems(page: number) {
-    const start = (page - 1) * 10;
-    const end = start + 10;
-    setPaginatedBets(b.slice(start, end));
-  }
+//   function updateItems(page: number) {
+//     const start = (page - 1) * 10;
+//     const end = start + 10;
+//     setPaginatedBets(b.slice(start, end));
+//   }
 
   function searchBetsByMatch(e: any) {
-    console.log(e);
-    if (e != "" || e != null) {
-      b = b.filter((bet) =>
-        bet.data.match_name.toLowerCase().includes(e.toLowerCase())
-      );
-      setPaginatedBets(b.slice(0, 10));
-    } else {
-      setPaginatedBets(b);
+    if(user) {
+        if (e != "" || e != null) {
+            b = b.filter((bet) =>
+              bet.data.match_name.toLowerCase().includes(e.toLowerCase())
+            );
+            setPaginatedBets(b);
+          }
     }
   }
 
@@ -63,12 +64,12 @@ export default function BetLoader({ bets, showBets, user }: props) {
         <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
           <div className="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4">
             <div className="flex items-center flex-1 space-x-4">
-              <h5>
-                <span className="text-gray-500">Total bets:</span>
-                <span className="dark:text-white">
-                  {showBets ? bets.length : " Login to view bets"}
-                </span>
-              </h5>
+                {!showBets ? (
+                    <span className="dark:text-white">
+                        Login to view bets
+                    </span>
+                ) : (null)}
+                
               <TextInput
                 className="w-full lg:w-3/4 md:w-7/8 sm:w-3/4"
                 type="text"
@@ -290,12 +291,12 @@ export default function BetLoader({ bets, showBets, user }: props) {
             </table>
           </div>
 
-          <Pagination
+          {/* <Pagination
             currentPage={1}
             itemsPerPage={10}
-            maxItems={bets.length}
+            maxItems={allBets.length}
             updateItems={updateItems}
-          />
+          /> */}
         </div>
       </div>
     </>

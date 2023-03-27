@@ -148,29 +148,29 @@ export default function EVLoader({ bets, showBets, user }: props) {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <thead className="text-xs text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="px-4 py-3">
-                    Match Name
+                    MATCH NAME
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Market
+                    MARKET
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Bet On
+                    BET ON
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Expected Value
+                    EXPECTED VALUE
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Bookmakers
+                    BOOKMAKERS
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Odds
+                    ODDS
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    No Vig
-                    <Tooltip content="Sports bettors use no-vig odds to determine what the sportsbooks think the true probability of an outcome is.">
+                    NO-VIG ODDS
+                    <Tooltip animation="duration-300" content="Sports bettors use no-vig odds to determine what the sportsbooks think the true probability of an outcome is.">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -189,8 +189,8 @@ export default function EVLoader({ bets, showBets, user }: props) {
                     </Tooltip>
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Rec. Bet Size
-                    <Tooltip content="This is calculated using the Kelly Criterion based from your total bankroll and the win probabilty of the match. ">
+                    REC. BET SIZE
+                    <Tooltip animation="duration-300" content="This is calculated using the Kelly Criterion based from your total bankroll and the win probabilty of the match. ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -209,7 +209,7 @@ export default function EVLoader({ bets, showBets, user }: props) {
                     </Tooltip>
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Actions
+                    ACTIONS
                   </th>
                 </tr>
               </thead>

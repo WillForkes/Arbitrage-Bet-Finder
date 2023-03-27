@@ -9,6 +9,7 @@ import Testimonials from "@/components/Home/Testimonials";
 import Tline from "@/components/Home/Timeline";
 import FreeTrial from "@/components/Home/FreeTrial";
 import Stats from "@/components/Home/Stats";
+import WhatIs from "@/components/Home/WhatIs";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,10 +17,10 @@ export default function Home() {
   return (
     <>
         <Hero />
+        <WhatIs />
         <Features />
         <Pricing />
         <Stats/>
-
         <Tline />
         <Testimonials />
         <FreeTrial />

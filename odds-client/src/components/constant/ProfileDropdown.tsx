@@ -1,10 +1,4 @@
-import {
-  Dropdown,
-  HiViewGrid,
-  HiCog,
-  HiCurrencyDollar,
-  HiLogout,
-} from "flowbite-react";
+import { Dropdown } from "flowbite-react";
 import { UserContext } from "@/pages/_app";
 import { User } from "@/types";
 
@@ -32,19 +26,15 @@ export default function ProfileDropdown() {
             {user?.user?.auth0.name}
           </span>
         </Dropdown.Header>
-        <Dropdown.Item onClick={() => router.push("/profile")} icon={HiCog}>
+        <Dropdown.Item onClick={() => router.push("/profile")}>
           Settings
         </Dropdown.Item>
-        <Dropdown.Item
-          onClick={() => router.push("/tracker")}
-          icon={HiCurrencyDollar}
-        >
+        <Dropdown.Item onClick={() => router.push("/tracker")}>
           Bet Tracker
         </Dropdown.Item>
         <Dropdown.Divider />
         <Dropdown.Item
           onClick={() => window.location.assign("http://localhost:3000/logout")}
-          icon={HiLogout}
         >
           Sign out
         </Dropdown.Item>

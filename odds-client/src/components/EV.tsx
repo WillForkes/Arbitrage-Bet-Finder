@@ -25,24 +25,24 @@ export default function EVLoader({ bets, showBets, user }: props) {
   const [modalBetId, setModalBetId] = useState(0);
   const [modalRecBetSize, setModalRecBetSize] = useState(0);
   const [regionFilter, setRegionFilter] = useState("UK");
-  var b: EV[] = filterRegion(regionFilter, bets, user ? true : false);
+  var b: any = filterRegion(regionFilter, bets, user ? true : false);
   const [paginatedBets, setPaginatedBets] = useState<EV[]>(b.slice(0, 10));
   const [bankroll, setBankroll] = useState(0);
   const [matchSearch, setMatchSearch] = useState("");
 
   function searchBetsByMatch(e: any) {
-    if(user) {
-        setMatchSearch(e);
-        if (e == "") {
-          setPaginatedBets(bets);
-          return;
-        }
-    
-        setPaginatedBets(
-          b.filter((bet) =>
-            bet.data.match_name.toLowerCase().includes(e.toLowerCase())
-          )
-        );
+    if (user) {
+      setMatchSearch(e);
+      if (e == "") {
+        setPaginatedBets(bets);
+        return;
+      }
+
+      setPaginatedBets(
+        b.filter((bet: any) =>
+          bet.data.match_name.toLowerCase().includes(e.toLowerCase())
+        )
+      );
     }
   }
 
@@ -91,11 +91,8 @@ export default function EVLoader({ bets, showBets, user }: props) {
             <div className="flex items-center flex-1 space-x-4">
               <h5>
                 {!showBets ? (
-                    <span className="dark:text-white">
-                        Login to view bets
-                    </span>
-                ) : (null)}
-                
+                  <span className="dark:text-white">Login to view bets</span>
+                ) : null}
               </h5>
               <TextInput
                 className="w-full lg:w-3/4 md:w-7/8 sm:w-3/4"
@@ -172,7 +169,10 @@ export default function EVLoader({ bets, showBets, user }: props) {
                   </th>
                   <th scope="col" className="px-4 py-3">
                     NO-VIG ODDS
-                    <Tooltip animation="duration-300" content="Sports bettors use no-vig odds to determine what the sportsbooks think the true probability of an outcome is.">
+                    <Tooltip
+                      animation="duration-300"
+                      content="Sports bettors use no-vig odds to determine what the sportsbooks think the true probability of an outcome is."
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -192,7 +192,10 @@ export default function EVLoader({ bets, showBets, user }: props) {
                   </th>
                   <th scope="col" className="px-4 py-3">
                     REC. BET SIZE
-                    <Tooltip animation="duration-300" content="This is calculated using the Kelly Criterion based from your total bankroll and the win probabilty of the match. ">
+                    <Tooltip
+                      animation="duration-300"
+                      content="This is calculated using the Kelly Criterion based from your total bankroll and the win probabilty of the match. "
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"

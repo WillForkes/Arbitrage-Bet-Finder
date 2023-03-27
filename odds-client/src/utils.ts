@@ -137,10 +137,10 @@ export function transformChartData(data: TrackedBet[]) {
     };
 }
 
-export function filterRegion(region: string, data: EV[] | Bet[], isAuthenticated: boolean) {
+export function filterRegion(region: string, data: (EV | Bet)[], isAuthenticated: boolean) {
     if(!isAuthenticated) return data;
 
-    return data.filter(d => d.data.region == region.toLowerCase())
+    return data.filter((d: Bet| EV) => d.data.region == region.toLowerCase())
 }
 
 export function calculateStats(data: Tracker[], timePeriod?: string) {

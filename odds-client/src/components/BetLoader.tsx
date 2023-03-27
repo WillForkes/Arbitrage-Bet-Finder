@@ -25,8 +25,8 @@ export default function BetLoader({ bets, showBets, user }: props) {
   const [modal, setModal] = useState(false);
   const [modalBetId, setModalBetId] = useState(0);
   const [regionFilter, setRegionFilter] = useState("UK");
-  
-  var b: Bet[] = filterRegion(regionFilter, bets, user ? true : false);
+
+  var b: any[] = filterRegion(regionFilter, bets, user ? true : false);
 
   const [paginatedBets, setPaginatedBets] = useState<Bet[]>(b.slice(0, 10));
 
@@ -40,20 +40,20 @@ export default function BetLoader({ bets, showBets, user }: props) {
     setPaginatedBets(b);
   }
 
-//   function updateItems(page: number) {
-//     const start = (page - 1) * 10;
-//     const end = start + 10;
-//     setPaginatedBets(b.slice(start, end));
-//   }
+  //   function updateItems(page: number) {
+  //     const start = (page - 1) * 10;
+  //     const end = start + 10;
+  //     setPaginatedBets(b.slice(start, end));
+  //   }
 
   function searchBetsByMatch(e: any) {
-    if(user) {
-        if (e != "" || e != null) {
-            b = b.filter((bet) =>
-              bet.data.match_name.toLowerCase().includes(e.toLowerCase())
-            );
-            setPaginatedBets(b);
-          }
+    if (user) {
+      if (e != "" || e != null) {
+        b = b.filter((bet) =>
+          bet.data.match_name.toLowerCase().includes(e.toLowerCase())
+        );
+        setPaginatedBets(b);
+      }
     }
   }
 
@@ -64,12 +64,10 @@ export default function BetLoader({ bets, showBets, user }: props) {
         <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
           <div className="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4">
             <div className="flex items-center flex-1 space-x-4">
-                {!showBets ? (
-                    <span className="dark:text-white">
-                        Login to view bets
-                    </span>
-                ) : (null)}
-                
+              {!showBets ? (
+                <span className="dark:text-white">Login to view bets</span>
+              ) : null}
+
               <TextInput
                 className="w-full lg:w-3/4 md:w-7/8 sm:w-3/4"
                 type="text"

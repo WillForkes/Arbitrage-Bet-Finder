@@ -10,7 +10,7 @@ import Auth from "@/components/Auth";
 import TrackedBetLoader from "@/components/TrackedBetLoader";
 import ChartLoader from "@/components/ChartLoader";
 
-export default function bets() {
+export default function TrackerPage() {
   const { data, error } = useSWR("/tracker/all", getter, {
     refreshInterval: 1000,
   });

@@ -12,10 +12,9 @@ import Pagination from "./Pagination";
 
 interface props {
   bets: Tracker[];
-  showBets: boolean;
 }
 
-export default function BetLoader({ bets, showBets }: props) {
+export default function BetLoader({ bets }: props) {
   const alertContext = useContext(AlertContext);
   const csvData = [["match_name", "profit", "stake", "bookmakers", "time"]];
   const [paginatedBets, setPaginatedBets] = useState(bets.slice(0, 10));
@@ -45,7 +44,7 @@ export default function BetLoader({ bets, showBets }: props) {
         totalProfit += bet.totalStake * bet.profitPercentage;
       }
     });
-    return totalProfit.toFixed(2);
+    return parseInt(totalProfit.toFixed(2));
   }
 
   function deleteBet(betId: number): void {

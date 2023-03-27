@@ -8,7 +8,7 @@ import { UserContext } from "@/pages/_app";
 import { User } from "@/types";
 import Auth from "@/components/Auth";
 
-export default function bets() {
+export default function Bets() {
   const { data, error } = useSWR("/scraper/all?type=arbitrage", getter, {
     refreshInterval: 10000,
   });

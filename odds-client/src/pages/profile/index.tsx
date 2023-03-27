@@ -6,18 +6,16 @@ import { getter } from "@/api";
 import { Spinner } from "flowbite-react";
 
 export default function profile() {
+    // Get profile data
   let { data, error } = useSWR("/profile", getter);
   const user: User = data;
 
-  const { data: invoicesData, error: invoiceError } = useSWR(
-    "/profile/invoices",
-    getter
-  );
+    // Get invoice data
+  const { data: invoicesData, error: invoiceError } = useSWR("/profile/invoices", getter);
   const invoices: Invoice[] = invoicesData?.invoices;
-  const { data: booksData, error: bookError } = useSWR(
-    "/scraper/bookmakers",
-    getter
-  );
+  
+  // Get bookmaker data
+  const { data: booksData, error: bookError } = useSWR("/scraper/bookmakers", getter);
   var books = booksData;
 
   return (

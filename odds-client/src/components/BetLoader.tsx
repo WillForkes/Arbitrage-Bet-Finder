@@ -146,7 +146,7 @@ export default function BetLoader({ bets, showBets }: props) {
                   >
                     <th
                       scope="row"
-                      className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      className="items-center px-4 py-12 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
                       {showBets ? bet.data.match_name : "HOME TEAM v AWAY TEAM"}
                     </th>

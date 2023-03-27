@@ -169,7 +169,7 @@ router.get("/bookmakers", async function(req, res) {
         var bookmakers = await prisma.bookmaker.findMany()
         res.json({"status": "ok", data: bookmakers});
     } catch(e) {
-        res.json({"status": "error", error: e})
+        res.status(500).json({"error": "Failed to get bookmakers from database."});
     }
 })
 

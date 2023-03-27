@@ -13,7 +13,7 @@ import {
 import "chartjs-adapter-date-fns";
 import "date-fns";
 import { Line } from "react-chartjs-2";
-
+import { Card } from "flowbite-react";
 import { TrackedBet, Tracker } from "@/types";
 import { dateFormat, transformChartData } from "@/utils";
 import { Dropdown } from "flowbite-react";
@@ -78,22 +78,25 @@ export function ChartLoader({ d }: { d: TrackedBet[] }) {
     ],
   };
   return (
-    <div className="px-4">
-      <Dropdown label={chartLength}>
-        <Dropdown.Header>
-          <Dropdown.Item onClick={() => setChartLength("allTime")}>
-            All Time
-          </Dropdown.Item>
-          <Dropdown.Item onClick={() => setChartLength("monthly")}>
-            Monthly
-          </Dropdown.Item>
-          <Dropdown.Item onClick={() => setChartLength("yearly")}>
-            Yearly
-          </Dropdown.Item>
-        </Dropdown.Header>
-      </Dropdown>
+    <div className="max-w-screen-sm">
+        <Card>
+            <Dropdown label={chartLength}>
+                <Dropdown.Header>
+                <Dropdown.Item onClick={() => setChartLength("allTime")}>
+                    All Time
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => setChartLength("monthly")}>
+                    Monthly
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => setChartLength("yearly")}>
+                    Yearly
+                </Dropdown.Item>
+                </Dropdown.Header>
+            </Dropdown>
 
-      <Line options={options} data={data} />
+            <Line options={options} data={data} />
+        </Card>
     </div>
+   
   );
 }

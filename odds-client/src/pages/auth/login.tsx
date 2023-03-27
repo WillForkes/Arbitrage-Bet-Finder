@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-export default function login() {
-  window.location.assign("http://localhost:3000/login");
+export default function Login() {
+  useEffect(() => {
+    window.location.assign("http://localhost:3000/login");
+  });
   return <div>Loading...</div>;
 }

@@ -46,7 +46,7 @@ async function getData(sport, regions, limiter=null) {
     const url = `${BASE_URL}/sports/${sport}/odds/`;
     const escapedUrl = encodeURI(url);
     let returndata = []
-    const markets = ["h2h","spreads","totals","outrights"].join(",")
+    const markets = ["h2h","spreads","totals"].join(",")
 
     // * FOREACH REGION GET DATA
     for(let i=0; i<regions.length; i++){
@@ -56,8 +56,9 @@ async function getData(sport, regions, limiter=null) {
             apiKey: API_KEY,
             regions: region,
             oddsFormat: 'decimal',
-            dateFormat: 'unix'
-        }; // CURRENTLY ONLY H2H (moneyline)
+            dateFormat: 'unix',
+            markets: markets
+        }; // CURRENTLY ONLY WORKING H2H (moneyline)
 
         querystringencoded = new URLSearchParams(querystring).toString();
     
@@ -86,8 +87,9 @@ async function getData(sport, regions, limiter=null) {
     return returndata
 }
 
-async function* processMatches(matches, includeStartedMatches = true) {
+function processMatches_h2h(matches, includeStartedMatches = false) {
     const matchCount = matches.length;
+    let arbBets = []
 
     // * Arbitrage
     for (let i = 0; i < matchCount; i++) {
@@ -103,6 +105,7 @@ async function* processMatches(matches, includeStartedMatches = true) {
             const bookieName = bookmaker.title;
 
             marketType = bookmaker.markets[0].key;
+            if (marketType !== "h2h") continue;
 
             for (const outcome of bookmaker.markets[0].outcomes) {
                 const outcomeName = outcome.name;
@@ -117,12 +120,14 @@ async function* processMatches(matches, includeStartedMatches = true) {
         let totalImpliedOdds = Object.values(bestOddPerOutcome).reduce((sum, i) => sum + 1 / i[1], 0);
         totalImpliedOdds = parseFloat(totalImpliedOdds.toFixed(4));
 
+        if(totalImpliedOdds > 1) continue;
+        
         const matchName = `${match.home_team} v. ${match.away_team}`;
         const timeToStart = (startTime - Date.now() / 1000) / 3600;
         const league = match.sport_key;
         //console.log(`Processing match ${i + 1} of ${matchCount} | ${totalImpliedOdds}`)
 
-        yield {
+        arbBets.push({
             match_id: match.id,
             match_name: matchName,
             match_start_time: startTime,
@@ -132,143 +137,185 @@ async function* processMatches(matches, includeStartedMatches = true) {
             best_outcome_odds: bestOddPerOutcome,
             total_implied_odds: totalImpliedOdds,
             region: match.region
-        };
+        });
     }
+    return arbBets
 }
 
-function averageOdds(match, i) {
-    let odds = [];
-    match.bookmakers.forEach(book => {
-        if (book.markets[0].key == 'h2h') {
-            try{
-                odds.push(book.markets[0].outcomes[i].price)
-            } 
-            catch (error) {
-                return false
+function processMatches_totals(matches, includeStartedMatches = false) {
+    const arbitrageBets = [];
+  
+  for (const match of matches) {
+    const startTime = parseInt(match.commence_time);
+    const timeToStart = (startTime - Date.now() / 1000) / 3600;
+    if (!includeStartedMatches && startTime < Date.now() / 1000) {
+        continue;
+    }
+    
+    for (const bookmaker of match.bookmakers) {
+      for (const market of bookmaker.markets) {
+        
+        const marketOutcomes = market.outcomes;
+        const marketType = market.key;
+
+        if(marketType !== "totals") continue;
+        
+        for (let i = 0; i < marketOutcomes.length; i++) {
+          const outcomeA = marketOutcomes[i];
+
+          for (let j = i+1; j < marketOutcomes.length; j++) {
+            const outcomeB = marketOutcomes[j];
+            const outcomeABookmaker = bookmaker;
+            const outcomeBBookmaker = match.bookmakers.find((bk) => {
+              return bk.key !== bookmaker.key 
+              && bk.markets.some((m) => m.key === marketType 
+              && m.outcomes.some((o) => o.name === outcomeB.name));
+            });
+            
+            if (outcomeBBookmaker) {
+              const outcomeAOdds = outcomeA.price;
+              const outcomeBOdds = outcomeBBookmaker.markets.find((m) => m.key === marketType)
+              .outcomes.find((o) => o.name === outcomeB.name).price;
+              
+              const impliedOdds = 1 / outcomeAOdds + 1 / outcomeBOdds;
+              
+              if (impliedOdds < 1) {
+                const arbitrageBet = {
+                  match_id: match.id,
+                  match_name: match.home_team + " v. " + match.away_team,
+                  match_start_time: startTime,
+                  hours_to_start: timeToStart,
+                  league: match.sport_key,
+                  key: marketType,
+                  best_outcome_odds: {
+                    [outcomeA.name]: [outcomeABookmaker.title, outcomeAOdds, outcomeA.point?  outcomeA.point : null],
+                    [outcomeB.name]: [outcomeBBookmaker.title, outcomeBOdds, outcomeB.point? outcomeB.point : null]
+                  },
+                  total_implied_odds: impliedOdds,
+                  region: match.region
+                };
+//{"match_id":"ea8ff5e76556b55161fe36966cab6080","match_name":"Toronto Raptors v. Detroit Pistons","match_start_time":1679701200,"hours_to_start":5.151658055583636,"league":"basketball_nba","key":"totals","best_outcome_odds":{"Over":["Matchbook",2.16],"Under":["Virgin Bet",1.91]},"total_implied_odds":0.9865231723870467,"region":"uk"}
+                
+                arbitrageBets.push(arbitrageBet);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  return arbitrageBets;
+}
+
+function processPositiveEV(matches, includeStartedMatches = true) {
+    let positiveBets = [];
+    let totalNoEV = 0
+    let totalPositiveEV = 0
+
+    for (let i = 0; i < matches.length; i++) {
+        let match = matches[i];
+        const startTime = parseInt(match.commence_time);
+        const timeToStart = (startTime - Date.now() / 1000) / 3600;
+        if (!includeStartedMatches && startTime < Date.now() / 1000) {
+            continue;
+        }
+
+        for (let j = 0; j < match.bookmakers.length; j++) {
+        let bookmaker = match.bookmakers[j];
+
+        for (let k = 0; k < bookmaker.markets.length; k++) {
+            let market = bookmaker.markets[k];
+
+            let homeTeamOutcome = market.outcomes.find(
+                (outcome) => outcome.name === match.home_team || market.key === "totals" && outcome.name === "Over"
+            );
+            let awayTeamOutcome = market.outcomes.find(
+                (outcome) => outcome.name === match.away_team || market.key === "totals" && outcome.name === "Under"
+            );
+            let drawOutcome = market.outcomes.find(
+                (outcome) => outcome.name.toLowerCase() === "draw"
+            );
+
+            const hasDraw = drawOutcome? true : false;
+
+            // * this is the implied probability of the outcome, with the bookmaker's vig included (so not accurate)
+            ht_impliedProbability = 1 / homeTeamOutcome.price;
+            at_impliedProbability = 1 / awayTeamOutcome.price;
+            draw_impliedProbability = hasDraw ? 1 / drawOutcome.price : 0;
+            sum_impliedProbability = ht_impliedProbability + at_impliedProbability + draw_impliedProbability;
+
+            // * this is the true probability of the outcome, without the bookmaker's vig in percentage
+            ht_noVig = ht_impliedProbability / sum_impliedProbability;
+            at_noVig = at_impliedProbability / sum_impliedProbability;
+            draw_noVig = hasDraw ? draw_impliedProbability / sum_impliedProbability : 0;
+
+            ht_noVig_odds = 1 / ht_noVig;
+            at_noVig_odds = 1 / at_noVig;
+            draw_noVig_odds = hasDraw ? 1 / draw_noVig : 0;
+            
+
+            // (Amount won per bet * probability of winning) – (Amount lost per bet * probability of losing)
+            ht_EV = ((homeTeamOutcome.price - 1) * ht_noVig) - (1*(1-ht_noVig))
+            at_EV = ((awayTeamOutcome.price - 1) * at_noVig) - (1*(1-at_noVig))
+            draw_EV = hasDraw ? ((drawOutcome.price - 1) * draw_noVig) - (1*(1-draw_noVig)) : 0
+
+            let outcomeToBetOn
+            let winProbability
+            let odds
+            let noVigOdds 
+            let ev
+
+            let shouldBet = (ht_EV > 0 || at_EV > 0 || draw_EV > 0) ? true : false;
+            
+            if(ht_EV > 0){
+                outcomeToBetOn = match.home_team
+                winProbability = ht_noVig
+                odds = homeTeamOutcome.price
+                noVigOdds = ht_noVig_odds
+                ev = ht_EV
+            } else if(at_EV > 0){
+                outcomeToBetOn = match.away_team
+                winProbability = at_noVig
+                odds = awayTeamOutcome.price
+                noVigOdds = at_noVig_odds
+                ev = at_EV
+            } else if(draw_EV > 0){
+                outcomeToBetOn = "Draw"
+                winProbability = draw_noVig
+                odds = drawOutcome.price
+                noVigOdds = draw_noVig_odds
+                ev = draw_EV
+            }
+            
+            if(shouldBet) {
+                const matchName = `${match.home_team} v. ${match.away_team}`;
+                const timeToStart = (startTime - Date.now() / 1000) / 3600;
+                const league = match.sport_key;
+
+                positiveBets.push({
+                    match_id: match.id,
+                    match_name: matchName,
+                    team: outcomeToBetOn,
+                    match_start_time: startTime,
+                    hours_to_start: timeToStart,
+                    league,
+                    key: market.key,
+                    bookmaker: bookmaker.title,
+                    winProbability: winProbability,
+                    odds: odds,
+                    noVigOdds: noVigOdds,
+                    ev: ev.toFixed(3),
+                    region: match.region
+                });
+            }
+
             }
         }
-        
-    })
-    return odds
-}
-
-function sumAverage(odds) {
-    return odds.reduce((a, b) => a + b) / odds.length;
-}
-
-async function processPositiveEV(matches, includeStartedMatches = false) {
-    // probability of winning = 1 / odds
-    // amount lost per bet = stake
-    // probability of losing = 1 / odds
-
-    // find all matches with an ev > 0 from the matches array
-    let positiveBets = [];
+    }
     
-    matches.forEach(match => {
-        const startTime = parseInt(match.commence_time);
-        if (!includeStartedMatches && startTime < Date.now() / 1000) {
-            return;
-        }
-
-        match.bookmakers.forEach(bookmaker => {
-            bookmaker.markets.forEach(market => {
-                if (market.key != 'h2h') return;
-
-                market.outcomes.forEach((outcome, i) => {
-                    let odds = averageOdds(match, i);
-                    let sumAvg = sumAverage(odds);
-                    if(!sumAvg){
-                        return
-                    }
-                    let probability = 1/Math.abs(sumAvg);
-                    let amountWon = Math.abs(outcome.price) - 1
-                    let amountLost = Math.abs(outcome.price);
-                    let ev = (amountWon*probability)-(1*(1-probability));
-                    let toBetOn = outcome.name;
-
-                    if (ev.toFixed(3) > 0.03) {
-
-                        const matchName = `${match.home_team} v. ${match.away_team}`;
-                        const timeToStart = (startTime - Date.now() / 1000) / 3600;
-                        const league = match.sport_key;
-
-                        positiveBets.push({
-                            match_id: match.id,
-                            match_name: matchName,
-                            team: toBetOn,
-                            match_start_time: startTime,
-                            hours_to_start: timeToStart,
-                            league,
-                            key: "h2h",
-                            bookmaker: bookmaker.title,
-                            winProbability: probability,
-                            odds: outcome.price,
-                            ev: ev.toFixed(3),
-                            region: match.region
-                        });
-                    }
-                });
-            });
-        });
-    });
     return positiveBets;
 }
-
-async function findPositiveEVBets(data, includeStartedMatches = false) {
-    let positiveEVBets = [];
-
-    for (let i = 0; i < data.length; i++) {
-        let match = data[i];
-        let bookmakers = match.bookmakers;
-
-        for (let j = 0; j < bookmakers.length; j++) {
-            let markets = bookmakers[j].markets;
-
-            for (let k = 0; k < markets.length; k++) {
-                if (markets[k].key === 'h2h') {
-                    let outcomes = markets[k].outcomes;
-                    let totalProbability = 0;
-
-                    for (let l = 0; l < outcomes.length; l++) {
-                        totalProbability += outcomes[l].price;
-                    }
-                    totalProbability = totalProbability / outcomes.length;
-                    totalProbability = 1/ totalProbability;
-                    for (let l = 0; l < outcomes.length; l++) {
-                        let probability = 1 / outcomes[l].price;
-                        let expectedValue = ((outcomes[l].price - 1) * totalProbability) - (1 - totalProbability);
-
-                        if (expectedValue > 0) {
-                            const startTime = parseInt(match.commence_time);
-                            if (!includeStartedMatches && startTime < Date.now() / 1000) {
-                                continue;
-                            }
-                            const matchName = `${match.home_team} v. ${match.away_team}`;
-                            const timeToStart = (startTime - Date.now() / 1000) / 3600;
-                            const league = match.sport_key;
-                            positiveEVBets.push({
-                                match_id: match.id,
-                                match_name: matchName,
-                                match_start_time: startTime,
-                                hours_to_start: timeToStart,
-                                league,
-                                key: "h2h",
-                                ev: expectedValue,
-                                bookmaker: bookmakers[j].title,
-                                odds: outcomes[l].price,
-                                winProbability: probability,
-                                region: match.region
-                            });
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    return positiveEVBets;
-}
-
 
 // ! Function to get arbitrage opportunities from the above functions
 async function getArbitrageOpportunities(cutoff) {
@@ -295,19 +342,22 @@ async function getArbitrageOpportunities(cutoff) {
             .value();
     }
 
+    // write data to output/raw.json
+    fs.writeFileSync(path.join(__dirname, "output", "raw.json"), JSON.stringify(data))
+ 
     // process matches
-    let results = [];
-    for await (const val of processMatches(data, includeStartedMatches=false)) {
-        results.push(val)
-    }
+    let arbResults_totals = await processMatches_totals(data, includeStartedMatches=false);
+    let arbResult_h2h = await processMatches_h2h(data, includeStartedMatches=false);
+    let arbResults = [...arbResult_h2h.concat(arbResults_totals)]
 
     //let evResults = await processPositiveEV(data, includeStartedMatches=false);
     let evResults = await processPositiveEV(data);
     evResults = [...evResults]
+    console.log(evResults);
 
     // filter opportunities
-    const arbitrageOpportunities = Array.from(results).filter(x => 0 < x.total_implied_odds && x.total_implied_odds < 1 - cutoff);
-    const EVOpportunities = Array.from(evResults).filter(x => x.ev > 0.1);
+    const arbitrageOpportunities = Array.from(arbResults).filter(x => 0 < x.total_implied_odds && x.total_implied_odds < 1 - cutoff && x.total_implied_odds > 0.7);
+    const EVOpportunities = Array.from(evResults).filter(x => x.ev < 0.4 && x.ev > 0.05);
 
     // sort array by hours_to_start in ascending order
     arbitrageOpportunities.sort((a, b) => a.hours_to_start - b.hours_to_start);

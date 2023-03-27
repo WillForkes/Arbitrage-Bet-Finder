@@ -46,6 +46,12 @@ export async function updateProfileA(region: string): Promise<any> {
     return await sendApiRequest("POST", "profile/update", true, {region: region})
 }
 
+export async function updateWhitelist(whiteList: [{value: string, label: string, disabled: boolean}]): Promise<any> {
+    var x = whiteList.map((x) => x.label)
+    return await sendApiRequest("POST", "profile/whitelist", true, {add: x})
+}
+
+
 export async function updateTrackerStatus(trackerId: number, status: number): Promise<any> {
     return await sendApiRequest("POST", "tracker/update", true, {trackerId: trackerId, status: status})
 }

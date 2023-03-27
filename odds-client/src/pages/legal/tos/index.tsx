@@ -58,6 +58,35 @@ export default function tos() {
                     <p className="mb-4 font-light">
                         Modification of Terms: We reserve the right to modify these terms of service at any time. We will notify you of any material changes to these terms.
                     </p>
+                    <p className="mb-4 font-bold">
+                        Money Back Guarantee
+                    </p>
+                    <p className="mb-4 font-light">
+                    We are confident that our service, Arbster, will provide you with profitable arbitrage betting opportunities. However, we understand that arbitrage betting can be challenging, and as a new subscriber, you may have reservations about the effectiveness of our service.
+
+                    Therefore, we offer a 30 day money-back guarantee for new subscribers who meet the following conditions:
+                    </p>
+                    <p className="mb-4 font-light">
+                    -This is your first time using Arbster, and you have not created any previous accounts using your current IP address and device.
+                    </p>
+                    <p className="mb-4 font-light">
+                    -You have made at least 10 arbitrage bets during the guarantee period, and you can provide documented evidence that you have not made back at least 70% of your investment within the time of using the service.
+                    </p>
+                    <p className="mb-4 font-light">
+                    -You must contact our customer support team to request a refund within the guarantee period, and provide the necessary proof of your losses. Our team will review your request and provide a response within 5 business days.
+                    </p>
+                    <p className="mb-4 font-light">
+                    -If your refund request is approved, we will refund 100% of your subscription fee within 30 days of our receipt of your request.
+                    </p>
+                    <p className="mb-4 font-light">
+                    Please note that the guarantee period starts from the date of your initial subscription and ends on the last day of your subscription period. The money-back guarantee applies only to the subscription fee paid for the first month of use of Arbster. Subsequent months of use are not covered under the guarantee.
+                    </p>
+                    <p className="mb-4 font-light">
+                    Additionally, we require that you use Arbster ethically and responsibly, and any misuse of our service will void the money-back guarantee. We reserve the right to investigate any misuse of our service and take appropriate action.
+                    </p>
+                    <p className="mb-4 font-light">
+                    We understand that the success of arbitrage betting depends on many factors beyond our control, and we cannot guarantee profits. Therefore, we do not cover losses incurred due to poor betting decisions, changes in market conditions, or any other factors outside of our control.
+                    </p>
                     <p className="mb-6 font-bold">
                     By using our service, you agree to these privacy policy and terms of service.
                     </p>

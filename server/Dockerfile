@@ -8,8 +8,10 @@ WORKDIR /usr/src/app
 # where available (npm@5+)
 COPY package.json ./
 COPY package.json ./
+COPY ./prisma prisma
+RUN npm run build
 
-RUN npm i
+RUN npm ci --only=production --quiet
 
 COPY . .
 

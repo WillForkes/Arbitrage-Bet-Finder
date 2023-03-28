@@ -54,6 +54,22 @@ let checkUser = async (req, res, next) => {
     let planExpiresAt
     let planId
 
+    // ! Check if the user has a trial plan and disable that one since they have another active plan
+    if(user.subscription.length == 2) {
+        for(let i = 0; i < user.subscription.length; i++){
+            if(user.subscription[i].plan == "trial"){
+                await prisma.subscription.update({
+                    where: {
+                        id: user.subscription[i].id
+                    },
+                    data: {
+                        status: "inactive"
+                    }
+                })
+            }
+        }
+    }
+
     if(user.subscription?.length == 0 || user.subscription == null || user.subscription == {}){
         plan = "free"
         planExpiresAt = new Date()

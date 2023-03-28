@@ -7,11 +7,15 @@ var router = express.Router();
 const Stripe = require('stripe');
 
 const environment = process.env.NODE_ENV || 'development';
-let stripe
+let stripe;
+let endpointSecret;
+
 if(process.env.NODE_ENV == 'development') {
     stripe = Stripe(process.env.STRIPE_TEST_SECRET);
+    endpointSecret = process.env.STRIPE_TEST_SIGNING_SECRET;
 } else {
     stripe = Stripe(process.env.STRIPE_LIVE_SECRET);
+    endpointSecret = process.env.STRIPE_LIVE_SIGNING_SECRET;
 }
 
 const plans = {
@@ -54,7 +58,7 @@ router.post('/create', checkUser, async (req, res) => {
         res.status(500).json({"error": "Error creating payment link. No plan supplied."})
         return
     }
-    if(user.plan != "free"){
+    if(user.plan != "free" && user.plan != "trial"){
         res.status(500).json({"error": "Error creating payment link. User already has a plan."})
         return
     }

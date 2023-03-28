@@ -32,7 +32,7 @@ export default function Pricing() {
               Great for learning the ropes.
             </p>
             <div className="flex justify-center items-baseline my-8">
-              <span className="mr-2 text-5xl font-extrabold">$29.99</span>
+              <span className="mr-2 text-5xl font-extrabold">£29.99</span>
               <span className="text-gray-500 dark:text-gray-400">/month</span>
             </div>
 
@@ -146,7 +146,7 @@ export default function Pricing() {
               Our recommended plan.
             </p>
             <div className="flex justify-center items-baseline my-8">
-              <span className="mr-2 text-5xl font-extrabold">$49.99</span>
+              <span className="mr-2 text-5xl font-extrabold">£49.99</span>
               <span className="text-gray-500 dark:text-gray-400 dark:text-gray-400">
                 /month
               </span>
@@ -305,7 +305,7 @@ export default function Pricing() {
               The ultimate plan for experienced users.
             </p>
             <div className="flex justify-center items-baseline my-8">
-              <span className="mr-2 text-5xl font-extrabold">$99.99</span>
+              <span className="mr-2 text-5xl font-extrabold">£99.99</span>
               <span className="text-gray-500 dark:text-gray-400">/month</span>
             </div>
 

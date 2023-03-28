@@ -6,23 +6,6 @@ let checkUser = async (req, res, next) => {
     // check if user is authenticated
     const isAuthenticated = req.oidc.isAuthenticated()
 
-    // check if api key is provided - therefore doesnt need to be logged in
-    // if(req.query.apikey && !isAuthenticated){
-    //     const userByApi = await prisma.user.findUnique({
-    //         where: {
-    //             apiKey: req.query.apikey
-    //         }
-    //     })
-    //     if(!userByApi){
-    //         res.status(401).json({"error": "Invalid api key"})
-    //         return;
-    //     }
-    //     req.user = userByApi
-        
-    //     next();
-    //     return;
-    // }
-
     // ! If no api key and is not authenticated
     if(!isAuthenticated){
         res.status(401).json({"error": "User is not authenticated"})
@@ -71,7 +54,23 @@ let checkUser = async (req, res, next) => {
     let planExpiresAt
     let planId
 
-    if(user.subscription?.length == 0){
+    // ! Check if the user has a trial plan and disable that one since they have another active plan
+    if(user.subscription.length == 2) {
+        for(let i = 0; i < user.subscription.length; i++){
+            if(user.subscription[i].plan == "trial"){
+                await prisma.subscription.update({
+                    where: {
+                        id: user.subscription[i].id
+                    },
+                    data: {
+                        status: "inactive"
+                    }
+                })
+            }
+        }
+    }
+
+    if(user.subscription?.length == 0 || user.subscription == null || user.subscription == {}){
         plan = "free"
         planExpiresAt = new Date()
         planId = null

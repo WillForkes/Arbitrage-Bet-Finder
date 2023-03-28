@@ -91,8 +91,11 @@ export default function EVLoader({ bets, showBets, user }: props) {
             <div className="flex items-center flex-1 space-x-4">
               <h5>
                 {!showBets ? (
-                  <span className="dark:text-white">Login to view bets</span>
-                ) : null}
+                    <span className="dark:text-white">
+                        Paid Tier Only
+                    </span>
+                ) : (null)}
+                
               </h5>
               <TextInput
                 className="w-full lg:w-3/4 md:w-7/8 sm:w-3/4"

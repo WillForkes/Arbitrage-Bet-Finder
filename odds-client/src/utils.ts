@@ -36,18 +36,14 @@ export function dateFormat(date: number): string {
     }
 }
 
-export function currencyCode(code: string, europe: boolean): string {
-    if (europe) {
-        return '€'
-    }
-
+export function currencyCode(code: string): string {
     switch (code) {
         case 'US':
             return '$'
         case 'UK':
             return '£'
         default:
-            return '$'
+            return '€'
     }
 }
 
@@ -139,8 +135,13 @@ export function transformChartData(data: TrackedBet[]) {
 
 export function filterRegion(region: string, data: (EV | Bet)[], isAuthenticated: boolean) {
     if(!isAuthenticated) return data;
-
-    return data.filter((d: Bet| EV) => d.data.region == region.toLowerCase())
+    try {
+        const filtered = data.filter(d => d.data.region == region.toLowerCase())
+        return filtered;
+    }
+    catch {
+        return data;
+    }
 }
 
 export function calculateStats(data: Tracker[], timePeriod?: string) {

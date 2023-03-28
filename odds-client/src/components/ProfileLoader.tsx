@@ -196,7 +196,7 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                   }}
                   className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
                 >
-                  View all
+                  Goto Billing Portal
                 </button>
               </div>
               <div className="flow-root">
@@ -271,6 +271,8 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                       })
                     }
                     checked={notifications.email}
+                    disabled={user.dbuser.plan == "pro" || user.dbuser.plan == "plus" || user.dbuser.plan == "starter" ? false : true}
+
                   />
                   <Label htmlFor="email">Email notifications</Label>
                 </div>
@@ -281,6 +283,7 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                     placeholder="name@arbster.com"
                     required={true}
                     value={notifications.emaila}
+                    disabled={user.dbuser.plan == "pro" || user.dbuser.plan == "plus" || user.dbuser.plan == "starter" ? false : true}
                     onChange={(e) =>
                       setNotifications({
                         ...notifications,
@@ -290,34 +293,39 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                   />
                 </div>
 
-                <div className="flex items-center gap-2 p-2">
-                  <Checkbox
-                    id="email"
-                    onClick={() =>
-                      setNotifications({
-                        ...notifications,
-                        sms: !notifications.sms,
-                      })
-                    }
-                    checked={notifications.sms}
-                  />
-                  <Label htmlFor="email">Phone notifications</Label>
-                </div>
                 <div>
-                  <TextInput
-                    id="email4"
-                    type="text"
-                    placeholder="+11234567890"
-                    required={true}
-                    value={notifications.phone}
-                    onChange={(e) =>
-                      setNotifications({
-                        ...notifications,
-                        phone: e.target.value,
-                      })
-                    }
-                  />
+                    <div className="flex items-center gap-2 p-2">
+                        <Checkbox
+                        id="email"
+                        onClick={() =>
+                            setNotifications({
+                            ...notifications,
+                            sms: !notifications.sms,
+                            })
+                        }
+                        checked={notifications.sms}
+                        disabled={user.dbuser.plan == "pro" || user.dbuser.plan == "plus" ? false : true}
+                        />
+                        <Label htmlFor="email">Phone notifications</Label>
+                    </div>
+                    <div>
+                        <TextInput
+                        id="email4"
+                        type="text"
+                        placeholder="+11234567890"
+                        required={true}
+                        value={notifications.phone}
+                        disabled={user.dbuser.plan == "pro" || user.dbuser.plan == "plus" ? false : true}
+                        onChange={(e) =>
+                            setNotifications({
+                            ...notifications,
+                            phone: e.target.value,
+                            })
+                        }
+                        />
+                    </div>
                 </div>
+
 
                 <div>
                   <Label htmlFor="email">Whitelisted bookmakers</Label>

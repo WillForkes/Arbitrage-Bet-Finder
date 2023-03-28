@@ -353,7 +353,6 @@ async function getArbitrageOpportunities(cutoff) {
     //let evResults = await processPositiveEV(data, includeStartedMatches=false);
     let evResults = await processPositiveEV(data);
     evResults = [...evResults]
-    console.log(evResults);
 
     // filter opportunities
     const arbitrageOpportunities = Array.from(arbResults).filter(x => 0 < x.total_implied_odds && x.total_implied_odds < 1 - cutoff && x.total_implied_odds > 0.7);

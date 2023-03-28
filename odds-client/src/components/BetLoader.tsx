@@ -64,10 +64,12 @@ export default function BetLoader({ bets, showBets, user }: props) {
         <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
           <div className="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4">
             <div className="flex items-center flex-1 space-x-4">
-              {!showBets ? (
-                <span className="dark:text-white">Login to view bets</span>
-              ) : null}
-
+                {!showBets ? (
+                    <span className="dark:text-white">
+                        Paid Tier Only
+                    </span>
+                ) : (null)}
+                
               <TextInput
                 className="w-full lg:w-3/4 md:w-7/8 sm:w-3/4"
                 type="text"

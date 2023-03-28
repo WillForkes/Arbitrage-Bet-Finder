@@ -88,7 +88,6 @@ app.get('/region', (req, res) => {
 
 app.get('/isAuth', (req, res) => {
     // print cookies sent
-    console.log(req.cookies);
     if(req.oidc.isAuthenticated()){
         res.json({
             "status": "ok",

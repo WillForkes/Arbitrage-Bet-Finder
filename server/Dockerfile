@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:latest
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -9,9 +9,9 @@ WORKDIR /usr/src/app
 COPY package.json ./
 COPY package-lock.json ./
 
-RUN npm
+RUN npm i
 
-COPY ./server .
+COPY . .
 
 ENV NODE_ENV production
 

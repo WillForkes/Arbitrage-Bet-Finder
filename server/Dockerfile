@@ -9,8 +9,7 @@ WORKDIR /usr/src/app
 COPY package.json ./
 COPY package.json ./
 COPY ./prisma prisma
-RUN npm run build
-
+RUN npx prisma generate
 RUN npm ci --only=production --quiet
 
 COPY . .

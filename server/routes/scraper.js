@@ -225,20 +225,22 @@ router.get("/all", freeStuff, async function(req, res, next){
         arbBets.forEach(bet => { bet.data = JSON.parse(bet.data); });
         arbBets.sort((a, b) => {return a.data.total_implied_odds - b.data.total_implied_odds;})
 
-        // ! Sort through arb bets, if bookmaker is not in whitelist, remove it
-        arbBets = arbBets.filter(bet => {
-            const bestOutcomeOdds = bet.data.best_outcome_odds;
-            const bestOutcomeOddsKeys = Object.keys(bestOutcomeOdds);
-            
-            for(let i = 0; i < bestOutcomeOddsKeys.length; i++){
-                const key = bestOutcomeOddsKeys[i];
-                const bookmaker = bestOutcomeOdds[key][0];
-                if(!userWhitelist.includes(bookmaker)){
-                    return false;
+        if(userWhitelist.length > 0){
+            // ! Sort through arb bets, if bookmaker is not in whitelist, remove it
+            arbBets = arbBets.filter(bet => {
+                const bestOutcomeOdds = bet.data.best_outcome_odds;
+                const bestOutcomeOddsKeys = Object.keys(bestOutcomeOdds);
+                
+                for(let i = 0; i < bestOutcomeOddsKeys.length; i++){
+                    const key = bestOutcomeOddsKeys[i];
+                    const bookmaker = bestOutcomeOdds[key][0];
+                    if(!userWhitelist.includes(bookmaker)){
+                        return false;
+                    }
                 }
-            }
-            return true;
-        })
+                return true;
+            })
+        }
 
         // ! League formatting for arb bets
         for(let i = 0; i < arbBets.length; i++){
@@ -257,14 +259,16 @@ router.get("/all", freeStuff, async function(req, res, next){
         evBets.forEach(bet => { bet.data = JSON.parse(bet.data); });
         evBets.sort((a, b) => { return b.data.ev - a.data.ev; })
 
-        // ! Sort through ev bets, if bookmaker is not in whitelist, remove it
-        evBets = evBets.filter(bet => {
-            const bookmaker = bet.data.bookmaker;
-            if(!userWhitelist.includes(bookmaker)){
-                return false;
-            }
-            return true;
-        })
+        if(userWhitelist.length > 0){
+            // ! Sort through ev bets, if bookmaker is not in whitelist, remove it
+            evBets = evBets.filter(bet => {
+                const bookmaker = bet.data.bookmaker;
+                if(!userWhitelist.includes(bookmaker)){
+                    return false;
+                }
+                return true;
+            })
+        }
 
         // ! League formatting for ev bets
         for(let i = 0; i < evBets.length; i++){

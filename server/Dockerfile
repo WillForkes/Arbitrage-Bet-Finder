@@ -8,11 +8,12 @@ WORKDIR /usr/src/app
 # where available (npm@5+)
 COPY package.json ./
 COPY package-lock.json ./
-RUN npx prisma generate
 RUN npm ci
 
 
 COPY . .
+
+RUN npx prisma generate
 
 ENV NODE_ENV production
 

@@ -9,7 +9,7 @@ WORKDIR /usr/src/app
 COPY package.json ./
 COPY package.json ./
 RUN npx prisma generate
-RUN npm ci --only=production --quiet
+RUN npm ci --quiet
 
 COPY . .
 

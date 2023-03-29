@@ -26,11 +26,10 @@ app.use(express.json({
 }));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors({
     maxAge: 86400,
     credentials: true,
-    origin: "http://localhost:3001"
+    origin: PROCESS.env.NODE_ENV == "development" ? "http://localhost:3001": "https://arbster.com"
 }))
 
 
@@ -119,7 +118,7 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     if(env == "development"){
         res.json({"error": "Something went wrong", "message": err.message, "status": err.status || 500})
-    }else{
+    }else{ 
         res.json({"error": "Something went wrong"})
     }       
 });

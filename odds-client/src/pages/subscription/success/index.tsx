@@ -28,7 +28,7 @@ export default function Maintainance() {
               Ready to start making money?
             </p>
             <Link
-              href="/scraper/bets"
+              href="/profile"
               className="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:focus:ring-primary-900"
             >
               Continue

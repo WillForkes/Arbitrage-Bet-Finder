@@ -174,10 +174,11 @@ function processMatches_totals(matches, includeStartedMatches = false) {
             
             if (outcomeBBookmaker) {
               const outcomeAOdds = outcomeA.price;
-              const outcomeBOdds = outcomeBBookmaker.markets.find((m) => m.key === marketType)
+              const outcomeBOdds = outcomeBBookmaker.markets
+              .find((m) => m.key === marketType)
               .outcomes.find((o) => o.name === outcomeB.name).price;
               
-              const impliedOdds = 1 / outcomeAOdds + 1 / outcomeBOdds;
+              const impliedOdds = (1 / outcomeAOdds) + (1 / outcomeBOdds);
               
               if (impliedOdds < 1) {
                 const arbitrageBet = {
@@ -194,8 +195,6 @@ function processMatches_totals(matches, includeStartedMatches = false) {
                   total_implied_odds: impliedOdds,
                   region: match.region
                 };
-//{"match_id":"ea8ff5e76556b55161fe36966cab6080","match_name":"Toronto Raptors v. Detroit Pistons","match_start_time":1679701200,"hours_to_start":5.151658055583636,"league":"basketball_nba","key":"totals","best_outcome_odds":{"Over":["Matchbook",2.16],"Under":["Virgin Bet",1.91]},"total_implied_odds":0.9865231723870467,"region":"uk"}
-                
                 arbitrageBets.push(arbitrageBet);
               }
             }
@@ -236,6 +235,8 @@ function processPositiveEV(matches, includeStartedMatches = true) {
             let drawOutcome = market.outcomes.find(
                 (outcome) => outcome.name.toLowerCase() === "draw"
             );
+
+            if(!homeTeamOutcome || !awayTeamOutcome) continue;
 
             const hasDraw = drawOutcome? true : false;
 
@@ -355,7 +356,7 @@ async function getArbitrageOpportunities(cutoff) {
     evResults = [...evResults]
 
     // filter opportunities
-    const arbitrageOpportunities = Array.from(arbResults).filter(x => 0 < x.total_implied_odds && x.total_implied_odds < 1 - cutoff && x.total_implied_odds > 0.7);
+    const arbitrageOpportunities = Array.from(arbResults).filter(x => 0 < x.total_implied_odds && x.total_implied_odds < 1 - cutoff && x.total_implied_odds > 0.85);
     const EVOpportunities = Array.from(evResults).filter(x => x.ev < 0.4 && x.ev > 0.05);
 
     // sort array by hours_to_start in ascending order

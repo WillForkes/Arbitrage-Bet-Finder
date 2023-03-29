@@ -3,7 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node app.js"
+    "generate": "npx prisma generate && npx prisma migrate deploy",
+    "deploy": "npx prisma migrate deploy",
+    "dev": "npm run generate && nodemon --watch \"src/**\" --ext \"js,json\" --exec \"node app.js\"",
+    "build": "npm run generate",
+    "start": "npm run build && node app.js"
   },
   "dependencies": {
     "@prisma/client": "^4.11.0",

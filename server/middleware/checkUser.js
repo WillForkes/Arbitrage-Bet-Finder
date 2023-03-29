@@ -55,7 +55,7 @@ let checkUser = async (req, res, next) => {
     let planId
 
     // ! Check if the user has a trial plan and disable that one since they have another active plan
-    if(user.subscription.length == 2) {
+    if(user.subscription?.length == 2) {
         for(let i = 0; i < user.subscription.length; i++){
             if(user.subscription[i].plan == "trial"){
                 await prisma.subscription.update({

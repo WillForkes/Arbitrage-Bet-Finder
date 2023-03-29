@@ -3,7 +3,7 @@ import { dateFormat, filterRegion } from "@/utils";
 import React, { useState, useContext } from "react";
 import Image from "next/image";
 import Modal from "./Modal";
-import { Dropdown, TextInput } from "flowbite-react";
+import { Dropdown, TextInput, Toast } from "flowbite-react";
 import { Region } from "../types";
 import Logo from "/public/arbster.png";
 import { AlertContext } from "@/pages/_app";
@@ -28,7 +28,7 @@ export default function BetLoader({ bets, showBets, user }: props) {
 
   var b: any[] = filterRegion(regionFilter, bets, user ? true : false);
 
-  const [paginatedBets, setPaginatedBets] = useState<Bet[]>(b.slice(0, 10));
+  const [paginatedBets, setPaginatedBets] = useState<Bet[]>(b);
 
   function closeModal(): void {
     setModal(false);
@@ -60,6 +60,7 @@ export default function BetLoader({ bets, showBets, user }: props) {
   return (
     <>
       <div className="px-4 mx-auto max-w-screen-2xl lg:px-4">
+      
         <Modal isVisible={modal} closeModal={closeModal} id={modalBetId} />
         <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
           <div className="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4">
@@ -71,11 +72,25 @@ export default function BetLoader({ bets, showBets, user }: props) {
                 ) : (null)}
                 
               <TextInput
-                className="w-full lg:w-3/4 md:w-7/8 sm:w-3/4"
+                className="w-full lg:w-1/2 md:w-7/8 sm:w-3/4"
                 type="text"
                 placeholder="Search Match"
                 onChange={(e) => searchBetsByMatch(e.target.value)}
               />
+            <Toast className="dark:bg-gray-400">
+                <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
+                    <svg
+                    fill="#32a852"
+                    width="24"
+                    height="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    >
+                    <path d="M21 6.285l-11.16 12.733-6.84-6.018 1.319-1.49 5.341 4.686 9.865-11.196 1.475 1.285z" />
+                    </svg>
+                </div>
+                <div className="ml-3 text-white text-sm font-normal">Showing whitelisted bookmakers</div>
+                <Toast.Toggle />
+            </Toast>
             </div>
             <Dropdown
               label="Region"

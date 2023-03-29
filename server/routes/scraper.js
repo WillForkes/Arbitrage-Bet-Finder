@@ -136,7 +136,7 @@ router.get("/run" ,async function(req, res, next) {
                 try {
                     await prisma.bookmaker.create({
                         data: {
-                            bookName: bookieNameToPut
+                            bookName: x
                         }
                     })
                 } catch {
@@ -298,7 +298,16 @@ router.get("/bet/:id", checkUser, async function(req, res, next){
 })
 
 router.post("/ev/simulate", async function(req, res, next){
-    const {betId, bets} = req.body;
+    let {betId, bets} = req.body;
+
+    if(!betId) {
+        res.status(400).json({"error": "Missing bet ID."});
+        return;
+    }
+    if(!bets) {
+        bets = 100000;
+    }
+
     const bet = await prisma.bet.findUnique({      
         where: {
             id: betId

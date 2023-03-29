@@ -64,7 +64,7 @@ app.use('/admin', adminRouter);
 // * Essential base routes
 app.get('/', (req, res) => {
     //res.json({"status":"ok", "data": "Welcome to the API"})
-    res.json({message: "hello"})
+    res.redirect('https://arbster.com')
 });
 
 app.get('/region', (req, res) => {

@@ -16,6 +16,7 @@ var app = express();
 const { lookup } = require('geoip-lite'); // * Geolocation IP data
 
 
+
 // * Setup libaries for express
 app.use(logger('dev'));
 app.use(express.json({
@@ -25,11 +26,10 @@ app.use(express.json({
 }));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors({
     maxAge: 86400,
     credentials: true,
-    origin: "http://localhost:3001"
+    origin: PROCESS.env.NODE_ENV == "development" ? "http://localhost:3001": "https://arbster.com"
 }))
 
 
@@ -64,7 +64,7 @@ app.use('/admin', adminRouter);
 // * Essential base routes
 app.get('/', (req, res) => {
     //res.json({"status":"ok", "data": "Welcome to the API"})
-    res.redirect('http://localhost:3001/')
+    res.json({message: "hello"})
 });
 
 app.get('/region', (req, res) => {
@@ -118,13 +118,13 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     if(env == "development"){
         res.json({"error": "Something went wrong", "message": err.message, "status": err.status || 500})
-    }else{
+    }else{ 
         res.json({"error": "Something went wrong"})
     }       
 });
 
 app.listen(process.env.PORT || 3000, () => {
-    console.log("listening")
+    console.log("listening on port" + process.env.PORT)
 })
 
 module.exports = app;

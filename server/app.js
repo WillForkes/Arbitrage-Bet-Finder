@@ -125,7 +125,7 @@ app.use(function(err, req, res, next) {
 });
 
 app.listen(process.env.PORT || 3000, () => {
-    console.log("listening on port ")
+    console.log("listening on port" + process.env.PORT)
 })
 
 module.exports = app;

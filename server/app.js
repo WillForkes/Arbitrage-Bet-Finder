@@ -16,6 +16,7 @@ var app = express();
 const { lookup } = require('geoip-lite'); // * Geolocation IP data
 
 
+
 // * Setup libaries for express
 app.use(logger('dev'));
 app.use(express.json({
@@ -64,7 +65,7 @@ app.use('/admin', adminRouter);
 // * Essential base routes
 app.get('/', (req, res) => {
     //res.json({"status":"ok", "data": "Welcome to the API"})
-    res.redirect('http://localhost:3001/')
+    res.json({message: "hello"})
 });
 
 app.get('/region', (req, res) => {

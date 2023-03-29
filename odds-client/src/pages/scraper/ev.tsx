@@ -21,6 +21,7 @@ export default function Ev() {
 
   return (
     <div className="page-offset-x py-8 bg-gray-900">
+
       {data ? (
         <div className="rounded-md gap-6 grid-cols-1 2xl:grid-cols-2 mb-2">
           <EVLoader bets={evData} showBets={showBets} user={user} />

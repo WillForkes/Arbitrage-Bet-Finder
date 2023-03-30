@@ -29,7 +29,7 @@ app.use(cookieParser());
 app.use(cors({
     maxAge: 86400,
     credentials: true,
-    origin: process.env.NODE_ENV == "development" ? "http://localhost:3001": "https://arbster.com"
+    origin: process.env.NODE_ENV == "development" ? "http://localhost:3001": "https://www.arbster.com"
 }))
 
 

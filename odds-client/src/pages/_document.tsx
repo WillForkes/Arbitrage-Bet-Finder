@@ -1,6 +1,7 @@
 declare global {
     interface Window {
         _rwq:any;
+        q: any;
     }
 }
 
@@ -15,7 +16,7 @@ export default function Document() {
           (function(w,r){
             if(typeof window == undefined) { return; }
 
-            w._rwq=r;w[r]=w[r]||function(){(w[r].q=w[r].q||[]).push(arguments)}})(window,'rewardful');
+            w._rwq=r;w[parseInt(r)]=w[parseInt(r)]||function(){(w[parseInt(r)].q=w[parseInt(r)].q||[]).push(arguments)}})(window,'rewardful');
         }} />
         <Script async src='https://r.wdfl.co/rw.js' data-rewardful='6e654d'></Script>
     </Head>

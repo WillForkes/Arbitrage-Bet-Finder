@@ -34,7 +34,9 @@ export default function ProfileDropdown() {
         </Dropdown.Item>
         <Dropdown.Divider />
         <Dropdown.Item
-          onClick={() => window.location.assign("http://localhost:3000/logout")}
+          onClick={() =>
+            window.location.assign(process.env.NEXT_PUBLIC_URI + "/logout")
+          }
         >
           Sign out
         </Dropdown.Item>

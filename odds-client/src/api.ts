@@ -30,8 +30,8 @@ export async function createBet(id: number, stake: number): Promise<any> {
     return await sendApiRequest("POST", `tracker/new`, true, {betid: id, stake: stake})
 }
 
-export async function createPayment(plan: Plan): Promise<any> {
-    return await sendApiRequest("POST", "payment/create", true, {plan: plan})
+export async function createPayment(plan: Plan, ref: string): Promise<any> {
+    return await sendApiRequest("POST", "payment/create?ref=" + ref, true, {plan: plan})
 }
 
 export async function deleteTrackedBet(betId: number): Promise<any> {

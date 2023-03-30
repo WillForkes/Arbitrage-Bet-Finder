@@ -9,6 +9,7 @@ import Logo from "/public/arbster.png";
 import { AlertContext } from "@/pages/_app";
 import Pagination from "./Pagination";
 import { getBookmakerLogo } from "@/utils";
+import FreeModal from "./FreeModal";
 
 // example:
 // {"match_id":"d3015bfea46b4b86f2407a6845885393","match_name":"St. Louis Cardinals v. Washington Nationals","match_start_time":1679418300,"hours_to_start":3.7805919444561003,"league":"baseball_mlb_preseason","key":"h2h","best_outcome_odds":{"St. Louis Cardinals":["Pinnacle",1.69],"Washington Nationals":["MyBookie.ag",2.55]},"total_implied_odds":0.9839,"region":"eu"}
@@ -25,10 +26,15 @@ export default function BetLoader({ bets, showBets, user }: props) {
   const [modal, setModal] = useState(false);
   const [modalBetId, setModalBetId] = useState(0);
   const [regionFilter, setRegionFilter] = useState("UK");
+  const [pricing, setPricing] = useState(bets.length > 0 && !showBets);
 
   var b: any[] = filterRegion(regionFilter, bets, user ? true : false);
 
   const [paginatedBets, setPaginatedBets] = useState<Bet[]>(b);
+
+  function closePricing(): void {
+    setPricing(false);
+  }
 
   function closeModal(): void {
     setModal(false);
@@ -60,37 +66,36 @@ export default function BetLoader({ bets, showBets, user }: props) {
   return (
     <>
       <div className="px-4 mx-auto max-w-screen-2xl lg:px-4">
-      
         <Modal isVisible={modal} closeModal={closeModal} id={modalBetId} />
         <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
           <div className="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4">
             <div className="flex items-center flex-1 space-x-4">
-                {!showBets ? (
-                    <span className="dark:text-white">
-                        Paid Tier Only
-                    </span>
-                ) : (null)}
-                
+              {!showBets ? (
+                <span className="dark:text-white">Paid Tier Only</span>
+              ) : null}
+
               <TextInput
                 className="w-full lg:w-1/2 md:w-7/8 sm:w-3/4"
                 type="text"
                 placeholder="Search Match"
                 onChange={(e) => searchBetsByMatch(e.target.value)}
               />
-            <Toast className="dark:bg-gray-400">
+              <Toast className="dark:bg-gray-400">
                 <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-                    <svg
+                  <svg
                     fill="#32a852"
                     width="24"
                     height="24"
                     xmlns="http://www.w3.org/2000/svg"
-                    >
+                  >
                     <path d="M21 6.285l-11.16 12.733-6.84-6.018 1.319-1.49 5.341 4.686 9.865-11.196 1.475 1.285z" />
-                    </svg>
+                  </svg>
                 </div>
-                <div className="ml-3 text-white text-sm font-normal">Showing whitelisted bookmakers</div>
+                <div className="ml-3 text-white text-sm font-normal">
+                  Showing whitelisted bookmakers
+                </div>
                 <Toast.Toggle />
-            </Toast>
+              </Toast>
             </div>
             <Dropdown
               label="Region"
@@ -126,6 +131,7 @@ export default function BetLoader({ bets, showBets, user }: props) {
               </Dropdown.Item>
             </Dropdown>
           </div>
+          {pricing ? <FreeModal closeModal={closePricing} /> : null}
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

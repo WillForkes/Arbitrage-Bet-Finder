@@ -17,14 +17,8 @@ if(process.env.NODE_ENV == 'development') {
 // * Update whitelisted bookies
 router.post('/whitelist', checkUser, async function(req, res, next) {
     // update bookmaker whitelist on user profile
-    const add = req.body.add; // array
-    
-    let currentWhitelist = JSON.parse(req.user.whitelist)
-    let newWhitelist = currentWhitelist.concat(add)
-    console.log(newWhitelist)
-    // remove duplicates
-    newWhitelist = [...new Set(newWhitelist)]
-
+    console.log(req.body.add)
+    newWhitelist = [...new Set(req.body.add)]
     await prisma.user.update({
         where: {
             authid: req.user.authid

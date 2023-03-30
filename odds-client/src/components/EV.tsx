@@ -22,6 +22,7 @@ interface props {
 
 export default function EVLoader({ bets, showBets, user }: props) {
   const [modal, setModal] = useState(false);
+  const [pricing, setPricing] = useState(bets.length > 0 && !showBets);
   const [modalBetId, setModalBetId] = useState(0);
   const [modalRecBetSize, setModalRecBetSize] = useState(0);
   const [regionFilter, setRegionFilter] = useState("UK");
@@ -48,6 +49,10 @@ export default function EVLoader({ bets, showBets, user }: props) {
 
   function closeModal(): void {
     setModal(false);
+  }
+
+  function closePricing(): void {
+    setPricing(false);
   }
 
   function updateItems(page: number) {
@@ -91,11 +96,8 @@ export default function EVLoader({ bets, showBets, user }: props) {
             <div className="flex items-center flex-1 space-x-4">
               <h5>
                 {!showBets ? (
-                    <span className="dark:text-white">
-                        Paid Tier Only
-                    </span>
-                ) : (null)}
-                
+                  <span className="dark:text-white">Paid Tier Only</span>
+                ) : null}
               </h5>
               <TextInput
                 className="w-full lg:w-3/4 md:w-7/8 sm:w-3/4"
@@ -221,7 +223,7 @@ export default function EVLoader({ bets, showBets, user }: props) {
                   </th>
                 </tr>
               </thead>
-              {bets.length > 0 && !showBets ? <FreeModal /> : null}
+              {pricing ? <FreeModal closeModal={closePricing} /> : null}
               <tbody className={`divide ${showBets ? "" : "blur"}`}>
                 {paginatedBets.map((bet) => (
                   <tr

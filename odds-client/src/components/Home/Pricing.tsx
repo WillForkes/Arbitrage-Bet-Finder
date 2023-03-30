@@ -1,3 +1,9 @@
+declare global {
+    interface Window {
+        Rewardful:any;
+    }
+}
+
 import { createPayment } from "@/api";
 import { Plan } from "@/types";
 import { useRouter } from "next/router";
@@ -8,7 +14,7 @@ export default function Pricing() {
     try {
         const refId = window.Rewardful && window.Rewardful.referral || ('checkout_'+(new Date).getTime());
         var response = await createPayment(plan as Plan, refId);
-        
+
         window.location.assign(response.url);
     } catch (e) {
       console.error(e);

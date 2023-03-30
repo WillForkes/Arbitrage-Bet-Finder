@@ -4,6 +4,15 @@ const prisma = new PrismaClient()
 var express = require('express');
 let { checkUser } = require('../middleware/checkUser');
 var router = express.Router();
+const Stripe = require('stripe');
+
+let stripe;
+if(process.env.NODE_ENV == 'development') {
+    stripe = Stripe(process.env.STRIPE_TEST_SECRET);
+} else {
+    stripe = Stripe(process.env.STRIPE_LIVE_SECRET);
+}
+
 
 // * Update whitelisted bookies
 router.post('/whitelist', checkUser, async function(req, res, next) {
@@ -103,13 +112,24 @@ router.get("/invoices", checkUser, async function(req, res, next) {
     const invoices = await prisma.invoice.findMany({
         include: {
             subscription: true
+        },
+        orderBy: {
+            createdAt: "desc"
         }
     })
 
     //search through subscriptions to find matching user id and append to array
     let invoicesReal = []
-    for(let i = 0; i < invoices.length; i++){
+    for(let i = 0; i < invoices.length; i++){        
         if(invoices[i].subscription.userId == req.user.authid){
+            const info = await getInvoiceInformation(invoices[i].stripeInvoiceId)
+            invoices[i].plan = invoices[i].subscription.plan
+            invoices[i].amount_paid = info.amount_paid
+            invoices[i].billing_reason = info.billing_reason.replace("_", " ")
+            
+            // capitalsie the first letter of each word
+            invoices[i].billing_reason = invoices[i].billing_reason.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+
             invoicesReal.push(invoices[i])
         }
     }
@@ -169,5 +189,11 @@ router.post("/startTrial", checkUser, async function(req, res, next) {
     res.status(200).json({"status": "ok", "data": {}})
 });
 
+
+async function getInvoiceInformation(invoiceId){
+    const invoice = await stripe.invoices.retrieve(invoiceId)
+
+    return {amount_paid: invoice.amount_paid, billing_reason: invoice.billing_reason}
+}
 
 module.exports = router;

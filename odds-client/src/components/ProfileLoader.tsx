@@ -215,7 +215,7 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                         </div>
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
-                            {invoice.subscription.plan.toUpperCase()} PLAN
+                            {invoice.billing_reason}
                           </p>
                           <p className="truncate text-sm text-gray-500 dark:text-gray-400">
                             ID: {invoice.stripeInvoiceId}
@@ -225,13 +225,8 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                           </p>
                           <p className="truncate text-sm text-gray-500 dark:text-gray-400">
                             {/* If starter - 29.99, if pro, 49.99, if plus 99.99 */}
-                            {invoice.subscription.plan.toUpperCase() ===
-                            "STARTER"
-                              ? "$29.99"
-                              : invoice.subscription.plan.toUpperCase() ===
-                                "PRO"
-                              ? "$49.99"
-                              : "$99.99"}
+
+                              ${invoice.amount_paid / 100}
                           </p>
                         </div>
                         <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">

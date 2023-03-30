@@ -20,7 +20,7 @@ export default function Pricing() {
         try {
             const refId = window.Rewardful && window.Rewardful.referral || ('checkout_'+(new Date).getTime());
             let trial = false
-            if(user?.dbuser.subscription == undefined || user?.dbuser.subscription.plan == "free") {
+            if(user?.dbuser.plan == "free") {
                 trial = true
             }
 
@@ -31,6 +31,8 @@ export default function Pricing() {
             console.error(e);
         }
     }
+
+    console.log(user)
 
     return (
     <section id="pricing" className="bg-white dark:bg-gray-900">
@@ -152,8 +154,9 @@ export default function Pricing() {
                 <button
                     onClick={() => subscriptionHandle("starter")}
                     className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
+                    disabled={user.dbuser.plan == "starter"}
                 >
-                    {user.dbuser.subscription == undefined ? "Try It Free" : "Buy Now"}
+                    {user.dbuser.plan == "free" ? "Try It Free" : (user.dbuser.plan == "starter") ? "Current Plan" : "Buy Now"}
                 </button>
             ) : (
                 <Link 
@@ -323,8 +326,9 @@ export default function Pricing() {
                 <button
                     onClick={() => subscriptionHandle("starter")}
                     className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
+                    disabled={user.dbuser.plan == "pro"}
                 >
-                    {user.dbuser.subscription == undefined ? "Try It Free" : "Buy Now"}
+                    {user.dbuser.plan == "free" ? "Try It Free" : (user.dbuser.plan == "pro") ? "Current Plan" : "Buy Now"}
                 </button>
             ) : (
                 <Link 
@@ -538,8 +542,9 @@ export default function Pricing() {
             <button
                 onClick={() => subscriptionHandle("plus")}
                 className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
+                disabled={user?.dbuser.plan == "plus"}
             >
-                Buy Now
+                {(user?.dbuser.plan == "plus") ? "Current Plan" : "Buy Now"}
             </button>
             </div>
         </div>

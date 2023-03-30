@@ -53,6 +53,7 @@ const plans = {
 // * Get profile data
 router.post('/create', checkUser, async (req, res) => {
     let ref = req.query.ref ? req.query.ref : new Date().getTime().toString()
+    let trial = req.body.trial ? req.body.trial : false
     let user = req.user
     
     if(!req.body.plan){
@@ -73,13 +74,13 @@ router.post('/create', checkUser, async (req, res) => {
         return;
     }
 
-    const session = await stripe.checkout.sessions.create({
+    let sessionObj = {
         mode: 'subscription',
         line_items: [
-          {
-            price: priceid,
-            quantity: 1,
-          },
+            {
+                price: priceid,
+                quantity: 1,
+            },
         ],
         // {CHECKOUT_SESSION_ID} is a string literal; do not change it!
         // the actual Session ID is returned in the query parameter when your customer
@@ -90,8 +91,15 @@ router.post('/create', checkUser, async (req, res) => {
         cancel_url: (process.env.NODE_ENV == "development") ? 
         "http://localhost:3001/subscription/failure" :
         "https://arbster.com/subscription/failure",
-        client_reference_id: ref
-    });
+        client_reference_id: ref,
+    }
+    if(trial == true) {
+        sessionObj.subscription_data = {
+            trial_period_days: 5,
+        }
+    }
+
+    const session = await stripe.checkout.sessions.create(sessionObj);
 
     const dbpayment = await prisma.subscription.create({
         data: {

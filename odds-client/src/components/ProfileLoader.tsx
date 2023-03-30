@@ -10,7 +10,7 @@ import {
   Label,
   Tabs,
   Card,
-  Toast
+  Toast,
 } from "flowbite-react";
 import Image from "next/image";
 import Logo from "../../public/arbster.png";
@@ -225,8 +225,7 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                           </p>
                           <p className="truncate text-sm text-gray-500 dark:text-gray-400">
                             {/* If starter - 29.99, if pro, 49.99, if plus 99.99 */}
-
-                              ${invoice.amount_paid / 100}
+                            ${invoice.amount_paid / 100}
                           </p>
                         </div>
                         <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
@@ -267,8 +266,13 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                       })
                     }
                     checked={notifications.email}
-                    disabled={user.dbuser.plan == "pro" || user.dbuser.plan == "plus" || user.dbuser.plan == "starter" ? false : true}
-
+                    disabled={
+                      user.dbuser.plan == "pro" ||
+                      user.dbuser.plan == "plus" ||
+                      user.dbuser.plan == "starter"
+                        ? false
+                        : true
+                    }
                   />
                   <Label htmlFor="email">Email notifications</Label>
                 </div>
@@ -279,7 +283,13 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                     placeholder="name@arbster.com"
                     required={true}
                     value={notifications.emaila}
-                    disabled={user.dbuser.plan == "pro" || user.dbuser.plan == "plus" || user.dbuser.plan == "starter" ? false : true}
+                    disabled={
+                      user.dbuser.plan == "pro" ||
+                      user.dbuser.plan == "plus" ||
+                      user.dbuser.plan == "starter"
+                        ? false
+                        : true
+                    }
                     onChange={(e) =>
                       setNotifications({
                         ...notifications,
@@ -290,38 +300,45 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                 </div>
 
                 <div>
-                    <div className="flex items-center gap-2 p-2">
-                        <Checkbox
-                        id="email"
-                        onClick={() =>
-                            setNotifications({
-                            ...notifications,
-                            sms: !notifications.sms,
-                            })
-                        }
-                        checked={notifications.sms}
-                        disabled={user.dbuser.plan == "pro" || user.dbuser.plan == "plus" ? false : true}
-                        />
-                        <Label htmlFor="email">Phone notifications</Label>
-                    </div>
-                    <div>
-                        <TextInput
-                        id="email4"
-                        type="text"
-                        placeholder="+11234567890"
-                        required={true}
-                        value={notifications.phone}
-                        disabled={user.dbuser.plan == "pro" || user.dbuser.plan == "plus" ? false : true}
-                        onChange={(e) =>
-                            setNotifications({
-                            ...notifications,
-                            phone: e.target.value,
-                            })
-                        }
-                        />
-                    </div>
+                  <div className="flex items-center gap-2 p-2">
+                    <Checkbox
+                      id="email"
+                      onClick={() =>
+                        setNotifications({
+                          ...notifications,
+                          sms: !notifications.sms,
+                        })
+                      }
+                      checked={notifications.sms}
+                      disabled={
+                        user.dbuser.plan == "pro" || user.dbuser.plan == "plus"
+                          ? false
+                          : true
+                      }
+                    />
+                    <Label htmlFor="email">Phone notifications</Label>
+                  </div>
+                  <div>
+                    <TextInput
+                      id="email4"
+                      type="text"
+                      placeholder="+11234567890"
+                      required={true}
+                      value={notifications.phone}
+                      disabled={
+                        user.dbuser.plan == "pro" || user.dbuser.plan == "plus"
+                          ? false
+                          : true
+                      }
+                      onChange={(e) =>
+                        setNotifications({
+                          ...notifications,
+                          phone: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
                 </div>
-
 
                 <div>
                   <Label htmlFor="email">Whitelisted bookmakers</Label>

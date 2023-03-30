@@ -15,6 +15,9 @@ export type Invoice = {
     stripeInvoiceId: string;
     stripeInvoicePdfUrl: string;
     status: string;
+    plan: string;
+    billing_reason: string;
+    amount_paid: number;
     createdAt: string;
     updatedAt: string;
     subscription: {

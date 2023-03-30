@@ -37,10 +37,10 @@ app.use(cors({
 const config = {
     authRequired: false,
     auth0Logout: true,
-    secret: process.env.SECRET,
+    secret: (process.env.NODE_ENV == "development") ? process.env.SECRET_DEV : process.env.SECRET,
     baseURL: process.env.BASEURL,
-    clientID: process.env.CLIENTID,
-    issuerBaseURL: process.env.ISSUERBASEURL
+    clientID: (process.env.NODE_ENV == "development") ? process.env.CLIENTID_DEV : process.env.CLIENTID,
+    issuerBaseURL: (process.env.NODE_ENV == "development") ? process.env.ISSUERBASEURL_DEV : process.env.ISSUERBASEURL
 };
 app.use(auth(config));
 

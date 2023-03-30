@@ -83,8 +83,12 @@ router.post('/create', checkUser, async (req, res) => {
         // {CHECKOUT_SESSION_ID} is a string literal; do not change it!
         // the actual Session ID is returned in the query parameter when your customer
         // is redirected to the success page.
-        success_url: 'https://localhost:3001/subscription/success?session_id={CHECKOUT_SESSION_ID}',
-        cancel_url: 'https://localhost:3001/subscription/failure',
+        success_url: (process.env.NODE_ENV == "development") ? 
+        "http://localhost:3001/subscription/success?session_id={CHECKOUT_SESSION_ID}" :
+        "https://arbster.com/subscription/success?session_id={CHECKOUT_SESSION_ID}",
+        cancel_url: (process.env.NODE_ENV == "development") ? 
+        "http://localhost:3001/subscription/failure" :
+        "https://arbster.com/subscription/failure",
     });
 
     const dbpayment = await prisma.subscription.create({
@@ -164,7 +168,6 @@ router.get("/portal", checkUser, async (req, res) => {
 
 router.post("/webhook", async (request, response) => {
     const sig = request.headers['stripe-signature'];
-    const endpointSecret = "whsec_9232b0a6659c8d62de3b9c29694164960bb9a43fdb23e21bb154e8d80da52631";
     let event;
   
     try {

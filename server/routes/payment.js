@@ -168,7 +168,6 @@ router.get("/portal", checkUser, async (req, res) => {
 
 router.post("/webhook", async (request, response) => {
     const sig = request.headers['stripe-signature'];
-    const endpointSecret = "whsec_9232b0a6659c8d62de3b9c29694164960bb9a43fdb23e21bb154e8d80da52631";
     let event;
   
     try {

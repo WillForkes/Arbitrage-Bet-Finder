@@ -178,11 +178,11 @@ router.post("/clean", async function(req, res, next){
 
     // Get all bets that are older than 10 minutes
     const betsToDelete = await prisma.bet.findMany({
-        // where: {
-        //     updatedAt: {
-        //         lt: new Date(Date.now() - (threshold * 60 * 1000))
-        //     }
-        // }
+        where: {
+            updatedAt: {
+                lt: new Date(Date.now() - (threshold * 60 * 1000))
+            }
+        }
     })
 
     // Delete all bets that are older than 10 minutes

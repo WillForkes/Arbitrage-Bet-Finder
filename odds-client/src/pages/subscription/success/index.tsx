@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Accordion } from "flowbite-react";
 import Link from "next/link";
+import Script from "next/script";
 
 export default function Maintainance() {
   return (
@@ -35,6 +36,7 @@ export default function Maintainance() {
             </Link>
           </div>
         </div>
+
       </section>
     </>
   );

@@ -52,6 +52,7 @@ const plans = {
 
 // * Get profile data
 router.post('/create', checkUser, async (req, res) => {
+    let ref = req.query.ref ? req.query.ref : new Date().getTime().toString()
     let user = req.user
     
     if(!req.body.plan){
@@ -89,6 +90,7 @@ router.post('/create', checkUser, async (req, res) => {
         cancel_url: (process.env.NODE_ENV == "development") ? 
         "http://localhost:3001/subscription/failure" :
         "https://arbster.com/subscription/failure",
+        client_reference_id: ref
     });
 
     const dbpayment = await prisma.subscription.create({

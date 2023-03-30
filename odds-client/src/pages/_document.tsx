@@ -12,13 +12,8 @@ export default function Document() {
   return (
     <Html lang="en" className="dark">
       <Head>
-        <Script onLoad={() => {
-          (function(w,r){
-            if(typeof window == undefined) { return; }
-
-            w._rwq=r;w[parseInt(r)]=w[parseInt(r)]||function(){(w[parseInt(r)].q=w[parseInt(r)].q||[]).push(arguments)}})(window,'rewardful');
-        }} />
-        <Script async src='https://r.wdfl.co/rw.js' data-rewardful='6e654d'></Script>
+        <Script id="rewardful_src" strategy="afterInteractive"> {`(function(w,r){w._rwq=r;w[r]=w[r]||function(){(w[r].q=w[r].q||[]).push(arguments)}})(window,'rewardful');`} </Script> 
+        <Script strategy="afterInteractive" src="https://r.wdfl.co/rw.js" data-rewardful="6e654d" ></Script>
     </Head>
       <body>
         <Main />

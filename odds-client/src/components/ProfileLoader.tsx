@@ -112,6 +112,12 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                     {user.auth0.nickname}
                   </dd>
                   <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
+                    Plan Renews/Expires At
+                  </dt>
+                  <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
+                    {new Date(user.dbuser.planExpiresAt).toLocaleDateString()}
+                  </dd>
+                  <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
                     Plan
                   </dt>
 
@@ -124,6 +130,7 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                   <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
                     Region
                   </dt>
+
                   {editProfile ? (
                     <div className="">
                       <TextInput

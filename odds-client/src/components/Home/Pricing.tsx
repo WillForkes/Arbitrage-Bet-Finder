@@ -11,6 +11,7 @@ import React, { useContext } from "react";
 import { Badge } from "flowbite-react";
 import { UserContext } from "@/pages/_app";
 import { User } from "@/types";
+import Link from "next/link";
 
 export default function Pricing() {
   const user: User | null = useContext(UserContext).user;
@@ -21,7 +22,7 @@ export default function Pricing() {
         (window.Rewardful && window.Rewardful.referral) ||
         "checkout_" + new Date().getTime();
       let trial = false;
-      if (user?.dbuser.subscription.plan == "free") {
+      if (user?.dbuser.plan == "free") {
         trial = true;
       }
 
@@ -32,6 +33,8 @@ export default function Pricing() {
       console.error(e);
     }
   }
+
+  console.log(user);
 
   return (
     <section id="pricing" className="bg-white dark:bg-gray-900">
@@ -149,12 +152,26 @@ export default function Pricing() {
                 <span>Discord Server Custom Role</span>
               </li>
             </ul>
-            <button
-              onClick={() => subscriptionHandle("starter")}
-              className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
-            >
-              Try it Free
-            </button>
+            {user ? (
+              <button
+                onClick={() => subscriptionHandle("starter")}
+                className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
+                disabled={user.dbuser.plan == "starter"}
+              >
+                {user.dbuser.plan == "free"
+                  ? "Try It Free"
+                  : user.dbuser.plan == "starter"
+                  ? "Current Plan"
+                  : "Buy Now"}
+              </button>
+            ) : (
+              <Link
+                className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
+                href="/auth/login"
+              >
+                Try It Free
+              </Link>
+            )}
           </div>
 
           <div className="flex flex-col p-6 max-w-xl text-center text-gray-900 bg-white rounded-lg border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-700 dark:text-white">
@@ -310,12 +327,26 @@ export default function Pricing() {
                 <span>Discord Server Custom Role</span>
               </li>
             </ul>
-            <button
-              onClick={() => subscriptionHandle("pro")}
-              className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
-            >
-              Try it Free
-            </button>
+            {user ? (
+              <button
+                onClick={() => subscriptionHandle("starter")}
+                className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
+                disabled={user.dbuser.plan == "pro"}
+              >
+                {user.dbuser.plan == "free"
+                  ? "Try It Free"
+                  : user.dbuser.plan == "pro"
+                  ? "Current Plan"
+                  : "Buy Now"}
+              </button>
+            ) : (
+              <Link
+                className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
+                href="/auth/login"
+              >
+                Try It Free
+              </Link>
+            )}
           </div>
 
           <div className="flex flex-col p-6 max-w-lg text-center text-gray-900 bg-white rounded-lg border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
@@ -521,8 +552,9 @@ export default function Pricing() {
             <button
               onClick={() => subscriptionHandle("plus")}
               className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
+              disabled={user?.dbuser.plan == "plus"}
             >
-              Try it Free
+              {user?.dbuser.plan == "plus" ? "Current Plan" : "Buy Now"}
             </button>
           </div>
         </div>

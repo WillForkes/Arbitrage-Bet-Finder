@@ -6,6 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useContext } from "react";
 import Logo from "../../../public/arbster.png";
+import Logo2 from "../../../public/arbster_logo.png";
+
 import { useRouter } from "next/router";
 
 export default function ProfileDropdown() {

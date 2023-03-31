@@ -11,18 +11,13 @@ export default function Testimonials() {
             We didn&apos;t reinvent the wheel
           </h2>
           <p className="mb-4">
-            Instead, we use provable math and statistics to help you make the
-            most of sports betting. Our platform systematically scans hundreds
-            of bookmakers to find the best odds available, allowing you to
-            identify and capitalize on arbitrage and positive EV opportunities.
-            Our calculations are based on proven mathematical models and
-            statistical analysis, ensuring that you can make informed decisions
-            and secure a healthy profit.
+Our calculations are derived from proven models and statistical analysis, delivering a reliable foundation for your betting strategy. We are committed to upholding sound mathematical principles and providing our clients with the edge they need to succeed in the competitive worlds of arbitrage and positive EV betting.
+          </p>
+          <p className="mb-4">
+Our calculations are derived from proven models and statistical analysis, delivering a reliable foundation for your betting strategy. We are committed to upholding sound mathematical principles and providing our clients with the edge they need to succeed in the competitive worlds of arbitrage and positive EV betting.
           </p>
           <p>
-            With our platform, you can rest assured that your bets are based on
-            sound mathematical principles, giving you the edge you need to
-            succeed in the worlds of arbitrage and positive EV betting.
+          With our platform, you can trust that your bets are grounded in a data-driven approach that is designed to yield maximum returns. Let us help you reach your sports betting goals with our innovative platform and unwavering commitment to excellence.
           </p>
         </div>
         <div className="grid grid-cols-2 gap-4 mt-8">

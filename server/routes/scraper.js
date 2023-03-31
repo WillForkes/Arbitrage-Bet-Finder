@@ -131,7 +131,6 @@ router.get("/run" ,async function(req, res, next) {
             toput[1] == "ev" ? 
             book.push(pjson.bookmaker) : 
             Object.keys(pjson.best_outcome_odds).map(key => book.push(pjson.best_outcome_odds[key][0]));
-
             for (const x of book) {
                 try {
                     await prisma.bookmaker.create({

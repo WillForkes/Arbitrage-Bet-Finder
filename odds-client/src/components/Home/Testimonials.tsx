@@ -32,15 +32,15 @@ export default function Testimonials() {
               <figcaption className="flex items-center justify-center mt-6 space-x-3">
                 <img
                   className="w-6 h-6 rounded-full"
-                  src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/michael-gouch.png"
+                  src="https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
                   alt="profile picture"
                 />
                 <div className="flex items-center divide-x-2 divide-gray-500 dark:divide-gray-700">
                   <div className="pr-3 font-medium text-gray-900 dark:text-white">
-                    Micheal Gough
+                    Ryan
                   </div>
                   <div className="pl-3 text-sm font-light text-gray-500 dark:text-gray-400">
-                    CEO at Google
+                    Plus Plan
                   </div>
                 </div>
               </figcaption>
@@ -71,15 +71,15 @@ export default function Testimonials() {
               <figcaption className="flex items-center justify-center mt-6 space-x-3">
                 <img
                   className="w-6 h-6 rounded-full"
-                  src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/michael-gouch.png"
+                  src="https://images.unsplash.com/photo-1583864697784-a0efc8379f70?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8bWFsZSUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80"
                   alt="profile picture"
                 />
                 <div className="flex items-center divide-x-2 divide-gray-500 dark:divide-gray-700">
                   <div className="pr-3 font-medium text-gray-900 dark:text-white">
-                    Micheal Gough
+                    Gordon
                   </div>
                   <div className="pl-3 text-sm font-light text-gray-500 dark:text-gray-400">
-                    CEO at Google
+                    Pro Plan
                   </div>
                 </div>
               </figcaption>
@@ -110,15 +110,15 @@ export default function Testimonials() {
               <figcaption className="flex items-center justify-center mt-6 space-x-3">
                 <img
                   className="w-6 h-6 rounded-full"
-                  src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/michael-gouch.png"
+                  src="https://wpimg.pixelied.com/blog/wp-content/uploads/2021/06/15175913/Colors-in-Profile-Pictures.jpeg"
                   alt="profile picture"
                 />
                 <div className="flex items-center divide-x-2 divide-gray-500 dark:divide-gray-700">
                   <div className="pr-3 font-medium text-gray-900 dark:text-white">
-                    Micheal Gough
+                    Will
                   </div>
                   <div className="pl-3 text-sm font-light text-gray-500 dark:text-gray-400">
-                    CEO at Google
+                    Starter Plan
                   </div>
                 </div>
               </figcaption>
@@ -149,15 +149,15 @@ export default function Testimonials() {
               <figcaption className="flex items-center justify-center mt-6 space-x-3">
                 <img
                   className="w-6 h-6 rounded-full"
-                  src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/michael-gouch.png"
+                  src="https://media.istockphoto.com/id/1338134336/photo/headshot-portrait-african-30s-man-smile-look-at-camera.jpg?b=1&s=170667a&w=0&k=20&c=j-oMdWCMLx5rIx-_W33o3q3aW9CiAWEvv9XrJQ3fTMU="
                   alt="profile picture"
                 />
                 <div className="flex items-center divide-x-2 divide-gray-500 dark:divide-gray-700">
                   <div className="pr-3 font-medium text-gray-900 dark:text-white">
-                    Micheal Gough
+                    Rufus
                   </div>
                   <div className="pl-3 text-sm font-light text-gray-500 dark:text-gray-400">
-                    CEO at Google
+                    Plus Plan
                   </div>
                 </div>
               </figcaption>

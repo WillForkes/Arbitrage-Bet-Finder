@@ -1,10 +1,20 @@
+declare global {
+    interface Window {
+        _rwq:any;
+        q: any;
+    }
+}
+
 import { Html, Head, Main, NextScript } from 'next/document'
 import Script from 'next/script'
 
 export default function Document() {
   return (
     <Html lang="en" className="dark">
-      <Head />
+      <Head>
+        <Script id="rewardful_src" strategy="afterInteractive"> {`(function(w,r){w._rwq=r;w[r]=w[r]||function(){(w[r].q=w[r].q||[]).push(arguments)}})(window,'rewardful');`} </Script> 
+        <Script strategy="afterInteractive" src="https://r.wdfl.co/rw.js" data-rewardful="6e654d" ></Script>
+    </Head>
       <body>
         <Main />
         <NextScript />
@@ -12,3 +22,20 @@ export default function Document() {
     </Html>
   )
 }
+
+// Fully test your initial setup using this guide:
+// Make sure you have finished the integration of Rewardful in your marketing website.
+// If possible, create a trial period to simulate actual signup or purchase. If not possible, proceed with an actual charge, you may refund the charged amount later on.
+// Create a test affiliate account.
+// Once the affiliate is created, go to Affiliates > name of Affiliate > Links.
+// Copy the affiliate link.
+// Open up an incognito browser or a different browser with a clean cache and no adblocker extension.
+// Paste the affiliate link on the browser you copied on STEP 5.
+// Proceed with the checkout/signup flow.
+// Once checkout/signup is complete, go to your Stripe account.
+// Go to Customers > test email address of the test purchase.
+// Check the Metadata section, check for the field labeled "referral" and the value is alphanumeric character. If not present, contact us for further support.
+// STEP 6 is important as this will simulate a referred customer. Use incognito/private browsing mode that doesn't have an adblocker. Or use a different browser wherein the cache and cookies are clean and there's no adblocker. Also, use an email address that is not yet present on your Stripe Customer record section.
+
+
+// TEST AFFILIATE ACC PSWD: f9c8e4d0eaa462df 

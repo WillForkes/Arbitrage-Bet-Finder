@@ -61,6 +61,10 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
     try {
       await updateProfileA(region);
       setEditProfile(false);
+      alertContext?.setAlert({
+        msg: "Profile edited successfully",
+        error: false,
+      });
     } catch (e: any) {
       alertContext?.setAlert({ msg: e.toString(), error: true });
     }

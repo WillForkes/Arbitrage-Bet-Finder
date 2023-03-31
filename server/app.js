@@ -67,6 +67,14 @@ app.get('/', (req, res) => {
     res.redirect('https://arbster.com')
 });
 
+app.get('/sign-up', (req, res) => {
+    res.oidc.login({
+        authorizationParams: {
+            screen_hint: 'signup',
+        },
+    });
+});
+
 app.get('/region', (req, res) => {
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     const details = lookup(ip); // location of the user

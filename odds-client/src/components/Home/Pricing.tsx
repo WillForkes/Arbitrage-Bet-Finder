@@ -1,13 +1,32 @@
+declare global {
+  interface Window {
+    Rewardful: any;
+  }
+}
+
 import { createPayment } from "@/api";
 import { Plan } from "@/types";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useContext } from "react";
 import { Badge } from "flowbite-react";
+import { UserContext } from "@/pages/_app";
+import { User } from "@/types";
+
 export default function Pricing() {
+  const user: User | null = useContext(UserContext).user;
+
   async function subscriptionHandle(plan: string) {
-    console.log(plan);
     try {
-      var response = await createPayment(plan as Plan);
+      const refId =
+        (window.Rewardful && window.Rewardful.referral) ||
+        "checkout_" + new Date().getTime();
+      let trial = false;
+      if (user?.dbuser.subscription.plan == "free") {
+        trial = true;
+      }
+
+      var response = await createPayment(plan as Plan, refId, trial);
+
       window.location.assign(response.url);
     } catch (e) {
       console.error(e);

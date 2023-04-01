@@ -8,6 +8,7 @@ import { getBookmakerLogo } from "../../utils";
 export default function BetPage() {
   const router = useRouter();
   const { betid } = router.query;
+
   const { data, error } = useSWR("/scraper/bet/" + betid, getter, {
     refreshInterval: 10000,
   });
@@ -21,7 +22,7 @@ export default function BetPage() {
   try {
     bet.data = JSON.parse(bet.data);
   } catch (e) {
-    console.log(e);
+    console.log(".");
   }
 
   return (
@@ -34,16 +35,21 @@ export default function BetPage() {
                 <h2 className="mb-2 text-xl font-semibold leading-none text-gray-900 md:text-2xl dark:text-white">
                   {bet.data.match_name}
                 </h2>
+                <h2 className="mb-2 text-md font-semibold leading-none text-gray-900 md:text-lg dark:text-white">
+                  {bet.data.league.replace(/_/g, " ")}
+                </h2>
 
-                {bet.type == "ev" ? (
-                  <p className="mb-4 text-xl font-extrabold leading-none text-gray-900 md:text-2xl dark:text-white">
-                    {(bet.data.ev * 100).toFixed(2)}%
-                  </p>
-                ) : (
-                  <p className="mb-4 text-xl font-extrabold leading-none text-gray-900 md:text-2xl dark:text-white">
-                    +{((1 - bet.data.total_implied_odds) * 100).toFixed(2)}%
-                  </p>
-                )}
+                <div className="flex items-center justify-between mb-4">
+                    {bet.type == "ev" ? (
+                        <span className="bg-primary-100 text-primary-800 text-xs font-extrabold px-2 py-0.5 rounded dark:bg-green-600 dark:text-green-300">
+                            {(bet.data.ev * 100).toFixed(2)}%
+                        </span>
+                    ) : (
+                        <span className="bg-primary-100 text-primary-800 text-xs font-extrabold px-2 py-0.5 rounded dark:bg-green-600 dark:text-green-300">
+                            +{((1 - bet.data.total_implied_odds) * 100).toFixed(2)}%
+                        </span>
+                    )}
+                </div>
 
                 <dl className="flex items-center space-x-6">
                   <div>
@@ -121,6 +127,11 @@ export default function BetPage() {
                               {bet.data.best_outcome_odds[key][0]}
                             </p>
                           </div>
+                          <div className="min-w-0 flex-1">
+                              <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                {bet.data.best_outcome_odds[key][1]}
+                              </p>
+                            </div>
                           {bet.data.best_outcome_odds[key].length > 1 ? (
                             <div className="min-w-0 flex-1">
                               <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
@@ -162,7 +173,17 @@ export default function BetPage() {
                     Details
                   </dt>
                   <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
-                    Bet information...
+                    {bet.type == "arbitrage" ? (
+                        <>
+                            {/* information about arbitrage bet */}
+                            Test
+                        </>
+                    ) : (
+                        <>
+                            {/* information about ev bet */}
+                            Test
+                        </>
+                    )}
                   </dd>
                 </dl>
 

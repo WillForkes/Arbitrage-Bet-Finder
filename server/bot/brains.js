@@ -117,7 +117,7 @@ function processMatches_h2h(matches, includeStartedMatches = false) {
             }
         }
 
-        let totalImpliedOdds = Object.values(bestOddPerOutcome).reduce((sum, i) => sum + 1 / i[1], 0);
+        let totalImpliedOdds = Object.values(bestOddPerOutcome).reduce((sum, i) => sum + (1 / i[1]), 0);
         totalImpliedOdds = parseFloat(totalImpliedOdds.toFixed(4));
 
         if(totalImpliedOdds > 1) continue;

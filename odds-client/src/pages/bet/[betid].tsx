@@ -15,7 +15,7 @@ export default function BetPage() {
 
   // parse bet data
   let bet = data?.bet;
-  if (!bet || error) {
+  if (error) {
     return null;
   }
 
@@ -28,10 +28,10 @@ export default function BetPage() {
   return (
     <>
       <section className="bg-white dark:bg-gray-900">
-        <div className="mx-auto max-w-screen-sm py-12">
+        <div className="mx-auto max-w-screen-md py-12">
           <Card>
             {bet ? (
-              <div className="py-8 px-4 mx-auto max-w-md lg:py-8">
+              <div className="py-8 px-4 mx-auto  lg:py-8">
                 <h2 className="mb-2 text-xl font-semibold leading-none text-gray-900 md:text-2xl dark:text-white">
                   {bet.data.match_name}
                 </h2>
@@ -57,7 +57,7 @@ export default function BetPage() {
                       Type
                     </dt>
                     <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
-                      {bet.type}
+                      {bet.type.toUpperCase()}
                     </dd>
                   </div>
                   <div>
@@ -65,7 +65,7 @@ export default function BetPage() {
                       Region
                     </dt>
                     <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
-                      {bet.data.region}
+                      {bet.data.region.toUpperCase()}
                     </dd>
                   </div>
                   <div>
@@ -73,7 +73,7 @@ export default function BetPage() {
                       Market
                     </dt>
                     <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
-                      {bet.data.key}
+                      {bet.data.key.toUpperCase()}
                     </dd>
                   </div>
                 </dl>
@@ -92,7 +92,7 @@ export default function BetPage() {
                         No-vig Odds
                       </dt>
                       <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
-                        {bet.data.noVigOdds}
+                        {bet.data.noVigOdds.toFixed(2)}
                       </dd>
                     </div>
                   </dl>
@@ -175,13 +175,15 @@ export default function BetPage() {
                   <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
                     {bet.type == "arbitrage" ? (
                         <>
-                            {/* information about arbitrage bet */}
-                            Test
+                            This bet between {bet.data.match_name} is an arbitrage opportunity. 
+                            This means you can place a bet on both outcomes of the match in a given market
+                            and make a profit regardless of the outcome due to discrepencies between different bookmakers.                            
                         </>
                     ) : (
                         <>
-                            {/* information about ev bet */}
-                            Test
+                            This bet between {bet.data.match_name} is an EV opportunity. This EV bet suggests you should place a bet on {bet.data.team} which
+                            mathematically will return an expected value of {(bet.data.ev * 100).toFixed(2)}% over the long term.
+                            This bet is based on the odds of {bet.data.bookmaker} with no-vig odds of {bet.data.noVigOdds.toFixed(2)}.
                         </>
                     )}
                   </dd>
@@ -224,7 +226,11 @@ export default function BetPage() {
               </div>
             ) : (
               <div className="mx-auto max-w-screen-md p-64 text-center mb-8 lg:mb-12">
-                <Spinner aria-label="Default status example" />
+                <h2 className="text-md font-bold dark:text-white">
+                    This bet may not exist or has been deleted.
+                </h2>
+
+               <Spinner aria-label="Default status example" />
               </div>
             )}
           </Card>

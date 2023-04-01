@@ -99,7 +99,6 @@ let checkUser = async (req, res, next) => {
     // ! attach user to request
     user.plan = plan
     user.planExpiresAt = planExpiresAt
-    user.subId = user.subscription.subId
     delete user.subscription
     user.email = req.oidc.user.email
 

@@ -7,7 +7,6 @@ import React, { useContext, useState } from "react";
 import Logo from "../../../public/arbster.png";
 import Login from "./Login";
 import ProfileDropdown from "./ProfileDropdown";
-import { Hamburger } from "flowbite-react";
 
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);

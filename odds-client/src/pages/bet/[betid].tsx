@@ -9,10 +9,6 @@ export default function BetPage() {
   const router = useRouter();
   const { betid } = router.query;
 
-  if(!betid) {
-    return null;
-  }
-
   const { data, error } = useSWR("/scraper/bet/" + betid, getter, {
     refreshInterval: 10000,
   });

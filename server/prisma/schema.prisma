@@ -17,7 +17,7 @@ model User {
   updatedAt          DateTime       @updatedAt
   region             String?        @default("UK")
   phone              String?
-  email              String?        @unique // used only for email notis
+  email              String? // used only for email notis
   smsNotifications   Boolean        @default(false)
   emailNotifications Boolean        @default(false)
   apikey             String?        @unique
@@ -56,7 +56,7 @@ model Subscription {
   id                   Int       @id @default(autoincrement())
   userId               String
   plan                 String
-  planExpiresAt        DateTime  @default(now())
+  planExpiresAt        DateTime?
   stripePaymentId      String?   @unique
   stripeSubscriptionId String?   @unique
   stripeCustomerId     String?
@@ -91,36 +91,3 @@ model Bookmaker {
   id       Int    @id @default(autoincrement())
   bookName String @unique
 }
-
-// Plans
-// Starter - $29.99/month
-// - Arbitrage betting tool
-// - Email alerts
-// - Access to all our betting calculators, guides tips and tricks
-// - Live chat support
-// - 30 Day money back guarantee
-// - API Access (1000 requqests per month)
-
-// Pro - $49.99/month
-// - Arbitrage betting tool
-// - Email alerts
-// - SMS alerts
-// - Access to all our betting calculators, guides tips and tricks
-// - 1 on 1 mentoring support
-// - 30 Day money back guarantee
-// - API Access (4000 requqests per month)
-
-// Plus - $99.99/month
-// - Arbitrage betting tool
-// - Email alerts
-// - SMS alerts
-// - Discord webhook alerts
-// - Access to all our betting calculators, guides tips and tricks
-// - 1 on 1 mentoring support
-// - 30 Day money back guarantee
-// - API Access (10000 requqests per month)
-// - Early access to features
-
-// API Only - $199.99/month
-// - Access to all features on the platform
-// - 25,000 API requests per month?

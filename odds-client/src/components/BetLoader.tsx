@@ -10,7 +10,8 @@ import { AlertContext } from "@/pages/_app";
 import Pagination from "./Pagination";
 import { getBookmakerLogo } from "@/utils";
 import FreeModal from "./FreeModal";
-
+import Link from 'next/link';
+import { Tooltip } from "flowbite-react";
 // example:
 // {"match_id":"d3015bfea46b4b86f2407a6845885393","match_name":"St. Louis Cardinals v. Washington Nationals","match_start_time":1679418300,"hours_to_start":3.7805919444561003,"league":"baseball_mlb_preseason","key":"h2h","best_outcome_odds":{"St. Louis Cardinals":["Pinnacle",1.69],"Washington Nationals":["MyBookie.ag",2.55]},"total_implied_odds":0.9839,"region":"eu"}
 
@@ -170,7 +171,14 @@ export default function BetLoader({ bets, showBets, user }: props) {
                       scope="row"
                       className="items-center px-4 py-12 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                      {showBets ? bet.data.match_name : "HOME TEAM v AWAY TEAM"}
+                        <Tooltip
+                        animation="duration-300"
+                        content="Click here to view the the details of this bet"
+                        >
+                            <Link href={`/bet/${bet.id}`}>
+                                {showBets ? bet.data.match_name : "HOME TEAM v AWAY TEAM"}
+                            </Link>
+                        </Tooltip>
                     </th>
 
                     <th
@@ -296,6 +304,7 @@ export default function BetLoader({ bets, showBets, user }: props) {
                           >
                             Calculate Stake
                           </button>
+                          
                         </div>
                       ) : (
                         <button

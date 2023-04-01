@@ -4,7 +4,7 @@ declare global {
   }
 }
 
-import { createPayment } from "@/api";
+import { createPayment, createPortal } from "@/api";
 import { Plan } from "@/types";
 import { useRouter } from "next/router";
 import React, { useContext } from "react";
@@ -18,17 +18,21 @@ export default function Pricing() {
 
   async function subscriptionHandle(plan: string) {
     try {
-      const refId =
-        (window.Rewardful && window.Rewardful.referral) ||
-        "checkout_" + new Date().getTime();
+      const refId = (window.Rewardful && window.Rewardful.referral) || "checkout_" + new Date().getTime();
       let trial = false;
-      if (user?.dbuser.plan == "free") {
+      if (user?.dbuser.trialActivated == false) {
         trial = true;
       }
 
-      var response = await createPayment(plan as Plan, refId, trial);
+      // if user already has plan, get portal link instead
+      if (user?.dbuser.plan != "free") {
+        const portalRes = await createPortal();
+        window.location.assign(portalRes.url);
+      } else {
+        var response = await createPayment(plan as Plan, refId, trial);
+        window.location.assign(response.url);
+      }
 
-      window.location.assign(response.url);
     } catch (e) {
       console.error(e);
     }
@@ -157,11 +161,13 @@ export default function Pricing() {
                 className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
                 disabled={user.dbuser.plan == "starter"}
               >
-                {user.dbuser.plan == "free"
+                {user.dbuser.plan == "free" && user.dbuser.trialActivated == false
                   ? "Try It Free"
                   : user.dbuser.plan == "starter"
                   ? "Current Plan"
-                  : "Buy Now"}
+                  : user.dbuser.plan != "free" ?
+                  "Upgrade Now" : 
+                  "Buy Now"}
               </button>
             ) : (
               <Link
@@ -332,10 +338,12 @@ export default function Pricing() {
                 className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
                 disabled={user.dbuser.plan == "pro"}
               >
-                {user.dbuser.plan == "free"
+                {user.dbuser.plan == "free" && user.dbuser.trialActivated == false
                   ? "Try It Free"
                   : user.dbuser.plan == "pro"
                   ? "Current Plan"
+                  : user.dbuser.plan != "free" ?
+                  "Upgrade Now"
                   : "Buy Now"}
               </button>
             ) : (
@@ -548,13 +556,26 @@ export default function Pricing() {
                 <span>Discord Server Custom Role</span>
               </li>
             </ul>
-            <button
-              onClick={() => subscriptionHandle("plus")}
-              className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
-              disabled={user?.dbuser.plan == "plus"}
-            >
-              {user?.dbuser.plan == "plus" ? "Current Plan" : "Buy Now"}
-            </button>
+            {user ? (
+              <button
+                onClick={() => subscriptionHandle("plus")}
+                className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
+                disabled={user.dbuser.plan == "plus"}
+              >
+                { user.dbuser.plan == "plus"
+                  ? "Current Plan"
+                  : user.dbuser.plan != "free" 
+                  ? "Upgrade Now"
+                  : "Buy Now"}
+              </button>
+            ) : (
+              <Link
+                className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
+                href="/auth/login"
+              >
+                Buy Now
+              </Link>
+            )}
           </div>
         </div>
       </div>

@@ -96,9 +96,6 @@ CREATE TABLE "Bookmaker" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-
--- CreateIndex
 CREATE UNIQUE INDEX "User_apikey_key" ON "User"("apikey");
 
 -- CreateIndex

@@ -125,7 +125,7 @@ export default function FreeModal({ closeModal }: { closeModal: () => void }) {
                     >
                       <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path>
                     </svg>
-                    Email Bet Notifications
+                    Email bet Notifications
                   </li>
                   <li>
                     <svg
@@ -217,18 +217,6 @@ export default function FreeModal({ closeModal }: { closeModal: () => void }) {
                     No Setup or Hidden Fees
                   </li>
                   <li>
-                    {" "}
-                    <svg
-                      className="inline-flex mr-2 w-5 h-5 text-green-500 dark:text-green-400"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path>
-                    </svg>
-                    Email Bet Notifications
-                  </li>
-                  <li>
                     <svg
                       className="inline-flex mr-2 w-5 h-5 text-green-500 dark:text-green-400"
                       fill="currentColor"
@@ -260,6 +248,50 @@ export default function FreeModal({ closeModal }: { closeModal: () => void }) {
                       <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path>
                     </svg>
                     Discord Server Custom Role
+                  </li>
+                  <li>
+                    <svg
+                      className="inline-flex mr-2 w-5 h-5 text-green-500 dark:text-green-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path>
+                    </svg>
+                    Email bet Notifications
+                  </li>
+                  <li>
+                    <svg
+                      className="inline-flex mr-2 w-5 h-5 text-green-500 dark:text-green-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path>
+                    </svg>
+                    SMS bet Notifications
+                  </li>
+                  <li>
+                    <svg
+                      className="inline-flex mr-2 w-5 h-5 text-green-500 dark:text-green-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path>
+                    </svg>
+                    1 On 1 Live video call coaching
+                  </li>
+                  <li>
+                    <svg
+                      className="inline-flex mr-2 w-5 h-5 text-green-500 dark:text-green-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path>
+                    </svg>
+                    API Access
                   </li>
                 </ul>
                 <p className="text-3xl font-bold mt-4">$99.99/month</p>
@@ -318,18 +350,6 @@ export default function FreeModal({ closeModal }: { closeModal: () => void }) {
                     No Setup or Hidden Fees
                   </li>
                   <li>
-                    {" "}
-                    <svg
-                      className="inline-flex mr-2 w-5 h-5 text-green-500 dark:text-green-400"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path>
-                    </svg>
-                    Email Bet Notifications
-                  </li>
-                  <li>
                     <svg
                       className="inline-flex mr-2 w-5 h-5 text-green-500 dark:text-green-400"
                       fill="currentColor"
@@ -361,6 +381,39 @@ export default function FreeModal({ closeModal }: { closeModal: () => void }) {
                       <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path>
                     </svg>
                     Discord Server Custom Role
+                  </li>
+                  <li>
+                    <svg
+                      className="inline-flex mr-2 w-5 h-5 text-green-500 dark:text-green-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path>
+                    </svg>
+                    Email bet Notifications
+                  </li>
+                  <li>
+                    <svg
+                      className="inline-flex mr-2 w-5 h-5 text-green-500 dark:text-green-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path>
+                    </svg>
+                    SMS bet Notifications
+                  </li>
+                  <li>
+                    <svg
+                      className="inline-flex mr-2 w-5 h-5 text-green-500 dark:text-green-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path>
+                    </svg>
+                    Free unique tips, tricks and tutorial guides
                   </li>
                 </ul>
                 <p className="text-3xl font-bold mt-4">$49.99/month</p>

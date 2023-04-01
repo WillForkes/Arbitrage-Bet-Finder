@@ -34,7 +34,6 @@ export default function Pricing() {
     }
   }
 
-  console.log(user);
 
   return (
     <section id="pricing" className="bg-white dark:bg-gray-900">

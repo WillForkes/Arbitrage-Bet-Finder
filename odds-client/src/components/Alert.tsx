@@ -4,12 +4,13 @@ import React, { useContext, useEffect } from "react";
 
 export default function AlertCom() {
   const error = useContext(AlertContext);
-  if (error?.msg == "") return null;
   useEffect(() => {
     setTimeout(() => {
       error?.setAlert({ msg: "", error: null });
     }, 3000);
   }, []);
+  if (error?.msg == "") return null;
+
   return (
     <div className="dark:bg-gray-900 flex items-center justify-center ">
       <Alert

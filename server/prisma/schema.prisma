@@ -56,7 +56,7 @@ model Subscription {
   id                   Int       @id @default(autoincrement())
   userId               String
   plan                 String
-  planExpiresAt        DateTime
+  planExpiresAt        DateTime  @default(now())
   stripePaymentId      String?   @unique
   stripeSubscriptionId String?   @unique
   stripeCustomerId     String?

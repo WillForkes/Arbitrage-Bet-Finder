@@ -51,7 +51,7 @@ CREATE TABLE "Subscription" (
     "id" SERIAL NOT NULL,
     "userId" TEXT NOT NULL,
     "plan" TEXT NOT NULL,
-    "planExpiresAt" TIMESTAMP(3) NOT NULL,
+    "planExpiresAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "stripePaymentId" TEXT,
     "stripeSubscriptionId" TEXT,
     "stripeCustomerId" TEXT,

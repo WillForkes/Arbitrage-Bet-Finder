@@ -79,7 +79,7 @@ app.get('/sign-up', (req, res) => {
 });
 
 app.get('/region', (req, res) => {
-    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    const ip = req.headers['x-forwarded-for'] || req.ip;
     const details = lookup(ip); // location of the user
     res.json({"status":"ok", "data": details})
 

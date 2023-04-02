@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Pricing from "./Home/Pricing";
+import Link from "next/link";
 
 export default function FreeModal({ closeModal }: { closeModal: () => void }) {
   const [plan, setPlan] = useState("starter");
@@ -161,10 +161,10 @@ export default function FreeModal({ closeModal }: { closeModal: () => void }) {
                     Discord Server Custom Role
                   </li>
                 </ul>
-                <p className="text-3xl font-bold mt-4">$29.99/month</p>
-                <button className="mt-8 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                <p className="text-3xl font-bold mt-4 py-4">£29.99/month</p>
+                <Link href="/#pricing" className="mt-8 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
                   Try it Free
-                </button>
+                </Link>
               </div>
             ) : null}
 
@@ -294,10 +294,10 @@ export default function FreeModal({ closeModal }: { closeModal: () => void }) {
                     API Access
                   </li>
                 </ul>
-                <p className="text-3xl font-bold mt-4">$99.99/month</p>
-                <button className="mt-8 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                <p className="text-3xl font-bold mt-4 py-4">£49.99/month</p>
+                <Link href="/#pricing" className="mt-8 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
                   Try it Free
-                </button>
+                </Link>
               </div>
             ) : null}
 
@@ -416,10 +416,10 @@ export default function FreeModal({ closeModal }: { closeModal: () => void }) {
                     Free unique tips, tricks and tutorial guides
                   </li>
                 </ul>
-                <p className="text-3xl font-bold mt-4">$49.99/month</p>
-                <button className="mt-8 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                <p className="text-3xl font-bold mt-4 py-4">£99.99/month</p>
+                <Link href="/#pricing" className="mt-8 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
                   Try it Free
-                </button>
+                </Link>
               </div>
             ) : null}
           </div>

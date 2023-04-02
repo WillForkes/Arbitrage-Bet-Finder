@@ -5,9 +5,9 @@ import { deleteTrackedBet, updateTrackerStatus } from "@/api";
 import Image from "next/image";
 import Modal from "./Modal";
 import { Table } from "flowbite-react";
-import { Region } from "../types";
+import { Region, User } from "../types";
 import { CSVLink, CSVDownload } from "react-csv";
-import { AlertContext } from "@/pages/_app";
+import { AlertContext, UserContext } from "@/pages/_app";
 import Pagination from "./Pagination";
 
 interface props {
@@ -15,8 +15,9 @@ interface props {
 }
 
 export default function BetLoader({ bets }: props) {
+  const user: User | null = useContext(UserContext).user;
   const alertContext = useContext(AlertContext);
-  const csvData = [["match_name", "profit", "stake", "bookmakers", "time"]];
+  const csvData = [["match_name", "profit", "stake", "settled", "bookmakers", "time"]];
   const [paginatedBets, setPaginatedBets] = useState(bets.slice(0, 10));
 
   const [modal, setModal] = useState(false);
@@ -86,6 +87,7 @@ export default function BetLoader({ bets }: props) {
         bet.matchName,
         (bet.totalStake * bet.profitPercentage).toString(),
         bet.totalStake.toString(),
+        bet.status == 0 ? "Pending" : (bet.status == 1) ? "Won" : "Lost",
         bookmakerString,
         bet.createdAt,
       ]);
@@ -126,26 +128,49 @@ export default function BetLoader({ bets }: props) {
                     </svg>
                     Add new bet
                   </button>
-                  <CSVLink
-                    data={csvData}
-                    className="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                  >
-                    <svg
-                      className="w-4 h-4 mr-2"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-                      />
-                    </svg>
-                    Export
-                  </CSVLink>
+                  {(user?.dbuser.plan != "free") ? (
+                    <CSVLink data={csvData} className="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                        <svg
+                        className="w-4 h-4 mr-2"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                        >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+                        />
+                        </svg>
+                        Export
+                    </CSVLink>
+                  ) : (
+                    <button onClick={() => {
+                        alertContext?.setAlert({
+                            msg: "CSV Bet Export is only available on the Pro or Plus plan!",
+                            error: true,
+                        });
+                    }} className="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                        <svg
+                        className="w-4 h-4 mr-2"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                        >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+                        />
+                        </svg>
+                        Export
+                    </button>
+                    )}
+
                 </div>
               </div>
 

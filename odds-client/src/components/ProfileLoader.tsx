@@ -74,6 +74,7 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
     try {
       await updateNotificationsA(notifications);
       await updateWhitelist(whiteList);
+      alertContext?.setAlert({ msg: "Whitelist updated", error: false });
     } catch (e) {
       alertContext?.setAlert({ msg: "Error updating user", error: true });
     }
@@ -269,7 +270,7 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                 <div className="flex items-center gap-2 p-2">
                   <Checkbox id="promotion" />
                   <Label htmlFor="promotion">
-                    I want to get promotional offers
+                    I want to get promotional offers on free signup deals and new products
                   </Label>
                 </div>
                 <div className="flex items-center gap-2 p-2">

@@ -9,7 +9,7 @@ import { Dropdown } from "flowbite-react";
 import FreeModal from "./FreeModal";
 import Pagination from "./Pagination";
 import { getBookmakerLogo } from "../utils";
-import { Tooltip, Badge } from "flowbite-react";
+import { Tooltip, Badge, Spinner } from "flowbite-react";
 import Link from "next/link";
 
 // example
@@ -379,6 +379,14 @@ export default function EVLoader({ bets, showBets, user }: props) {
                 ))}
               </tbody>
             </table>
+            {paginatedBets.length === 0 ? (
+                <div className="mx-auto max-w-md text-center py-8">
+                    <h2 className="text-xl font-bold mb-6 lg:text-2xl dark:text-white">
+                        We couldn&apos;t find any bets in this region. Please consider whitelisting more bookmakers or try again soon.
+                    </h2>
+                    <Spinner aria-label="Default status example" />
+                </div>
+            ) : (null)}
           </div>
 
           <Pagination

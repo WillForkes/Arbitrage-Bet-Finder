@@ -272,7 +272,7 @@ router.get("/all", freeStuff, async function(req, res, next){
 
         // ! League formatting for ev bets
         for(let i = 0; i < evBets.length; i++){
-            const leagueFormatted = evBets[i].data.league.replaceAll("_", " ").split(" ");
+            const leagueFormatted = evBets[i].data.league.replace(/_/g, " ").split(" ");
             for(let j = 0; j < leagueFormatted.length; j++){
                 leagueFormatted[j] = leagueFormatted[j].charAt(0).toUpperCase() + leagueFormatted[j].slice(1);
             }

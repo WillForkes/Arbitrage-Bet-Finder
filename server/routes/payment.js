@@ -154,7 +154,7 @@ router.get("/portal", checkUser, async (req, res) => {
     }
 
     const sub = dbuser.subscription[0]
-    const returnUrl = "http://localhost:3001/profile";
+    const returnUrl = process.env.BASEURL + "/profile";
     const customerId = sub.stripeCustomerId;
 
     const portalSession = await stripe.billingPortal.sessions.create({
@@ -225,6 +225,31 @@ router.post("/webhook", async (request, response) => {
                 }
             })
 
+            // check if subscription is trial
+            const trial_days = data.object.lines.data[0]?.plan.trial_period_days ? data.object.lines.data[0]?.plan.trial_period_days : 0
+            const pea = new Date(Date.now() + (trial_days + 30) * 24 * 60 * 60 * 1000) // * 30 days + trial days from now
+
+            if(trial_days > 0) {
+                // update user to say they've used their trial period if they have
+                const u = await prisma.subscription.findUnique({
+                    where: {
+                        stripeSubscriptionId: ip_subId
+                    },
+                    include: {
+                        user: true
+                    }
+                })
+                const userid = u.user.authid
+                await prisma.user.update({
+                    where: {
+                        authid: userid
+                    },
+                    data: {
+                        trialActivated: true
+                    }
+                })
+            }
+
             // Update subscription status to active
             await prisma.subscription.update({
                 where: {
@@ -232,7 +257,7 @@ router.post("/webhook", async (request, response) => {
                 },
                 data: {
                     status: "active",
-                    planExpiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // * 30 days from now
+                    planExpiresAt: pea
                 }
             })
 

@@ -63,8 +63,11 @@ app.use('/admin', adminRouter);
 
 // * Essential base routes
 app.get('/', (req, res) => {
-    //res.json({"status":"ok", "data": "Welcome to the API"})
-    res.redirect('https://arbster.com')
+    if(process.env.NODE_ENV == "development"){
+        res.redirect('http://localhost:3001')
+    } else {
+        res.redirect('https://arbster.com')
+    }
 });
 
 app.get('/sign-up', (req, res) => {

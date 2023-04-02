@@ -287,6 +287,12 @@ router.get("/all", freeStuff, async function(req, res, next){
 
 router.get("/bet/:id", checkUser, async function(req, res, next){
     const betId = parseInt(req.params.id);
+
+    if(req.user.plan == "free") {
+        res.status(400).json({"error": "You need to upgrade to a paid plan to view this page."});
+        return;
+    }
+    
     if(!betId || isNaN(betId)){
         res.status(400).json({"error": "Missing bet ID."});
         return;

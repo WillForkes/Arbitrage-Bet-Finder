@@ -94,7 +94,7 @@ export default function BetPage() {
                     </span>
                   ) : (
                     <span className="bg-primary-100 text-primary-800 text-xs font-extrabold px-2 py-0.5 rounded dark:bg-green-600 dark:text-green-300">
-                      +{((1 - bet.data.total_implied_odds) * 100).toFixed(2)}%
+                      +{(((1 / bet.data.total_implied_odds) - 1) * 100).toFixed(2)}%
                     </span>
                   )}
                 </div>

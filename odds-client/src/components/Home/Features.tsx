@@ -28,10 +28,7 @@ export default function Features() {
               Comprehensive Betting Tools
             </h3>
             <p className="text-gray-500 dark:text-gray-400">
-              Our service scans hundreds of bookmakers in many countries to find
-              you the most comprehensive list of arbitrage and positive
-              EVopportunities available, ensuring you never miss a profitable
-              bet.
+            Our platform extensively scans multiple bookmakers across various countries to provide you with a comprehensive list of arbitrage and positive EV opportunities, guaranteeing you never miss out on a profitable bet.
             </p>
           </div>
           <div>
@@ -49,8 +46,7 @@ export default function Features() {
               Real-Time Updates
             </h3>
             <p className="text-gray-500 dark:text-gray-400">
-              Our bot updates the odds in real-time, so you can take advantage
-              of arbitrage opportunities as soon as they become available.
+            Our bot updates the odds in real-time, allowing you to capitalize on arbitrage opportunities as soon as they arise.
             </p>
           </div>
           <div>
@@ -69,9 +65,7 @@ export default function Features() {
               Easy-to-Use Interface
             </h3>
             <p className="text-gray-500 dark:text-gray-400">
-              Our user-friendly interface makes it easy for you to navigate and
-              find the best arbitrage opportunities, even if you&apos;re new to
-              arbitrage betting.
+            Our intuitive interface is designed to simplify navigation and aid you in finding the best arbitrage opportunities, even if you are new to arbitrage betting.
             </p>
           </div>
           <div>
@@ -87,11 +81,10 @@ export default function Features() {
               </svg>
             </div>
             <h3 className="mb-2 text-xl font-bold dark:text-white">
-              Bet Tracker
+              Bet Tracking
             </h3>
             <p className="text-gray-500 dark:text-gray-400">
-              We offer our users a fully-featured bet tracker, so you can keep
-              track of all your bets and profits in real-time.
+            We offer a fully-featured bet tracker that allows you to track all of your bets and profits in real-time.
             </p>
           </div>
           <div>
@@ -109,8 +102,7 @@ export default function Features() {
               50+ Countries, 100+ Bookmakers
             </h3>
             <p className="text-gray-500 dark:text-gray-400">
-              Arbster works in over 50 countries included in Europe, USA,
-              Australia and the UK
+            Arbster operates in more than 50 countries, including Europe, USA, Australia, and the UK, with over 100 bookmakers available.
             </p>
           </div>
           <div>
@@ -128,8 +120,7 @@ export default function Features() {
               Dedicated Support
             </h3>
             <p className="text-gray-500 dark:text-gray-400">
-              Our dedicated support team is available 24/7 to assist you with
-              any questions or issues you may have.
+            Our dedicated support team is available 24/7 to provide assistance and resolve any queries or issues you may encounter.
             </p>
           </div>
         </div>

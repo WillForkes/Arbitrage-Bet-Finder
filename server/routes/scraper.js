@@ -287,6 +287,11 @@ router.get("/all", freeStuff, async function(req, res, next){
 
 router.get("/bet/:id", checkUser, async function(req, res, next){
     const betId = parseInt(req.params.id);
+    if(!betId || isNaN(betId)){
+        res.status(400).json({"error": "Missing bet ID."});
+        return;
+    }
+
     const bet = await prisma.bet.findUnique({
         where: {
             id: betId

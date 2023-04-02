@@ -111,12 +111,17 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                   <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
                     {user.auth0.nickname}
                   </dd>
-                  <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
-                    Plan Renews/Expires At
-                  </dt>
-                  <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
-                    {new Date(user.dbuser.planExpiresAt).toLocaleDateString()}
-                  </dd>
+                  {(user.dbuser.plan != "free") ? (
+                    <div>
+                        <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
+                            Plan Renews/Expires At
+                        </dt>
+                        <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
+                            {new Date(user.dbuser.planExpiresAt).toLocaleDateString()}
+                        </dd>
+                    </div>
+                  ) : (null)}
+
                   <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
                     Plan
                   </dt>
@@ -195,7 +200,7 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
             </Card>
           </div>
         </Tabs.Item>
-        <Tabs.Item title="Invoices">
+        <Tabs.Item title="Billing">
           <div className="mx-auto max-w-screen-xl">
             <Card>
               <div className="mb-4 flex items-center justify-between">

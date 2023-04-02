@@ -17,7 +17,7 @@ model User {
   updatedAt          DateTime       @updatedAt
   region             String?        @default("UK")
   phone              String?
-  email              String?         // used only for email notis
+  email              String? // used only for email notis
   smsNotifications   Boolean        @default(false)
   emailNotifications Boolean        @default(false)
   apikey             String?        @unique

@@ -11,7 +11,7 @@ import Pagination from "./Pagination";
 import { getBookmakerLogo } from "@/utils";
 import FreeModal from "./FreeModal";
 import Link from 'next/link';
-import { Tooltip } from "flowbite-react";
+import { Tooltip, Spinner } from "flowbite-react";
 // example:
 // {"match_id":"d3015bfea46b4b86f2407a6845885393","match_name":"St. Louis Cardinals v. Washington Nationals","match_start_time":1679418300,"hours_to_start":3.7805919444561003,"league":"baseball_mlb_preseason","key":"h2h","best_outcome_odds":{"St. Louis Cardinals":["Pinnacle",1.69],"Washington Nationals":["MyBookie.ag",2.55]},"total_implied_odds":0.9839,"region":"eu"}
 
@@ -93,7 +93,7 @@ export default function BetLoader({ bets, showBets, user }: props) {
                   </svg>
                 </div>
                 <div className="ml-3 text-white text-sm font-normal">
-                  Showing whitelisted bookmakers
+                  Update whitelisted bookmakers <Link className="text-primary-700" href="/profile">here</Link>
                 </div>
                 <Toast.Toggle />
               </Toast>
@@ -320,6 +320,14 @@ export default function BetLoader({ bets, showBets, user }: props) {
                 ))}
               </tbody>
             </table>
+            {paginatedBets.length === 0 ? (
+                <div className="mx-auto max-w-md text-center py-8">
+                    <h2 className="text-xl font-bold mb-6 lg:text-2xl dark:text-white">
+                        We couldn&apos;t find any bets in this region. Please consider whitelisting more bookmakers or try again soon.
+                    </h2>
+                    <Spinner aria-label="Default status example" />
+                </div>
+            ) : (null)}
           </div>
 
           {/* <Pagination

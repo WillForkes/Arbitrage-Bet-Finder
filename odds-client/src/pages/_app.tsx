@@ -41,6 +41,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <div className="bg-gray-700">
+        <title>Arbster - #1 Betting Tools</title>
       <UserContext.Provider value={{ user: user, auth: isAuth }}>
         <AlertContext.Provider
           value={{

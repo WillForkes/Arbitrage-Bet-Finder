@@ -138,7 +138,7 @@ app.use(function(err, req, res, next) {
 
 var PORT = process.env.PORT || 3000
 
-schedule.scheduleJob('*/2 * * * *', async () => {
+schedule.scheduleJob('*/5 * * * *', async () => {
   console.log('Running Scraper');
   try {
     const x = await axios.get('http://localhost:' + PORT + '/scraper/run')

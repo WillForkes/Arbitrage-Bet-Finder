@@ -244,7 +244,8 @@ router.get("/all", freeStuff, async function(req, res, next){
         // ! League formatting for arb bets
         for(let i = 0; i < arbBets.length; i++){
             // * Add formatted league name to the object
-            const leagueFormatted = arbBets[i].data.league.replaceAll("_", " ").split(" ");
+            // replace all _ with spaces, then capitalize first letter of each word
+            const leagueFormatted = arbBets[i].data.league.replace(/_/g, " ").split(" ");
             for(let j = 0; j < leagueFormatted.length; j++){
                 leagueFormatted[j] = leagueFormatted[j].charAt(0).toUpperCase() + leagueFormatted[j].slice(1);
             }

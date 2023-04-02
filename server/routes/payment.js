@@ -136,9 +136,7 @@ router.get("/portal", checkUser, async (req, res) => {
         include: {
             subscription: {
                 where: {
-                    plan: {
-                        not: "trial"
-                    }
+                    status: "active"
                 }
             }
         }

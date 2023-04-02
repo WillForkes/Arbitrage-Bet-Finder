@@ -10,15 +10,13 @@ export default function Testimonials() {
           <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
             We didn&apos;t reinvent the wheel
           </h2>
+
           <p className="mb-4">
-Our calculations are derived from proven models and statistical analysis, delivering a reliable foundation for your betting strategy. We are committed to upholding sound mathematical principles and providing our clients with the edge they need to succeed in the competitive worlds of arbitrage and positive EV betting.
-          </p>
-          <p className="mb-4">
-Our calculations are derived from proven models and statistical analysis, delivering a reliable foundation for your betting strategy. We are committed to upholding sound mathematical principles and providing our clients with the edge they need to succeed in the competitive worlds of arbitrage and positive EV betting.
+            At Arbster, we leverage proven models and statistical analysis to provide a reliable foundation for your betting strategy. 
           </p>
           <p>
-          With our platform, you can trust that your bets are grounded in a data-driven approach that is designed to yield maximum returns. Let us help you reach your sports betting goals with our innovative platform and unwavering commitment to excellence.
-          </p>
+            Our data-driven approach is designed to yield maximum returns and give you the edge you need to succeed in the competitive worlds of arbitrage and positive EV betting. Our flagship tools, the arbitrage tool and the positive EV tool, enable you to identify profitable opportunities and make smart wagers. 
+            Trust us to help you reach your sports betting goals with our innovative platform and unwavering commitment to excellence.              </p>
         </div>
         <div className="grid grid-cols-2 gap-4 mt-8">
           <img

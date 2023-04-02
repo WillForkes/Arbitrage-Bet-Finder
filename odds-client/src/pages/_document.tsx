@@ -11,21 +11,20 @@ import Script from 'next/script'
 export default function Document() {
   return (
     <Html lang="en" className="dark">
-      <Head>
-          <title>Arbster - #1 Betting Tools</title>
-        <Script id="rewardful_src" strategy="afterInteractive"> {`(function(w,r){w._rwq=r;w[r]=w[r]||function(){(w[r].q=w[r].q||[]).push(arguments)}})(window,'rewardful');`} </Script> 
-        <Script strategy="afterInteractive" src="https://r.wdfl.co/rw.js" data-rewardful="6e654d" ></Script>
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-        <link rel="manifest" href="/site.webmanifest" />
-        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
-    </Head>
-      <body>
+        <Head>
+            <Script id="rewardful_src" strategy="afterInteractive"> {`(function(w,r){w._rwq=r;w[r]=w[r]||function(){(w[r].q=w[r].q||[]).push(arguments)}})(window,'rewardful');`} </Script> 
+            <Script strategy="afterInteractive" src="https://r.wdfl.co/rw.js" data-rewardful="6e654d" ></Script>
+            <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+            <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+            <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+            <link rel="manifest" href="/site.webmanifest" />
+            <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+        </Head>
+    <body>
         <Main />
         <NextScript />
-      </body>
-    </Html>
+    </body>
+</Html>
   )
 }
 

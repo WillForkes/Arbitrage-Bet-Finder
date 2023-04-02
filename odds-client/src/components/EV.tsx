@@ -10,6 +10,7 @@ import FreeModal from "./FreeModal";
 import Pagination from "./Pagination";
 import { getBookmakerLogo } from "../utils";
 import { Tooltip, Badge } from "flowbite-react";
+import Link from "next/link";
 
 // example
 // {"match_id":"06f491453cb35e153d61c67257f3cb3b","match_name":"Bayern Munich v. Borussia Dortmund","match_start_time":1680366600,"hours_to_start":267.19723500000106,"league":"soccer_germany_bundesliga","key":"h2h","bookmaker":"Betsson","winProbability":0.18587360594795543,"odds":6,"ev":"0.115","region":"eu"}
@@ -250,15 +251,20 @@ export default function EVLoader({ bets, showBets, user }: props) {
                         ) : (
                           <div className="inline-block w-4 h-4 mr-2 bg-green-700 rounded-full"></div>
                         )}
-                        {showBets
-                          ? bet.data.match_name
-                          : "HOME TEAM v AWAY TEAM"}{" "}
-                        - {showBets ? bet.data.region.toUpperCase() : "REGION"}
-                        <div className=" text-xs dark:text-primary-600">
-                          {showBets
-                            ? bet.data.leagueFormatted
-                            : "LEAGUE_FORMATTED"}
-                        </div>
+
+                        <Link href={`/bet/${bet.id}`}>
+                            {showBets
+                            ? bet.data.match_name
+                            : "HOME TEAM v AWAY TEAM"}{" "}
+                            - {showBets ? bet.data.region.toUpperCase() : "REGION"}
+                            <div className=" text-xs dark:text-primary-600">
+                            {showBets
+                                ? bet.data.leagueFormatted
+                                : "LEAGUE_FORMATTED"}
+                            </div>
+                        </Link>
+
+
                       </th>
                     </Tooltip>
                     <th

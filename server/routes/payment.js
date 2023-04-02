@@ -136,8 +136,8 @@ router.get("/portal", checkUser, async (req, res) => {
         include: {
             subscription: {
                 where: {
-                    plan: {
-                        not: "trial"
+                    stripeCustomerId: {
+                        not: null
                     }
                 }
             }
@@ -154,7 +154,7 @@ router.get("/portal", checkUser, async (req, res) => {
     }
 
     const sub = dbuser.subscription[0]
-    const returnUrl = process.env.BASEURL + "/profile";
+    const returnUrl = process.env.NODE_ENV == "development" ? "http://localhost:3001/profile" : "https://arbster.com/profile";
     const customerId = sub.stripeCustomerId;
 
     const portalSession = await stripe.billingPortal.sessions.create({

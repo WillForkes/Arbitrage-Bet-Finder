@@ -14,6 +14,8 @@ let { checkStaff } = require('./middleware/checkStaff');
 const prisma = new PrismaClient()
 var app = express();
 const { lookup } = require('geoip-lite'); // * Geolocation IP data
+const schedule = require('node-schedule');
+const axios = require('axios');
 
 
 
@@ -134,7 +136,20 @@ app.use(function(err, req, res, next) {
     }       
 });
 
-app.listen(process.env.PORT || 3000, () => {
+var PORT = process.env.PORT || 3000
+
+schedule.scheduleJob('*/5 * * * *', async () => {
+  console.log('Running Scraper');
+  try {
+    const x = await axios.get('http://localhost:' + PORT + '/scraper/run')
+    console.log(x.data)
+  } catch(e) {
+    console.error(e);
+  }
+  
+});
+
+app.listen(PORT, () => {
     console.log("listening on port" + process.env.PORT)
 })
 

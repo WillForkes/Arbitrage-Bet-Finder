@@ -29,7 +29,7 @@ export default function Testimonials() {
                   profits.&rsquo;
                 </p>
               </blockquote>
-              <figcaption className="flex items-center justify-center mt-6 space-x-3">
+              {/* <figcaption className="flex items-center justify-center mt-6 space-x-3">
                 <img
                   className="w-6 h-6 rounded-full"
                   src="https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
@@ -43,7 +43,7 @@ export default function Testimonials() {
                     Plus Plan
                   </div>
                 </div>
-              </figcaption>
+              </figcaption> */}
             </figure>
           </div>
           <div className="max-w-screen-xl px-4 py-8 mx-auto text-center lg:py-16 lg:px-6">
@@ -68,7 +68,7 @@ export default function Testimonials() {
                   opportunities before they disappear.&rsquo;
                 </p>
               </blockquote>
-              <figcaption className="flex items-center justify-center mt-6 space-x-3">
+              {/* <figcaption className="flex items-center justify-center mt-6 space-x-3">
                 <img
                   className="w-6 h-6 rounded-full"
                   src="https://images.unsplash.com/photo-1583864697784-a0efc8379f70?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8bWFsZSUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80"
@@ -82,7 +82,7 @@ export default function Testimonials() {
                     Pro Plan
                   </div>
                 </div>
-              </figcaption>
+              </figcaption> */}
             </figure>
           </div>
           <div className="max-w-screen-xl px-4 py-8 mx-auto text-center lg:py-16 lg:px-6">
@@ -107,7 +107,7 @@ export default function Testimonials() {
                   profits so far. Money well spent&rsquo;
                 </p>
               </blockquote>
-              <figcaption className="flex items-center justify-center mt-6 space-x-3">
+              {/* <figcaption className="flex items-center justify-center mt-6 space-x-3">
                 <img
                   className="w-6 h-6 rounded-full"
                   src="https://wpimg.pixelied.com/blog/wp-content/uploads/2021/06/15175913/Colors-in-Profile-Pictures.jpeg"
@@ -121,7 +121,7 @@ export default function Testimonials() {
                     Starter Plan
                   </div>
                 </div>
-              </figcaption>
+              </figcaption> */}
             </figure>
           </div>
           <div className="max-w-screen-xl px-4 py-8 mx-auto text-center lg:py-16 lg:px-6">
@@ -146,7 +146,7 @@ export default function Testimonials() {
                   surprise and proven very useful!&rsquo;
                 </p>
               </blockquote>
-              <figcaption className="flex items-center justify-center mt-6 space-x-3">
+              {/* <figcaption className="flex items-center justify-center mt-6 space-x-3">
                 <img
                   className="w-6 h-6 rounded-full"
                   src="https://media.istockphoto.com/id/1338134336/photo/headshot-portrait-african-30s-man-smile-look-at-camera.jpg?b=1&s=170667a&w=0&k=20&c=j-oMdWCMLx5rIx-_W33o3q3aW9CiAWEvv9XrJQ3fTMU="
@@ -160,7 +160,7 @@ export default function Testimonials() {
                     Plus Plan
                   </div>
                 </div>
-              </figcaption>
+              </figcaption> */}
             </figure>
           </div>
         </Carousel>

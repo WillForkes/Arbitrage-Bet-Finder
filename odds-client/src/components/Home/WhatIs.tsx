@@ -1,6 +1,7 @@
 import React from "react";
 import { Carousel } from "flowbite-react";
 import Image from "next/image";
+import { Tooltip } from "flowbite-react";
 
 export default function Testimonials() {
   return (
@@ -11,12 +12,20 @@ export default function Testimonials() {
             We didn&apos;t reinvent the wheel
           </h2>
 
-          <p className="mb-4">
-            At Arbster, we leverage proven models and statistical analysis to provide a reliable foundation for your betting strategy. 
-          </p>
-          <p>
-            Our data-driven approach is designed to yield maximum returns and give you the edge you need to succeed in the competitive worlds of arbitrage and positive EV betting. Our flagship tools, the arbitrage tool and the positive EV tool, enable you to identify profitable opportunities and make smart wagers. 
-            Trust us to help you reach your sports betting goals with our innovative platform and unwavering commitment to excellence.              </p>
+            <p className="mb-4">
+            At Arbster, we are passionate about providing sports bettors with the tools they need to succeed in the world of sports betting. Our flagship products, the arbitrage betting tool and the positive EV betting tool, are designed to help our users identify profitable betting opportunities.
+            </p>
+            <p className="mb-4">
+            Using proven mathematical models and real-time data, our arbitrage betting tool scans various sportsbooks to find discrepancies in the odds. By betting on both sides of a game with different sportsbooks, our users can guarantee a profit. This powerful tool has helped our users generate consistent profits and is a key reason why Arbster is a leading name in the world of sports betting.
+            </p>
+            <p className="mb-4">
+            Our positive EV betting tool is designed to identify situations where the odds offered by a sportsbook are better than the true odds of an event occurring. By placing bets in these situations, our users can achieve a positive expected value (EV) and generate profits over the long term.
+            </p>
+            <p>
+            At Arbster, we are committed to providing our users with the best possible tools for sports betting. Whether you are a seasoned bettor or just starting out, our innovative platform and unwavering commitment to excellence make us the perfect partner to help you achieve your sports betting objectives.
+            </p>
+
+
         </div>
         <div className="grid grid-cols-2 gap-4 mt-8">
           <img

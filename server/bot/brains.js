@@ -63,6 +63,7 @@ async function getData(sport, regions, limiter=null) {
                 console.log("Failed to fetch data for " + sport + " in " + region + "(" + err.response.data.message + ")");
                 continue;
             }
+            continue;
         }
 
         let filtered_response = response.data.filter(item => item !== 'message');

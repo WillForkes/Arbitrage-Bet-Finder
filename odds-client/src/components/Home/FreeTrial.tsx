@@ -35,12 +35,7 @@ export default function FreeTrial() {
               Try for free today.
             </h2>
             <p className="mb-6 font-light text-gray-500 md:text-lg dark:text-gray-400">
-              Get ready to transform your sports betting game with Arbster - and
-              the best part? You can try it out for FREE for your first 5 days!
-              With full access to our powerful service, you&apos;ll see
-              firsthand how our arbitrage betting dashboard and positive EV tool
-              can help you make smarter bets and win big. Don&apos;t wait -
-              start your winning streak today with Arbster.
+            Rev up your sports betting with Arbster. Try it for free for 5 days and get full access to our powerful service. Witness how our arbitrage betting dashboard and positive EV tool can help you make smarter bets and win big. Start your winning streak today.
             </p>
 
             {user ? (
@@ -48,7 +43,7 @@ export default function FreeTrial() {
                 href="#pricing"
                 className="inline-flex items-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:focus:ring-primary-900"
               >
-                Start Free Trial
+                Select Plan
                 <svg
                   className="ml-2 -mr-1 w-5 h-5"
                   fill="currentColor"

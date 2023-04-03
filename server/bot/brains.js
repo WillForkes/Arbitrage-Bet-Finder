@@ -17,10 +17,13 @@ const {
 } = require('./constants');
 
 function handleFaultyResponse(response) {
+    if(!response) {
+        console.log("No response from API")   
+    }    
     if (response.status === 429) {
         console.log("Rate limit reached");
     } else {
-        console.log("Error status: " + response.status + " - " + response.statusText);
+        console.log("Error status: " + response.status);
     }
     //throw new Error(`Failed to fetch data. Response: ${response.status} - ${response.statusText}`);
 }
@@ -68,8 +71,7 @@ async function getData(sport, regions, limiter=null) {
         try {
             response = await limiter.get(_uri)
         } catch (error) {
-            console.log(error);
-            continue
+            handleFaultyResponse(response) //rate limit error most likely lol
         }
 
         let filtered_response = response.data.filter(item => item !== 'message');
@@ -330,7 +332,7 @@ async function getArbitrageOpportunities(cutoff) {
         const regions = ['eu', 'uk', 'au', 'us'];
 
         // create rate limiter axios object for getting match data from API
-        const limiter = rateLimit(axios.create(), { maxRequests: 6, perMilliseconds: 150, maxRPS: 15 })
+        const limiter = rateLimit(axios.create(), { maxRequests: 12, perMilliseconds: 1000, maxRPS: 12 }) // ! Adjust timings?
 
         // get array of sports
         // TODO: Just add sports to array as they dont change

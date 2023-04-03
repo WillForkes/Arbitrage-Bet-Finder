@@ -142,11 +142,10 @@ schedule.scheduleJob('*/5 * * * *', async () => {
   console.log('Running Scraper');
   try {
     const x = await axios.get('http://localhost:' + PORT + '/scraper/run')
-    console.log(x.data)
   } catch(e) {
-    console.error(e);
+    console.log(e)
   }
-  
+ 
 });
 
 app.listen(PORT, () => {

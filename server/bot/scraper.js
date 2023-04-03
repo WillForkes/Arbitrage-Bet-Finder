@@ -10,7 +10,6 @@ async function returnBettingOpportunities(cutoff, lastUpdated) {
             getArbitrageOpportunities(cutoff).then((arb_data) => {
                 resolve(arb_data);
             }).catch((err) => {
-                console.log(err);
                 reject(err);
             });
         } else {

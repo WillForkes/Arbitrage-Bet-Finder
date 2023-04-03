@@ -139,13 +139,21 @@ app.use(function(err, req, res, next) {
 var PORT = process.env.PORT || 3000
 
 schedule.scheduleJob('*/5 * * * *', async () => {
-  console.log('Running Scraper');
-  try {
-    const x = await axios.get('http://localhost:' + PORT + '/scraper/run')
-  } catch(e) {
-    console.log(e)
-  }
- 
+    console.log('Running Scraper');
+    try {
+        await axios.get('http://localhost:' + PORT + '/scraper/run')
+    } catch(e) {
+        console.log(e)
+    }
+});
+
+schedule.scheduleJob('*/10 * * * *', async () => {
+    console.log('Running Cleaner');
+    try {
+        await axios.post('http://localhost:' + PORT + '/scraper/clean', {})
+    } catch(e) {
+        console.log(e)
+    }
 });
 
 app.listen(PORT, () => {

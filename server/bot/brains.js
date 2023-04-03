@@ -16,17 +16,6 @@ const {
     SAVE_JSON
 } = require('./constants');
 
-function handleFaultyResponse(response) {
-    if(!response) {
-        console.log("No response from API")   
-    }    
-    if (response.status === 429) {
-        console.log("Rate limit reached");
-    } else {
-        console.log("Error status: " + response.status);
-    }
-    //throw new Error(`Failed to fetch data. Response: ${response.status} - ${response.statusText}`);
-}
 
 async function getSports() {
     const url = `${BASE_URL}/sports/`;
@@ -35,11 +24,11 @@ async function getSports() {
         apiKey: API_KEY
     };
     
-    const response = await axios.get(escapedUrl, {
-        params: querystring
-    });
-    if (!response) {
-        handleFaultyResponse(response);
+    let response
+    try {
+        response = await axios.get(escapedUrl, {params: querystring})
+    } catch {
+        throw new Error(`Failed to fetch sports data`);
     }
 
     return new Set(response.data.map(item => item.key));
@@ -53,7 +42,6 @@ async function getData(sport, regions, limiter=null) {
 
     // * FOREACH REGION GET DATA
     for(let i=0; i<regions.length; i++){
-
         let region = regions[i]
         let querystring = {
             apiKey: API_KEY,
@@ -70,8 +58,11 @@ async function getData(sport, regions, limiter=null) {
         let response
         try {
             response = await limiter.get(_uri)
-        } catch (error) {
-            handleFaultyResponse(response) //rate limit error most likely lol
+        } catch (err) {
+            if(process.env.NODE_ENV == "development") {
+                console.log("Failed to fetch data for " + sport + " in " + region + "(" + err.response.data.message + ")");
+                continue;
+            }
         }
 
         let filtered_response = response.data.filter(item => item !== 'message');
@@ -84,6 +75,10 @@ async function getData(sport, regions, limiter=null) {
                 match.market = querystring.markets
                 returndata.push(match);
             }
+        }
+
+        if(process.env.NODE_ENV == "development") {
+            console.log(`Fetched ${returndata.length} matches for ${sport} in ${region} (${i+1}/${regions.length})`)
         }
     };
     return returndata
@@ -332,17 +327,19 @@ async function getArbitrageOpportunities(cutoff) {
         const regions = ['eu', 'uk', 'au', 'us'];
 
         // create rate limiter axios object for getting match data from API
-        const limiter = rateLimit(axios.create(), { maxRequests: 12, perMilliseconds: 1000, maxRPS: 12 }) // ! Adjust timings?
+        const limiter = rateLimit(axios.create(), { maxRequests: 12, perMilliseconds: 1000, maxRPS: 10 }) // ! Adjust timings?
 
         // get array of sports
         // TODO: Just add sports to array as they dont change
-        const sports = await getSports();
+        await getSports().then(async (sports) => {
+            // get data for each match and all regions 
+            data = chain(await Promise.all([...sports].map(sport => getData(sport, regions, limiter))))
+                .flatten()
+                .filter(item => item !== 'message')
+                .value();
+        });
         
-        // get data for each match and all regions 
-        data = chain(await Promise.all([...sports].map(sport => getData(sport, regions, limiter))))
-            .flatten()
-            .filter(item => item !== 'message')
-            .value();
+
     }
 
     // write data to output/raw.json

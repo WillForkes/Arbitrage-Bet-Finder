@@ -23,13 +23,15 @@ router.get("/run" ,async function(req, res, next) {
 
     // * Get arbitrage data
     let data
-    await returnBettingOpportunities(cutoff, lastUpdated).then((response) => {
-        data = response;
-    }).catch((error) => {
-        res.status(500).json({"error": "Failed to run scraper"});
-        return;
-    })
-
+    try {
+        data = await returnBettingOpportunities(cutoff, lastUpdated)
+    }  catch (error) {
+        res.status(500).json({
+            "error": "Failed to run scraper. Details: " + error
+        });
+        return
+    }
+    
     if(!data) {
         res.status(200).json({"status": "ok", "message": "Data already up to date."});
         return;
@@ -38,6 +40,7 @@ router.get("/run" ,async function(req, res, next) {
     // * Insert arbitrage data into database - update records if already exist
     let betsToInsert = [];
     let updatedCount = 0;
+    console.log(data)
     const arbitrageData = data.data.arbitrage;
     let newArbBets = 0
     const evData = data.data.ev;

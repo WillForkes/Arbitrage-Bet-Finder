@@ -101,8 +101,9 @@ router.get("/run" ,async function(req, res, next) {
                             }
                         })
                     } catch {
-                        res.status(500).json({"error": "Failed to update arbitrage data in database."});
-                        return;
+                        continue
+                        // res.status(500).json({"error": "Failed to update EV record in database."});
+                        // return;
                     }
 
                     updatedCount++;

@@ -101,8 +101,9 @@ router.get("/run" ,async function(req, res, next) {
                             }
                         })
                     } catch {
-                        res.status(500).json({"error": "Failed to update arbitrage data in database."});
-                        return;
+                        continue
+                        // res.status(500).json({"error": "Failed to update EV record in database."});
+                        // return;
                     }
 
                     updatedCount++;
@@ -161,7 +162,11 @@ router.get("/run" ,async function(req, res, next) {
         "total_new_bets": betsToInsert.length,
         "updated_bets": updatedCount
 
-    }, "Message": `${betsToInsert.length} new bets found. ${updatedCount} bets updated.`});
+    }, 
+    "Message": `${betsToInsert.length} new bets found. ${updatedCount} bets updated.`
+    });
+
+    console.log(`[SCRAPER] ${betsToInsert.length} new bets found. (${newArbBets} arb, ${newEVBets} EV) ${updatedCount} bets updated.`)
 
     // send notifications
     //await sendBatchNotifications();
@@ -197,6 +202,7 @@ router.post("/clean", async function(req, res, next){
         })
     }
 
+    console.log(`[CLEANER] ${betsToDelete.length} bets deleted (older than ${threshold} minutes).`)
     res.json({"status": "ok", "Message": `${betsToDelete.length} bets deleted (older than ${threshold} minutes).`});
         
 })

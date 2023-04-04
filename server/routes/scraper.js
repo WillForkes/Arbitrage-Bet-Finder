@@ -168,6 +168,9 @@ router.get("/run" ,async function(req, res, next) {
 
     console.log(`[SCRAPER] ${betsToInsert.length} new bets found. (${newArbBets} arb, ${newEVBets} EV) ${updatedCount} bets updated.`)
 
+    // clean old bets
+    await clean();
+
     // send notifications
     //await sendBatchNotifications();
 });
@@ -181,8 +184,8 @@ router.get("/bookmakers", async function(req, res) {
     }
 })
 
-router.post("/clean", async function(req, res, next){
-    const threshold = (req.body.threshold) ? parseInt(req.body.threshold) : 10; // in minutes
+async function clean() {
+    const threshold = 10; // in minutes
 
     // Get all bets that are older than 10 minutes
     const betsToDelete = await prisma.bet.findMany({
@@ -203,9 +206,32 @@ router.post("/clean", async function(req, res, next){
     }
 
     console.log(`[CLEANER] ${betsToDelete.length} bets deleted (older than ${threshold} minutes).`)
-    res.json({"status": "ok", "Message": `${betsToDelete.length} bets deleted (older than ${threshold} minutes).`});
+}
+// router.post("/clean", async function(req, res, next){
+//     const threshold = (req.body.threshold) ? parseInt(req.body.threshold) : 10; // in minutes
+
+//     // Get all bets that are older than 10 minutes
+//     const betsToDelete = await prisma.bet.findMany({
+//         where: {
+//             updatedAt: {
+//                 lt: new Date(Date.now() - (threshold * 60 * 1000))
+//             }
+//         }
+//     })
+
+//     // Delete all bets that are older than 10 minutes
+//     for(let i = 0; i < betsToDelete.length; i++){
+//         await prisma.bet.delete({
+//             where: {
+//                 id: betsToDelete[i].id
+//             }
+//         })
+//     }
+
+//     console.log(`[CLEANER] ${betsToDelete.length} bets deleted (older than ${threshold} minutes).`)
+//     res.json({"status": "ok", "Message": `${betsToDelete.length} bets deleted (older than ${threshold} minutes).`});
         
-})
+// })
 
 router.get("/all", freeStuff, async function(req, res, next){
     let arbBets = []

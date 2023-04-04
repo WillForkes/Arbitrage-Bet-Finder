@@ -147,14 +147,6 @@ schedule.scheduleJob('*/5 * * * *', async () => {
     }
 });
 
-schedule.scheduleJob('*/10 * * * *', async () => {
-    console.log('Running Cleaner');
-    try {
-        await axios.post('http://localhost:' + PORT + '/scraper/clean', {})
-    } catch(e) {
-        console.log(e)
-    }
-});
 
 app.listen(PORT, () => {
     console.log("listening on port" + process.env.PORT)

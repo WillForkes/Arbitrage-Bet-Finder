@@ -162,7 +162,11 @@ router.get("/run" ,async function(req, res, next) {
         "total_new_bets": betsToInsert.length,
         "updated_bets": updatedCount
 
-    }, "Message": `${betsToInsert.length} new bets found. ${updatedCount} bets updated.`});
+    }, 
+    "Message": `${betsToInsert.length} new bets found. ${updatedCount} bets updated.`
+    });
+
+    console.log(`[SCRAPER] ${betsToInsert.length} new bets found. (${newArbBets} arb, ${newEVBets} EV) ${updatedCount} bets updated.`)
 
     // send notifications
     //await sendBatchNotifications();
@@ -198,6 +202,7 @@ router.post("/clean", async function(req, res, next){
         })
     }
 
+    console.log(`[CLEANER] ${betsToDelete.length} bets deleted (older than ${threshold} minutes).`)
     res.json({"status": "ok", "Message": `${betsToDelete.length} bets deleted (older than ${threshold} minutes).`});
         
 })

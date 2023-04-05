@@ -40,7 +40,6 @@ router.get("/run" ,async function(req, res, next) {
     // * Insert arbitrage data into database - update records if already exist
     let betsToInsert = [];
     let updatedCount = 0;
-    console.log(data)
     const arbitrageData = data.data.arbitrage;
     let newArbBets = 0
     const evData = data.data.ev;

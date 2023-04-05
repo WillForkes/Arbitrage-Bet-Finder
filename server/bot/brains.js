@@ -179,6 +179,11 @@ function processMatches_totals(matches, includeStartedMatches = false) {
               const impliedOdds = (1 / outcomeAOdds) + (1 / outcomeBOdds);
               
               if (impliedOdds < 1) {
+                const boo = {
+                    [outcomeA.name]: [outcomeABookmaker.title, outcomeAOdds, outcomeA.point?  outcomeA.point : null],
+                    [outcomeB.name]: [outcomeBBookmaker.title, outcomeBOdds, outcomeB.point? outcomeB.point : null]
+                };
+
                 const arbitrageBet = {
                   match_id: match.id,
                   match_name: match.home_team + " v. " + match.away_team,
@@ -186,10 +191,7 @@ function processMatches_totals(matches, includeStartedMatches = false) {
                   hours_to_start: timeToStart,
                   league: match.sport_key,
                   key: marketType,
-                  best_outcome_odds: {
-                    [outcomeA.name]: [outcomeABookmaker.title, outcomeAOdds, outcomeA.point?  outcomeA.point : null],
-                    [outcomeB.name]: [outcomeBBookmaker.title, outcomeBOdds, outcomeB.point? outcomeB.point : null]
-                  },
+                  best_outcome_odds: boo,
                   total_implied_odds: impliedOdds,
                   region: match.region
                 };
@@ -357,7 +359,13 @@ async function getArbitrageOpportunities(cutoff) {
 
     // filter opportunities
     // more than 0, less than 1 - cutoff, and greater than 0.85
-    const arbitrageOpportunities = Array.from(arbResults).filter(x => 0 < x.total_implied_odds && x.total_implied_odds < 1 - cutoff && x.total_implied_odds > 0.90);
+    const arbitrageOpportunities = Array.from(arbResults).filter(x => {
+        const _pg = ((1 / x.total_implied_odds) - 1).toFixed(2) // percentage gain | 0.1 = 10%
+        
+        return 0 < x.total_implied_odds 
+        && _pg > cutoff 
+        && _pg < 0.15
+    });
     const EVOpportunities = Array.from(evResults).filter(x => x.ev < 0.3 && x.ev > 0.03);
 
     // sort array by hours_to_start in ascending order

@@ -180,7 +180,7 @@ export default function BetPage() {
                               {bet.data.best_outcome_odds[key][1]}
                             </p>
                           </div>
-                          {bet.data.best_outcome_odds[key].length > 1 ? (
+                          {bet.data.best_outcome_odds[key].length > 2 ? (
                             <div className="min-w-0 flex-1">
                               <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                                 {key} {bet.data.best_outcome_odds[key][2]}

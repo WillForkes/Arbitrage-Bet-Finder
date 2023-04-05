@@ -6,7 +6,7 @@ async function returnBettingOpportunities(cutoff, lastUpdated) {
         const now = new Date();
 
         // if data is outdated, get new data
-        if (now - lastUpdated > 600000) {
+        if (now - lastUpdated > 300000) { // 5 mins
             getArbitrageOpportunities(cutoff).then((arb_data) => {
                 resolve(arb_data);
             }).catch((err) => {

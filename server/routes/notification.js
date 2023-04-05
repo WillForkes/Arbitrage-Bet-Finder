@@ -53,8 +53,9 @@ router.post('/email', async function(req, res, next) {
 
     // send email
     const betData = JSON.parse(bet.data)
-    const profitPercentage = Math.round(((1 - betData.total_implied_odds) + Number.EPSILON) * 100) / 100
-    const message = `Arbster notification: +${profitPercentage}% arbitrage opportunity found! Click here to view: https://arbster.com/bet/${betid}`
+    const profitPercentage = (bet.type == "ev") ? (betData.ev * 100).toFixed(2) : ((1 - betData.total_implied_odds) * 100).toFixed(2)
+    const opportunity = (bet.type == "ev") ? "Positive EV" : "Arbitrage"
+    const message = `Arbster Bet Notification!\+${profitPercentage}% ${opportunity} opportunity found! Click here to view: https://arbster.com/bet/${betid}`
     let mailOptions = {
         from: process.env.EMAIL_FROM,
         to: toEmails,

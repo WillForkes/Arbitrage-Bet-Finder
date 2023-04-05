@@ -7,6 +7,7 @@ import React, { useContext, useState } from "react";
 import Logo from "../../../public/arbster.png";
 import Login from "./Login";
 import ProfileDropdown from "./ProfileDropdown";
+import { Badge } from "flowbite-react";
 
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,8 +20,9 @@ export default function Nav() {
   return (
     <nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
       <div className="container flex flex-wrap items-center justify-between mx-auto">
-        <a href="https://arbster.com/" className="flex items-center">
+        <a href="https://arbster.com/" className="flex items-center gap-x-4">
           <Image src={Logo} height={60} alt="Arbster image" />
+          <Badge>Beta</Badge>
         </a>
         <div className="flex items-center md:order-2">
           {user != null ? <ProfileDropdown /> : <Login />}
@@ -95,9 +97,7 @@ export default function Nav() {
               viewBox="0 0 20 20"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <path
-                d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-              ></path>
+              <path d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"></path>
             </svg>
           </button>
           {isOpen && (

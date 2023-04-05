@@ -7,6 +7,7 @@ import type { AppProps } from "next/app";
 import { createContext, useState } from "react";
 import useSWR from "swr";
 import Alert from "@/components/Alert";
+import Script from "next/script";
 
 export const UserContext = createContext<{
   user: User | null;
@@ -41,7 +42,26 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <div className="bg-gray-700">
-        <title>Arbster - #1 Betting Tools</title>
+      <Script
+        strategy="afterInteractive"
+        src="https://www.googletagmanager.com/gtag/js?id=G-7H7GEWNWCK"
+      />
+          
+      <Script
+        id="google-analytics"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-7H7GEWNWCK', {
+            page_path: window.location.pathname,
+          });
+        `,
+        }}
+      />
+      <title>Arbster - #1 Betting Tools</title>
       <UserContext.Provider value={{ user: user, auth: isAuth }}>
         <AlertContext.Provider
           value={{
@@ -53,7 +73,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <Nav />
           <Alert />
           <Component {...pageProps} />
-        <Footer />
+          <Footer />
         </AlertContext.Provider>
       </UserContext.Provider>
     </div>

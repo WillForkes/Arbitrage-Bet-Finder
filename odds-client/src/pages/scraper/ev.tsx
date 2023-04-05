@@ -16,7 +16,7 @@ export default function Ev() {
   const evData = data?.ev;
   const user: User | null = useContext(UserContext).user;
   const showBets = user
-    ? user.dbuser.plan == "pro" || user.dbuser.plan == "plus"
+    ? user.dbuser.plan == "pro" || user.dbuser.plan == "plus" || user.dbuser.staff
     : false;
 
   return (

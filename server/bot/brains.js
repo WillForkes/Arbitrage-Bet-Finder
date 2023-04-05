@@ -360,7 +360,6 @@ async function getArbitrageOpportunities(cutoff) {
     const arbitrageOpportunities = Array.from(arbResults).filter(x => {
         const _pg = ((1 / x.total_implied_odds) - 1).toFixed(2) // percentage gain | 0.1 = 10%
         
-        console.log(_pg)
         return 0 < x.total_implied_odds 
         && _pg > cutoff 
         && _pg < 0.15

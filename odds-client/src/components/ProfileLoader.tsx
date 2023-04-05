@@ -130,7 +130,11 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                   {/* Small text div that takes up only 100 pixels */}
                   <div className="w-20 h-10">
                     <span className="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
-                      {user.dbuser.plan.toUpperCase()}
+                      {user.dbuser.staff ? (
+                        "STAFF"
+                    ) : (
+                        user.dbuser.plan.toUpperCase()
+                    )}
                     </span>
                   </div>
                   <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
@@ -286,7 +290,8 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                     disabled={
                       user.dbuser.plan == "pro" ||
                       user.dbuser.plan == "plus" ||
-                      user.dbuser.plan == "starter"
+                      user.dbuser.plan == "starter" ||
+                      user.dbuser.staff
                         ? false
                         : true
                     }
@@ -303,7 +308,8 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                     disabled={
                       user.dbuser.plan == "pro" ||
                       user.dbuser.plan == "plus" ||
-                      user.dbuser.plan == "starter"
+                      user.dbuser.plan == "starter" ||
+                      user.dbuser.staff
                         ? false
                         : true
                     }
@@ -328,7 +334,9 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                       }
                       checked={notifications.sms}
                       disabled={
-                        user.dbuser.plan == "pro" || user.dbuser.plan == "plus"
+                        user.dbuser.plan == "pro" ||
+                        user.dbuser.plan == "plus" ||
+                        user.dbuser.staff
                           ? false
                           : true
                       }
@@ -343,7 +351,9 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                       required={true}
                       value={notifications.phone}
                       disabled={
-                        user.dbuser.plan == "pro" || user.dbuser.plan == "plus"
+                        user.dbuser.plan == "pro" || 
+                        user.dbuser.plan == "plus" ||
+                        user.dbuser.staff
                           ? false
                           : true
                       }

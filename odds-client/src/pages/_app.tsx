@@ -43,24 +43,18 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <div className="bg-gray-700">
       <Script
-        strategy="afterInteractive"
         src="https://www.googletagmanager.com/gtag/js?id=G-7H7GEWNWCK"
-      />
-          
-      <Script
-        id="google-analytics"
         strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-7H7GEWNWCK', {
-            page_path: window.location.pathname,
-          });
-        `,
-        }}
       />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){window.dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-7H7GEWNWCK');
+        `}
+      </Script>
       <title>Arbster - #1 Betting Tools</title>
       <UserContext.Provider value={{ user: user, auth: isAuth }}>
         <AlertContext.Provider

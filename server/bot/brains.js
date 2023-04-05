@@ -179,6 +179,11 @@ function processMatches_totals(matches, includeStartedMatches = false) {
               const impliedOdds = (1 / outcomeAOdds) + (1 / outcomeBOdds);
               
               if (impliedOdds < 1) {
+                const boo = {
+                    [outcomeA.name]: [outcomeABookmaker.title, outcomeAOdds, outcomeA.point?  outcomeA.point : null],
+                    [outcomeB.name]: [outcomeBBookmaker.title, outcomeBOdds, outcomeB.point? outcomeB.point : null]
+                };
+
                 const arbitrageBet = {
                   match_id: match.id,
                   match_name: match.home_team + " v. " + match.away_team,
@@ -186,10 +191,7 @@ function processMatches_totals(matches, includeStartedMatches = false) {
                   hours_to_start: timeToStart,
                   league: match.sport_key,
                   key: marketType,
-                  best_outcome_odds: {
-                    [outcomeA.name]: [outcomeABookmaker.title, outcomeAOdds, outcomeA.point?  outcomeA.point : null],
-                    [outcomeB.name]: [outcomeBBookmaker.title, outcomeBOdds, outcomeB.point? outcomeB.point : null]
-                  },
+                  best_outcome_odds: boo,
                   total_implied_odds: impliedOdds,
                   region: match.region
                 };

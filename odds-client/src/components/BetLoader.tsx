@@ -99,7 +99,7 @@ export default function BetLoader({ bets, showBets, user }: props) {
               </Toast>
             </div>
             <Dropdown
-              label="Region"
+              label={regionFilter}
               className="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium  dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
             >
               <Dropdown.Item

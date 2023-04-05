@@ -357,7 +357,13 @@ async function getArbitrageOpportunities(cutoff) {
 
     // filter opportunities
     // more than 0, less than 1 - cutoff, and greater than 0.85
-    const arbitrageOpportunities = Array.from(arbResults).filter(x => 0 < x.total_implied_odds && x.total_implied_odds < 1 - cutoff && x.total_implied_odds > 0.90);
+    const arbitrageOpportunities = Array.from(arbResults).filter(x => {
+        const _pg = ((1 / x.total_implied_odds) - 1).toFixed(2) // percentage gain | 0.1 = 10%
+        
+        return 0 < x.total_implied_odds 
+        && _pg > cutoff 
+        && _pg < 0.15
+    });
     const EVOpportunities = Array.from(evResults).filter(x => x.ev < 0.3 && x.ev > 0.03);
 
     // sort array by hours_to_start in ascending order

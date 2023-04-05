@@ -46,6 +46,7 @@ export type User = {
         apikey: string;
         banned: boolean;
         trialActivated: boolean;
+        staff: boolean;
         region: string;
         subscription: {
             id: number;

@@ -223,10 +223,10 @@ export default function Pricing() {
               </li>
               <li className="flex items-center space-x-3">
                 <HiX className="dark:text-red-600"/>
-                <span>&gt;15% ROI Bets</span>
+                <span>&gt;10% ROI Bets</span>
                 <Tooltip
                     animation="duration-300"
-                    content="Bets above 15% ROI are only available to plus members as they disapear quicker when there is a higher volume of users placing the bet."
+                    content="Bets above 10% ROI are only available to plus members as they disapear quicker when there is a higher volume of users placing the bet."
                 >
                     <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -438,10 +438,10 @@ export default function Pricing() {
               </li>
               <li className="flex items-center space-x-3">
                 <HiX className="dark:text-red-600"/>
-                <span>&gt;15% ROI Bets</span>
+                <span>&gt;10% ROI Bets</span>
                 <Tooltip
                     animation="duration-300"
-                    content="Bets above 15% ROI are only available to plus members as they disapear quicker when there is a higher volume of users placing the bet."
+                    content="Bets above 10% ROI are only available to plus members as they disapear quicker when there is a higher volume of users placing the bet."
                 >
                     <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -696,10 +696,10 @@ export default function Pricing() {
                 >
                   <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path>
                 </svg>
-                <span>&gt;15% ROI Bets</span>
+                <span>&gt;10% ROI Bets</span>
                 <Tooltip
                     animation="duration-300"
-                    content="Bets above 15% ROI are only available to plus members as they disapear quicker when there is a higher volume of users placing the bet.">
+                    content="Bets above 10% ROI are only available to plus members as they disapear quicker when there is a higher volume of users placing the bet.">
                     <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"

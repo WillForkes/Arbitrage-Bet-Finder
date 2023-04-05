@@ -40,7 +40,6 @@ router.get("/run" ,async function(req, res, next) {
     // * Insert arbitrage data into database - update records if already exist
     let betsToInsert = [];
     let updatedCount = 0;
-    console.log(data)
     const arbitrageData = data.data.arbitrage;
     let newArbBets = 0
     const evData = data.data.ev;
@@ -244,7 +243,7 @@ router.get("/all", freeStuff, async function(req, res, next){
         return;
     }
     
-    if(req.user.plan == "free") {
+    if(req.user.plan == "free" && req.user.staff == false) {
         arbBets = [{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:7},{id:8},{id:9},{id:10}]
         evBets = [{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:7},{id:8},{id:9},{id:10}]
         res.json({"status": "ok", "data": {
@@ -315,6 +314,19 @@ router.get("/all", freeStuff, async function(req, res, next){
             evBets[i].data.leagueFormatted = leagueFormatted.join(" ");
         }
     }
+
+    // filter through arb bets, if user plan is not "plus" then remove bets with total implied odds <0.9
+    arbBets = arbBets.filter(bet => {
+        if(req.user.plan == "plus" || req.user.staff){
+            return true;
+        }
+        const _pg = ((1 / bet.data.total_implied_odds) - 1).toFixed(2) // percentage gain | 0.1 = 10%
+        if(_pg <= 0.1){
+            return true;
+        }
+        return false;
+    })
+
         
     res.json({"status": "ok", "data": {
         "arbitrage": arbBets,
@@ -325,7 +337,7 @@ router.get("/all", freeStuff, async function(req, res, next){
 router.get("/bet/:id", checkUser, async function(req, res, next){
     const betId = parseInt(req.params.id);
 
-    if(req.user.plan == "free") {
+    if(req.user.plan == "free" && req.user.staff == false) {
         res.status(400).json({"error": "You need to upgrade to a paid plan to view this page."});
         return;
     }

@@ -60,7 +60,7 @@ router.post('/email', async function(req, res, next) {
         to: toEmails,
         subject: 'Arbster Bet Notification',
         text: message, 
-        html: '<b>HTML template not created yet...</b>' // html body
+        html: '<b>' + message + '</b>' // html body
     };
 
     transporter.sendMail(mailOptions, (error, info) => {

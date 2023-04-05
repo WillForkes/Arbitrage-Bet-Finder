@@ -171,7 +171,7 @@ router.get("/run" ,async function(req, res, next) {
     await clean();
 
     // send notifications
-    //await sendBatchNotifications();
+    await sendBatchNotifications();
 });
 
 router.get("/bookmakers", async function(req, res) {

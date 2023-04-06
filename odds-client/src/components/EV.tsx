@@ -18,7 +18,7 @@ import Link from "next/link";
 interface props {
   bets: EV[];
   showBets: boolean;
-  user: User | null;
+  user: User;
 }
 
 export default function EVLoader({ bets, showBets, user }: props) {
@@ -28,7 +28,7 @@ export default function EVLoader({ bets, showBets, user }: props) {
   );
   const [modalBetId, setModalBetId] = useState(0);
   const [modalRecBetSize, setModalRecBetSize] = useState(0);
-  const [regionFilter, setRegionFilter] = useState("UK");
+  const [regionFilter, setRegionFilter] = useState(user.dbuser.region);
   var b: any = filterRegion(regionFilter, bets, user ? true : false);
   const [paginatedBets, setPaginatedBets] = useState<EV[]>(b.slice(0, 10));
   const [bankroll, setBankroll] = useState(0);

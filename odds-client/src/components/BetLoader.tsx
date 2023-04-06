@@ -19,7 +19,7 @@ import { Tooltip, Spinner, Badge } from "flowbite-react";
 interface props {
   bets: Bet[];
   showBets: boolean;
-  user: User | null;
+  user: User;
 }
 
 export default function BetLoader({ bets, showBets, user }: props) {
@@ -27,7 +27,7 @@ export default function BetLoader({ bets, showBets, user }: props) {
 
   const [modal, setModal] = useState(false);
   const [modalBetId, setModalBetId] = useState(0);
-  const [regionFilter, setRegionFilter] = useState("UK");
+  const [regionFilter, setRegionFilter] = useState(user.dbuser.region);
   const [pricing, setPricing] = useState(
     bets.length > 0 && !showBets && (!user || user.dbuser.plan == "free")
   );

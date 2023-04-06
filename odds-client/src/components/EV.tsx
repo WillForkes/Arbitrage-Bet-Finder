@@ -18,7 +18,7 @@ import Link from "next/link";
 interface props {
   bets: EV[];
   showBets: boolean;
-  user: User;
+  user: User | null;
 }
 
 export default function EVLoader({ bets, showBets, user }: props) {
@@ -28,7 +28,9 @@ export default function EVLoader({ bets, showBets, user }: props) {
   );
   const [modalBetId, setModalBetId] = useState(0);
   const [modalRecBetSize, setModalRecBetSize] = useState(0);
-  const [regionFilter, setRegionFilter] = useState(user.dbuser.region);
+  const [regionFilter, setRegionFilter] = useState(
+    user ? user.dbuser.region : "UK"
+  );
   var b: any = filterRegion(regionFilter, bets, user ? true : false);
   const [paginatedBets, setPaginatedBets] = useState<EV[]>(b.slice(0, 10));
   const [bankroll, setBankroll] = useState(0);
@@ -229,7 +231,10 @@ export default function EVLoader({ bets, showBets, user }: props) {
               {pricing ? <FreeModal closeModal={closePricing} /> : null}
               <tbody className={`divide ${showBets ? "" : "blur"}`}>
                 {paginatedBets.map((bet) => (
-                  <tr key={bet.id} className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <tr
+                    key={bet.id}
+                    className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
                     <Tooltip
                       content={`Win probability: ${
                         showBets
@@ -237,7 +242,10 @@ export default function EVLoader({ bets, showBets, user }: props) {
                           : "?.??%"
                       }%`}
                     >
-                      <th scope="row" className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      <th
+                        scope="row"
+                        className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
                         {bet.data?.winProbability > 0.6 ? (
                           <div className="inline-block w-4 h-4 mr-2 bg-green-700 rounded-full"></div>
                         ) : bet.data?.winProbability > 0.35 ? (
@@ -252,8 +260,9 @@ export default function EVLoader({ bets, showBets, user }: props) {
                           {showBets
                             ? bet.data.match_name
                             : "HOME TEAM v AWAY TEAM"}{" "}
-                            - {showBets ? bet.data.region.toUpperCase() : "REGION"}
-                            <div className="text-xs dark:text-primary-600">
+                          -{" "}
+                          {showBets ? bet.data.region.toUpperCase() : "REGION"}
+                          <div className="text-xs dark:text-primary-600">
                             {showBets
                               ? bet.data.leagueFormatted
                               : "LEAGUE_FORMATTED"}

@@ -16,12 +16,13 @@ export default function Ev() {
   const evData = data?.ev;
   const user: User | null = useContext(UserContext).user;
   const showBets = user
-    ? user.dbuser.plan == "pro" || user.dbuser.plan == "plus" || user.dbuser.staff
+    ? user.dbuser.plan == "pro" ||
+      user.dbuser.plan == "plus" ||
+      user.dbuser.staff
     : false;
 
   return (
     <div className="page-offset-x py-8 bg-gray-900">
-
       {data ? (
         <div className="rounded-md gap-6 grid-cols-1 2xl:grid-cols-2 mb-2">
           <EVLoader bets={evData} showBets={showBets} user={user} />

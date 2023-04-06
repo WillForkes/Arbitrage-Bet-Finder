@@ -69,6 +69,7 @@ export type Bet = {
         region: string;
         league: string;
         leagueFormatted: string;
+        live: boolean;
     } 
     id: number;
     type: string;

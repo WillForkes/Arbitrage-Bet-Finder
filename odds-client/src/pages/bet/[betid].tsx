@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import useSWR from "swr";
 import { getter } from "@/api";
-import { Card, Spinner, TextInput } from "flowbite-react";
+import { Card, Spinner, TextInput, Badge } from "flowbite-react";
 import { useRouter } from "next/router";
 import { getBookmakerLogo } from "../../utils";
 import Modal from "@/components/Modal";
@@ -242,6 +242,15 @@ export default function BetPage() {
                     )}
                   </dd>
                 </dl>
+
+                <div className="flex mb-4 mx-auto flex-wrap gap-2">
+                    <Badge>
+                    Disclaimer:
+We strive to provide accurate and up-to-date odds, but please note that bookmakers may change their odds without prior notice.
+It is your responsibility to independently verify the real-time odds with the bookmakers before placing bets based on our displayed odds.
+We are not liable for any losses incurred due to discrepancies between our displayed odds and the actual odds offered by bookmakers.    
+                    </Badge>
+                </div>
 
                 <div className="flex items-center space-x-4">
                   {bet.type == "arbitrage" || evm == true ? (

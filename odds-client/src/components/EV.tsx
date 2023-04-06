@@ -23,7 +23,9 @@ interface props {
 
 export default function EVLoader({ bets, showBets, user }: props) {
   const [modal, setModal] = useState(false);
-  const [pricing, setPricing] = useState(bets.length > 0 && !showBets);
+  const [pricing, setPricing] = useState(
+    bets.length > 0 && !showBets && (!user || user.dbuser.plan == "free")
+  );
   const [modalBetId, setModalBetId] = useState(0);
   const [modalRecBetSize, setModalRecBetSize] = useState(0);
   const [regionFilter, setRegionFilter] = useState("UK");
@@ -227,10 +229,7 @@ export default function EVLoader({ bets, showBets, user }: props) {
               {pricing ? <FreeModal closeModal={closePricing} /> : null}
               <tbody className={`divide ${showBets ? "" : "blur"}`}>
                 {paginatedBets.map((bet) => (
-                  <tr
-                    key={bet.id}
-                    className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
+                  <tr key={bet.id} className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
                     <Tooltip
                       content={`Win probability: ${
                         showBets
@@ -238,10 +237,7 @@ export default function EVLoader({ bets, showBets, user }: props) {
                           : "?.??%"
                       }%`}
                     >
-                      <th
-                        scope="row"
-                        className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                      >
+                      <th scope="row" className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         {bet.data?.winProbability > 0.6 ? (
                           <div className="inline-block w-4 h-4 mr-2 bg-green-700 rounded-full"></div>
                         ) : bet.data?.winProbability > 0.35 ? (
@@ -253,18 +249,16 @@ export default function EVLoader({ bets, showBets, user }: props) {
                         )}
 
                         <Link href={`/bet/${bet.id}`}>
-                            {showBets
+                          {showBets
                             ? bet.data.match_name
                             : "HOME TEAM v AWAY TEAM"}{" "}
                             - {showBets ? bet.data.region.toUpperCase() : "REGION"}
-                            <div className=" text-xs dark:text-primary-600">
+                            <div className="text-xs dark:text-primary-600">
                             {showBets
-                                ? bet.data.leagueFormatted
-                                : "LEAGUE_FORMATTED"}
-                            </div>
+                              ? bet.data.leagueFormatted
+                              : "LEAGUE_FORMATTED"}
+                          </div>
                         </Link>
-
-
                       </th>
                     </Tooltip>
                     <th
@@ -380,13 +374,14 @@ export default function EVLoader({ bets, showBets, user }: props) {
               </tbody>
             </table>
             {paginatedBets.length === 0 ? (
-                <div className="mx-auto max-w-md text-center py-8">
-                    <h2 className="text-xl font-bold mb-6 lg:text-2xl dark:text-white">
-                        We couldn&apos;t find any bets in this region. Please consider whitelisting more bookmakers or try again soon.
-                    </h2>
-                    <Spinner aria-label="Default status example" />
-                </div>
-            ) : (null)}
+              <div className="mx-auto max-w-md text-center py-8">
+                <h2 className="text-xl font-bold mb-6 lg:text-2xl dark:text-white">
+                  We couldn&apos;t find any bets in this region. Please consider
+                  whitelisting more bookmakers or try again soon.
+                </h2>
+                <Spinner aria-label="Default status example" />
+              </div>
+            ) : null}
           </div>
 
           <Pagination

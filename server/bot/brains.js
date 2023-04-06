@@ -93,8 +93,13 @@ function processMatches_h2h(matches, includeStartedMatches = false) {
     for (let i = 0; i < matchCount; i++) {
         const match = matches[i];
         const startTime = parseInt(match.commence_time);
-        if (!includeStartedMatches && startTime < Date.now() / 1000) {
-            continue;
+        let isLive = false
+
+        if(startTime < Date.now() / 1000) {
+            isLive=true
+            if (!includeStartedMatches) {
+                continue;
+            }
         }
 
         const bestOddPerOutcome = {};
@@ -134,7 +139,8 @@ function processMatches_h2h(matches, includeStartedMatches = false) {
             key: marketType,
             best_outcome_odds: bestOddPerOutcome,
             total_implied_odds: totalImpliedOdds,
-            region: match.region
+            region: match.region,
+            live: isLive
         });
     }
     return arbBets
@@ -146,9 +152,15 @@ function processMatches_totals(matches, includeStartedMatches = false) {
   for (const match of matches) {
     const startTime = parseInt(match.commence_time);
     const timeToStart = (startTime - Date.now() / 1000) / 3600;
-    if (!includeStartedMatches && startTime < Date.now() / 1000) {
-        continue;
+    let isLive = false
+
+    if(startTime < Date.now() / 1000) {
+        isLive=true
+        if (!includeStartedMatches) {
+            continue;
+        }
     }
+    
     
     for (const bookmaker of match.bookmakers) {
       for (const market of bookmaker.markets) {
@@ -193,7 +205,8 @@ function processMatches_totals(matches, includeStartedMatches = false) {
                   key: marketType,
                   best_outcome_odds: boo,
                   total_implied_odds: impliedOdds,
-                  region: match.region
+                  region: match.region,
+                  live: isLive
                 };
                 arbitrageBets.push(arbitrageBet);
               }
@@ -349,8 +362,8 @@ async function getArbitrageOpportunities(cutoff) {
     fs.writeFileSync(path.join(__dirname, "output", "raw.json"), JSON.stringify(data))
  
     // process matches
-    let arbResults_totals = await processMatches_totals(data, includeStartedMatches=false);
-    let arbResult_h2h = await processMatches_h2h(data, includeStartedMatches=false);
+    let arbResults_totals = await processMatches_totals(data, includeStartedMatches=true);
+    let arbResult_h2h = await processMatches_h2h(data, includeStartedMatches=true);
     let arbResults = [...arbResult_h2h.concat(arbResults_totals)]
 
     //let evResults = await processPositiveEV(data, includeStartedMatches=false);

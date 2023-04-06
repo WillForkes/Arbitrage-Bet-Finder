@@ -11,6 +11,7 @@ import {
   Tabs,
   Card,
   Toast,
+  Dropdown,
 } from "flowbite-react";
 import Image from "next/image";
 import Logo from "../../public/arbster.png";
@@ -33,7 +34,7 @@ interface props {
 
 export default function ProfileLoader({ user, invoices, bookMakers }: props) {
   const [editProfile, setEditProfile] = useState(false);
-  const [region, setRegion] = useState(user.dbuser.region);
+  const [region, setRegion] = useState<string>(user.dbuser.region);
   const [notifications, setNotifications] = useState({
     email: user.dbuser.emailNotifications,
     emaila: user.auth0.email,
@@ -112,16 +113,18 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                   <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
                     {user.auth0.nickname}
                   </dd>
-                  {(user.dbuser.plan != "free") ? (
+                  {user.dbuser.plan != "free" ? (
                     <div>
-                        <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
-                            Plan Renews/Expires At
-                        </dt>
-                        <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
-                            {new Date(user.dbuser.planExpiresAt).toLocaleDateString()}
-                        </dd>
+                      <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
+                        Plan Renews/Expires At
+                      </dt>
+                      <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
+                        {new Date(
+                          user.dbuser.planExpiresAt
+                        ).toLocaleDateString()}
+                      </dd>
                     </div>
-                  ) : (null)}
+                  ) : null}
 
                   <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
                     Plan
@@ -130,11 +133,9 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                   {/* Small text div that takes up only 100 pixels */}
                   <div className="w-20 h-10">
                     <span className="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
-                      {user.dbuser.staff ? (
-                        "STAFF"
-                    ) : (
-                        user.dbuser.plan.toUpperCase()
-                    )}
+                      {user.dbuser.staff
+                        ? "STAFF"
+                        : user.dbuser.plan.toUpperCase()}
                     </span>
                   </div>
                   <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
@@ -143,11 +144,17 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
 
                   {editProfile ? (
                     <div className="">
-                      <TextInput
+                      <select
+                        id="countries"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         onChange={(e) => setRegion(e.target.value)}
-                        type="text"
-                        value={region}
-                      />
+                      >
+                        <option selected>Choose a country</option>
+                        <option value="US">US</option>
+                        <option value="UK">UK</option>
+                        <option value="EU">EU</option>
+                        <option value="AU">AU</option>
+                      </select>
                       <button
                         type="button"
                         className="text-white inline-flex items-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
@@ -274,7 +281,8 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                 <div className="flex items-center gap-2 p-2">
                   <Checkbox id="promotion" />
                   <Label htmlFor="promotion">
-                    I want to get promotional offers on free signup deals and new products
+                    I want to get promotional offers on free signup deals and
+                    new products
                   </Label>
                 </div>
                 <div className="flex items-center gap-2 p-2">
@@ -351,7 +359,7 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                       required={true}
                       value={notifications.phone}
                       disabled={
-                        user.dbuser.plan == "pro" || 
+                        user.dbuser.plan == "pro" ||
                         user.dbuser.plan == "plus" ||
                         user.dbuser.staff
                           ? false

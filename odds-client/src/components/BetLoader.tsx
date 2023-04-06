@@ -11,7 +11,8 @@ import Pagination from "./Pagination";
 import { getBookmakerLogo } from "@/utils";
 import FreeModal from "./FreeModal";
 import Link from 'next/link';
-import { Tooltip, Spinner } from "flowbite-react";
+import { Tooltip, Spinner, Badge } from "flowbite-react";
+
 // example:
 // {"match_id":"d3015bfea46b4b86f2407a6845885393","match_name":"St. Louis Cardinals v. Washington Nationals","match_start_time":1679418300,"hours_to_start":3.7805919444561003,"league":"baseball_mlb_preseason","key":"h2h","best_outcome_odds":{"St. Louis Cardinals":["Pinnacle",1.69],"Washington Nationals":["MyBookie.ag",2.55]},"total_implied_odds":0.9839,"region":"eu"}
 
@@ -163,22 +164,22 @@ export default function BetLoader({ bets, showBets, user }: props) {
               </thead>
               <tbody className={`divide ${showBets ? "" : "blur"}`}>
                 {paginatedBets.map((bet) => (
-                  <tr
-                    key={bet.id}
-                    className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    <th
-                      scope="row"
-                      className="items-center px-4 py-12 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                    >
-                        <Tooltip
-                        animation="duration-300"
-                        content="Click here to view the the details of this bet"
-                        >
+                  <tr key={bet.id} className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <th scope="row" className="items-center px-4 py-8 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        <Tooltip animation="duration-300" content="Click here to view the the details of this bet">
+                            {bet.data.live == true ? (
+                                <div className="flex mx-auto flex-wrap gap-2">
+                                    <Badge>
+                                        IN PLAY
+                                    </Badge>
+                                </div>
+                            ) : (null)}
+                           
                             <Link href={`/bet/${bet.id}`}>
-                                {showBets ? bet.data.match_name : "HOME TEAM v AWAY TEAM"}
+                                {showBets ? bet.data.match_name : "HOME TEAM v AWAY TEAM"} 
                             </Link>
                         </Tooltip>
+                        
                     </th>
 
                     <th

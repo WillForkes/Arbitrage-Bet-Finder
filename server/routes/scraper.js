@@ -171,8 +171,11 @@ router.get("/run" ,async function(req, res, next) {
     await clean();
 
     // send notifications
-    const notisToSend = await getNotifications();
-    await sendBatchNotifications(notisToSend);
+    if(process.env.NODE_ENV != "development") {
+        const notisToSend = await getNotifications();
+        await sendBatchNotifications(notisToSend);
+    }
+
 });
 
 router.get("/bookmakers", async function(req, res) {
@@ -546,10 +549,10 @@ async function sendBatchNotifications(notifications) {
             userids: userids_sms,
             betid: noti.id
         }).then((res) => {
-                console.log(res);
-            }
+            console.log("Sent sms notifications!");
+        }
         ).catch((err) => {
-            console.log(err);
+            console.log("Error sending sms notifications: " + err);
         })
 
         // ! Send BULK EMAIL
@@ -557,10 +560,10 @@ async function sendBatchNotifications(notifications) {
             userids: userids_sms,
             betid: noti.id
         }).then((res) => {
-                console.log(res);
+                console.log("Sent email notifications!");
             }
         ).catch((err) => {
-            console.log(err);
+            console.log("Error sending email notifications: " + err);
         })
 
         

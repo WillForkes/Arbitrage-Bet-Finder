@@ -1,4 +1,4 @@
-import { Bet, User } from "@/types";
+import { Bet, Plan, User } from "@/types";
 import { dateFormat, filterRegion } from "@/utils";
 import React, { useState, useContext } from "react";
 import Image from "next/image";
@@ -28,7 +28,9 @@ export default function BetLoader({ bets, showBets, user }: props) {
   const [modal, setModal] = useState(false);
   const [modalBetId, setModalBetId] = useState(0);
   const [regionFilter, setRegionFilter] = useState("UK");
-  const [pricing, setPricing] = useState(bets.length > 0 && !showBets);
+  const [pricing, setPricing] = useState(
+    bets.length > 0 && !showBets && (!user || user.dbuser.plan == "free")
+  );
 
   var b: any[] = filterRegion(regionFilter, bets, user ? true : false);
 
@@ -94,7 +96,10 @@ export default function BetLoader({ bets, showBets, user }: props) {
                   </svg>
                 </div>
                 <div className="ml-3 text-white text-sm font-normal">
-                  Update whitelisted bookmakers <Link className="text-primary-700" href="/profile">here</Link>
+                  Update whitelisted bookmakers{" "}
+                  <Link className="text-primary-700" href="/profile">
+                    here
+                  </Link>
                 </div>
                 <Toast.Toggle />
               </Toast>
@@ -202,8 +207,10 @@ export default function BetLoader({ bets, showBets, user }: props) {
                     >
                       <span className="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-green-600 dark:text-green-300">
                         {showBets
-                          ? (((1 / bet.data.total_implied_odds) - 1) * 100).toFixed(2)
-                          
+                          ? (
+                              (1 / bet.data.total_implied_odds - 1) *
+                              100
+                            ).toFixed(2)
                           : 0.0}
                         %
                       </span>
@@ -306,7 +313,6 @@ export default function BetLoader({ bets, showBets, user }: props) {
                           >
                             Calculate Stake
                           </button>
-                          
                         </div>
                       ) : (
                         <button
@@ -322,13 +328,14 @@ export default function BetLoader({ bets, showBets, user }: props) {
               </tbody>
             </table>
             {paginatedBets.length === 0 ? (
-                <div className="mx-auto max-w-md text-center py-8">
-                    <h2 className="text-xl font-bold mb-6 lg:text-2xl dark:text-white">
-                        We couldn&apos;t find any bets in this region. Please consider whitelisting more bookmakers or try again soon.
-                    </h2>
-                    <Spinner aria-label="Default status example" />
-                </div>
-            ) : (null)}
+              <div className="mx-auto max-w-md text-center py-8">
+                <h2 className="text-xl font-bold mb-6 lg:text-2xl dark:text-white">
+                  We couldn&apos;t find any bets in this region. Please consider
+                  whitelisting more bookmakers or try again soon.
+                </h2>
+                <Spinner aria-label="Default status example" />
+              </div>
+            ) : null}
           </div>
 
           {/* <Pagination

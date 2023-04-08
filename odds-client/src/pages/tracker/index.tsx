@@ -21,7 +21,7 @@ export default function TrackerPage() {
     <div className="page-offset-x py-8 bg-gray-900">
       <Auth />
       {data ? (
-        <div className="rounded-md grid py-1 gap-6 grid-cols-1 2xl:grid-cols-2 mb-2">
+        <div className="rounded-md grid py-1 gap-6 grid-cols-1 mb-2">
           <ChartLoader d={trackedBets} />
           <TrackedBetLoader bets={trackedBets} />
         </div>

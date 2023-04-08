@@ -9,7 +9,7 @@ function ChartLoader({ d }: { d: Tracker[] }) {
     stats = calculateStats(d, time);
   }
   return (
-    <div className="px-4 max-w-screen-2xl lg:px-12">
+    <div className="px-4 max-w-full lg:px-12">
       <Dropdown label="Time Period">
         <Dropdown.Item onClick={() => setTimePeriod("Week")}>
           Week

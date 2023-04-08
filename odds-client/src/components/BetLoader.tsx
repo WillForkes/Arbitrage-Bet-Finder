@@ -27,7 +27,9 @@ export default function BetLoader({ bets, showBets, user }: props) {
 
   const [modal, setModal] = useState(false);
   const [modalBetId, setModalBetId] = useState(0);
-  const [regionFilter, setRegionFilter] = useState("UK");
+  const [regionFilter, setRegionFilter] = useState(
+    user ? user.dbuser.region : "UK"
+  );
   const [pricing, setPricing] = useState(
     bets.length > 0 && !showBets && (!user || user.dbuser.plan == "free")
   );

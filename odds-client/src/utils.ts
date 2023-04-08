@@ -175,15 +175,17 @@ export function calculateStats(data: Tracker[], timePeriod?: string) {
       }
     }, 0);
     const pendingBets = filteredData.length - settledBets;
-    const ROI = ((totalProfit / totalStake) * 100).toFixed(2);
-  
+    var ROI = ((totalProfit / totalStake) * 100);
+    if (isNaN(ROI)) {
+        ROI = 0;
+    }
     return {
       totalProfit: totalProfit.toFixed(2),
       totalStake: totalStake.toFixed(2),
       pendingBets,
       settledBets,
       potentialEarnings: potentialEarnings.toFixed(2),
-      ROI: `${ROI}%`,
+      ROI: `${ROI.toFixed(2)}%`,
       totalBets: filteredData.length,
     };
   }

@@ -20,7 +20,8 @@ export default function Pricing() {
     try {
       const refId = (window.Rewardful && window.Rewardful.referral) || "checkout_" + new Date().getTime();
       let trial = false;
-      if (user?.dbuser.trialActivated == false) {
+
+      if (user?.dbuser.trialActivated == false && plan != "plus") {
         trial = true;
       }
 
@@ -41,7 +42,7 @@ export default function Pricing() {
   function getButtonText(plan: string) {
     if (user?.dbuser.plan == plan) {
         return "Current Plan";
-    } else if (user?.dbuser.plan == "free" && user?.dbuser.trialActivated == false) {
+    } else if (user?.dbuser.plan == "free" && user?.dbuser.trialActivated == false && plan != "plus") {
         return "Try 5 Days For Free";
     } else if(!user) {
         return "Login To Try For Free";

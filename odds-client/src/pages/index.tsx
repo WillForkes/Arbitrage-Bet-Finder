@@ -10,17 +10,19 @@ import Tline from "@/components/Home/Timeline";
 import FreeTrial from "@/components/Home/FreeTrial";
 import Stats from "@/components/Home/Stats";
 import WhatIs from "@/components/Home/WhatIs";
-
+import Blog from "@/components/Home/Blog";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   return (
     <>
         <Hero />
+        <Stats/>
+
         <WhatIs />
         <Features />
         <Pricing />
-        <Stats/>
+        <Blog />
         <Tline />
         <Testimonials />
         <FreeTrial />

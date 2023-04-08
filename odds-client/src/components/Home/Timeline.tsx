@@ -22,7 +22,9 @@ export default function Timeline() {
                 <div className="mt-3 sm:pr-8">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Beta Release</h3>
                     <time className="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">Released on 21st March 2023</time>
-                    <p className="text-base font-normal text-gray-500 dark:text-gray-400">We launched our Beta Release on March 21, 2023, offering early customers exclusive discounts and access to our new features. This initial release marked an exciting milestone for our company, and we were thrilled to receive valuable feedback from our early adopters.</p>
+                    <p className="text-base font-normal text-gray-500 dark:text-gray-400">
+                        Our Beta Release, featuring exclusive discounts and access to new features, was a significant milestone for our company. We&quot;re grateful for the valuable feedback from our early adopters, helping us enhance our offering.
+                    </p>
                 </div>
             </li>
             <li className="relative mb-6 sm:mb-0">

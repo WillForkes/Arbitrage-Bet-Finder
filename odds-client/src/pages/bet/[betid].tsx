@@ -24,11 +24,12 @@ export default function BetPage() {
   let bet = data?.bet;
   if (error || !bet) {
     return (
-    <section className="bg-white dark:bg-gray-900">
-        <div className="mx-auto max-w-screen-md py-12">
-            <div>
-                <Spinner />
-            </div>
+    <section className="bg-white dark:bg-gray-900 page-offset-x py-8 bg-gray-900">
+        <div className="mx-auto max-w-screen-md p-64 text-center mb-8 lg:mb-12">
+            <h2 className="text-md font-bold dark:text-white mb-2">
+                This bet does not exist or may have expired. Please try again soon.
+            </h2>
+            <Spinner aria-label="Default status example" />
         </div>
     </section>
   );
@@ -60,17 +61,7 @@ export default function BetPage() {
     return rec;
     //return (kmultiplier * 100).toFixed(0);
   }
-
-  if (!data) {
-    return (
-      <section className="bg-white dark:bg-gray-900">
-        <div className="mx-auto max-w-screen-md py-12">
-          <Spinner />
-        </div>
-      </section>
-    );
-  }
-
+  
   return (
     <>
       {bet.type == "arbitrage" ? (

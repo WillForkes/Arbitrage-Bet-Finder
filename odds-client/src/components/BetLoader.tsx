@@ -174,7 +174,7 @@ export default function BetLoader({ bets, showBets, user }: props) {
                   <tr key={bet.id} className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
                     <th scope="row" className="items-center px-4 py-8 font-medium text-gray-900 whitespace-nowrap dark:text-white underline hover:dark:text-primary-700">
                         <Tooltip animation="duration-300" content="Click here to view the the details of this bet">
-                            {bet.data.live == true ? (
+                            {bet.data?.live == true ? (
                                 <div className="flex mx-auto flex-wrap gap-2">
                                     <Badge>
                                         IN PLAY
@@ -183,7 +183,7 @@ export default function BetLoader({ bets, showBets, user }: props) {
                             ) : (null)}
                            
                             <Link href={`/bet/${bet.id}`}>
-                                {showBets ? bet.data.match_name : "HOME TEAM v AWAY TEAM"} 
+                                {showBets ? bet.data?.match_name : "HOME TEAM v AWAY TEAM"} 
                             </Link>
                         </Tooltip>
                         

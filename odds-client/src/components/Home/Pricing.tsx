@@ -6,21 +6,25 @@ declare global {
 
 import { createPayment, createPortal } from "@/api";
 import { Plan } from "@/types";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Badge, Tooltip } from "flowbite-react";
 import { UserContext } from "@/pages/_app";
 import { User } from "@/types";
 import Link from "next/link";
 import { HiClock, HiCheck, HiCurrencyPound, HiX } from "react-icons/hi";
+import DiscountModal from "../DiscountModal";
 
 export default function Pricing() {
   const user: User | null = useContext(UserContext).user;
+  const [modal, setModal] = useState(false);
+  const [plan, setPlan] = useState("starter");
 
   async function subscriptionHandle(plan: string) {
     try {
       const refId = (window.Rewardful && window.Rewardful.referral) || "checkout_" + new Date().getTime();
       let trial = false;
-      if (user?.dbuser.trialActivated == false) {
+
+      if (user?.dbuser.trialActivated == false && plan != "plus") {
         trial = true;
       }
 
@@ -29,7 +33,10 @@ export default function Pricing() {
         const portalRes = await createPortal();
         window.location.assign(portalRes.url);
       } else {
+        console.log("creating payment")
         var response = await createPayment(plan as Plan, refId, trial);
+        console.log("payment created")
+        console.log(response.url)
         window.location.assign(response.url);
       }
 
@@ -41,7 +48,7 @@ export default function Pricing() {
   function getButtonText(plan: string) {
     if (user?.dbuser.plan == plan) {
         return "Current Plan";
-    } else if (user?.dbuser.plan == "free" && user?.dbuser.trialActivated == false) {
+    } else if (user?.dbuser.plan == "free" && user?.dbuser.trialActivated == false && plan != "plus") {
         return "Try 5 Days For Free";
     } else if(!user) {
         return "Login To Try For Free";
@@ -72,8 +79,6 @@ export default function Pricing() {
             Bet like a Hedge Fund
           </h2>
         </div>
-
-
 
         <div className="space-y-8 lg:grid lg:grid-cols-3 sm:gap-2 xl:gap-10 lg:space-y-0">
           <div className="flex flex-col p-6  max-w-lg text-center text-gray-900 bg-white rounded-lg border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
@@ -251,7 +256,9 @@ export default function Pricing() {
 
             {user ? (
               <button
-                onClick={() => subscriptionHandle("starter")}
+              onClick={() => {
+                subscriptionHandle("starter")
+              }}
                 className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
                 disabled={user.dbuser.plan == "starter"}
               >
@@ -464,8 +471,10 @@ export default function Pricing() {
 
             {user ? (
               <button
-                onClick={() => subscriptionHandle("starter")}
-                className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
+              onClick={() => {
+                subscriptionHandle("pro")
+              }}
+              className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
                 disabled={user.dbuser.plan == "pro"}
               >
                 {getButtonText("pro")}
@@ -722,7 +731,9 @@ export default function Pricing() {
 
             {user ? (
               <button
-                onClick={() => subscriptionHandle("plus")}
+                onClick={() => {
+                    subscriptionHandle("plus")
+                }}
                 className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
                 disabled={user.dbuser.plan == "plus"}
               >

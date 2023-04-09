@@ -121,7 +121,7 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                       <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
                         {new Date(
                           user.dbuser.planExpiresAt
-                        ).toLocaleDateString()}
+                        ).toDateString()}
                       </dd>
                     </div>
                   ) : null}

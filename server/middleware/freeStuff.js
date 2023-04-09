@@ -31,53 +31,80 @@ let freeStuff = async (req, res, next) => {
             // generate api key
             const apikey = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
             const afilliateCode = makeid(8)
-
-            const newUser = await prisma.user.create({
-                data: {
-                    email: req.oidc.user.email,
-                    afilliateCode: afilliateCode,
-                    authid: req.oidc.user.sub,
-                    apikey: apikey
-                }
-            })
-
-            if(!newUser){
+            let newUser
+    
+            try {
+                newUser = await prisma.user.create({
+                    data: {
+                        email: req.oidc.user.email,
+                        afilliateCode: afilliateCode,
+                        authid: req.oidc.user.sub,
+                        apikey: apikey
+                    }
+                })
+            } catch {
                 res.status(500).json({"error": "Error creating user"})
                 return;
             }
+    
             user = newUser
-        } else {
-            // ! Check user plan has not expired
-            let plan = user.subscription[0] ? user.subscription[0].plan : "free"
-            const planExpiresAt = user.subscription[0] ? new Date(user.subscription[0].planExpiresAt) : new Date()
-            const planId = user.subscription[0] ? user.subscription[0].id : null
-
-            if(plan != "free" && planExpiresAt < new Date()){
-                // ! Update user plan to free and set subscription to inactive
-                plan = "free"
-
-                await prisma.subscription.update({
-                    where: {
-                        id: planId
-                    },
-                    data: {
-                        status: "inactive"
-                    }
-                })
-            }
-
-            // ! attach user to request
-            user.plan = plan
-            user.planExpiresAt = planExpiresAt
-            user.subId = user.subscription.subId
-            delete user.subscription
-            user.email = req.oidc.user.email
-
-            // * attach user to request
-            req.user = user
-
-            next();
         }
+    
+        // ! Check user plan has not expired
+        let plan
+        let planExpiresAt
+        let planId
+    
+        // ! Check if the user has a trial plan and disable that one since they have another active plan
+        if(user.subscription?.length == 2) {
+            for(let i = 0; i < user.subscription.length; i++){
+                if(user.subscription[i].plan == "trial"){
+                    await prisma.subscription.update({
+                        where: {
+                            id: user.subscription[i].id
+                        },
+                        data: {
+                            status: "inactive"
+                        }
+                    })
+                }
+            }
+        }
+    
+        if(user.subscription?.length == 0 || user.subscription == null || user.subscription == {}){
+            plan = "free"
+            planExpiresAt = new Date()
+            planId = null
+        } else {
+            plan = user.subscription[0].plan
+            planExpiresAt = new Date(user.subscription[0].planExpiresAt)
+            planId = user.subscription[0].id
+        }
+    
+        if(plan != "free" && planExpiresAt < new Date()){
+            // ! Update user plan to free and set subscription to inactive
+            plan = "free"
+    
+            await prisma.subscription.update({
+                where: {
+                    id: planId
+                },
+                data: {
+                    status: "inactive"
+                }
+            })
+        }
+    
+        // ! attach user to request
+        user.plan = plan
+        user.planExpiresAt = planExpiresAt
+        delete user.subscription
+        user.email = req.oidc.user.email
+    
+        // * attach user to request
+        req.user = user
+    
+        next();
     }
 }
 

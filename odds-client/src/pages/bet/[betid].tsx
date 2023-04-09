@@ -22,8 +22,17 @@ export default function BetPage() {
 
   // parse bet data
   let bet = data?.bet;
-  if (error) {
-    return null;
+  if (error || !bet) {
+    return (
+    <section className="bg-white dark:bg-gray-900 page-offset-x py-8 bg-gray-900">
+        <div className="mx-auto max-w-screen-md p-64 text-center mb-8 lg:mb-12">
+            <h2 className="text-md font-bold dark:text-white mb-2">
+                This bet does not exist or may have expired. Please try again soon.
+            </h2>
+            <Spinner aria-label="Default status example" />
+        </div>
+    </section>
+  );
   }
 
   try {
@@ -52,17 +61,7 @@ export default function BetPage() {
     return rec;
     //return (kmultiplier * 100).toFixed(0);
   }
-
-  if (!data) {
-    return (
-      <section className="bg-white dark:bg-gray-900">
-        <div className="mx-auto max-w-screen-md py-12">
-          <Spinner />
-        </div>
-      </section>
-    );
-  }
-
+  
   return (
     <>
       {bet.type == "arbitrage" ? (
@@ -146,75 +145,96 @@ export default function BetPage() {
                   </dl>
                 ) : null}
 
-                <dl>
-                  <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
-                    Bookmakers
-                  </dt>
-                  {bet.type == "arbitrage" ? (
-                    Object.keys(bet.data.best_outcome_odds).map(
-                      (key, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center space-x-3"
-                        >
-                          <div className="flex-shrink-0">
-                            <div className="relative py-1">
-                              <img
-                                className="rounded-md"
-                                src={getBookmakerLogo(
-                                  bet.data.best_outcome_odds[key][0]
-                                )}
-                                alt="Bookmaker Logo"
-                                width={25}
-                                height={25}
-                              />
-                            </div>
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                              {bet.data.best_outcome_odds[key][0]}
-                            </p>
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                              {bet.data.best_outcome_odds[key][1]}
-                            </p>
-                          </div>
-                          {bet.data.best_outcome_odds[key].length > 2 ? (
-                            <div className="min-w-0 flex-1">
-                              <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead>
+                        <tr>
+                            <th className="text-left font-bold leading-none text-gray-900 dark:text-white">
+                                Bookmakers
+                            </th>
+                            <th className="text-left font-bold leading-none text-gray-900 dark:text-white">
+                                Odds
+                            </th>
+                            <th className="text-left font-bold leading-none text-gray-900 dark:text-white">
+                                Outcome
+                            </th>
+                        </tr>
+                    </thead>
+                <tbody>
+                    {bet.type === "arbitrage"
+                    ? Object.keys(bet.data.best_outcome_odds).map((key, index) => (
+                        <tr key={index}>
+                            <td className="py-2 flex items-center">
+                                <div className="flex-shrink-0">
+                                    <div className="relative py-1">
+                                        <img
+                                            className="rounded-md"
+                                            src={getBookmakerLogo(bet.data.best_outcome_odds[key][0])}
+                                            alt="Bookmaker Logo"
+                                            width={25}
+                                            height={25}
+                                        />
+                                    </div>
+                                </div>
+                            
+                                <div className="min-w-0 flex-1">
+                                    <span className="text-sm font-medium text-gray-900 dark:text-white truncate ml-2">
+                                        {bet.data.best_outcome_odds[key][0]}
+                                    </span>
+                                </div>
+                            </td>
+                            <td className="py-2">
+                            <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                {bet.data.best_outcome_odds[key][1]}
+                            </span>
+                            </td>
+                            <td className="py-2">
+                            {bet.data.best_outcome_odds[key].length > 2 ? (
+                                <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
                                 {key} {bet.data.best_outcome_odds[key][2]}
-                              </p>
-                            </div>
-                          ) : (
-                            <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                              {key}
-                            </p>
-                          )}
-                        </div>
-                      )
-                    )
-                  ) : (
-                    <div className="flex items-center space-x-3">
-                      <div className="flex-shrink-0">
-                        <div className="relative">
-                          <img
-                            src={getBookmakerLogo(bet.data.bookmaker)}
-                            alt="Bookmaker Logo"
-                            className="rounded-md"
-                            width={25}
-                            height={25}
-                          />
-                        </div>
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                          {bet.data.bookmaker}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                </dl>
+                                </span>
+                            ) : (
+                                <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                {key}
+                                </span>
+                            )}
+                            </td>
+                        </tr>
+                        ))
+                    : (
+                        <tr>
+                            <td className="py-2 flex items-center">
+                                <div className="flex-shrink-0">
+                                    <div className="relative py-1">
+                                        <img
+                                            className="rounded-md"
+                                            src={getBookmakerLogo(bet.data.bookmaker)}
+                                            alt="Bookmaker Logo"
+                                            width={25}
+                                            height={25}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                    <span className="text-sm font-medium text-gray-900 dark:text-white truncate ml-2">
+                                        {bet.data.bookmaker}
+                                    </span>
+                                </div>
+                                </td>
+                                <td className="py-2">
+                                <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                    {bet.data.odds}
+                                </span>
+                                </td>
+                                <td className="py-2">
+                                <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                    {bet.data.team}
+                                </span>
+                            </td>
+                        </tr>
+                        )}
+                </tbody>
+                </table>
+                
                 <div className="py-4"></div>
                 <dl>
                   <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">

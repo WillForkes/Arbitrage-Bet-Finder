@@ -21,7 +21,9 @@ export default function Home() {
         <WhatIs />
         <Features />
         <Pricing />
-        <Blog />
+        {process.env.NODE_ENV === "development" ? (
+            <Blog />
+        ) : (null)}
         <Tline />
         <Testimonials />
         <FreeTrial />

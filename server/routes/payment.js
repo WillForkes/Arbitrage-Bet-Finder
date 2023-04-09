@@ -47,8 +47,8 @@ const plans = {
             price: "price_1MosoaIHDYxT34Ib7dw5npCF"
         }
     }
-
 }
+
 
 // * Get profile data
 router.post('/create', checkUser, async (req, res) => {
@@ -85,13 +85,14 @@ router.post('/create', checkUser, async (req, res) => {
         // {CHECKOUT_SESSION_ID} is a string literal; do not change it!
         // the actual Session ID is returned in the query parameter when your customer
         // is redirected to the success page.
-        success_url: (process.env.NODE_ENV == "development") ? 
+        success_url: (environment== "development") ? 
         "http://localhost:3001/subscription/success?session_id={CHECKOUT_SESSION_ID}" :
         "https://arbster.com/subscription/success?session_id={CHECKOUT_SESSION_ID}",
-        cancel_url: (process.env.NODE_ENV == "development") ? 
+        cancel_url: (environment == "development") ? 
         "http://localhost:3001/subscription/failure" :
         "https://arbster.com/subscription/failure",
         client_reference_id: ref,
+        allow_promotion_codes: true,
     }
     if(trial == true) {
         sessionObj.subscription_data = {
@@ -99,8 +100,8 @@ router.post('/create', checkUser, async (req, res) => {
         }
     }
 
-    const session = await stripe.checkout.sessions.create(sessionObj);
 
+    const session = await stripe.checkout.sessions.create(sessionObj);
     const dbpayment = await prisma.subscription.create({
         data: {
             userId: user.authid,

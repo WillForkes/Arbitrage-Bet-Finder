@@ -5,6 +5,7 @@ import { Tooltip } from "flowbite-react";
 import Img1 from "../../../public/whatis1.jpg";
 import Img2 from "../../../public/whatis2.jpg";
 import Img3 from "../../../public/whatis3.jpg";
+import Img4 from "../../../public/whatis4.jpg";
 
 export default function Testimonials() {
   return (
@@ -29,7 +30,7 @@ export default function Testimonials() {
             </p>
         </div>
         <div className="">
-            <Image src={Img2} alt="office content 1" height={500} className="w-full rounded-lg mt-10"/>
+            <Image src={Img4} alt="office content 1" height={500} className="w-full rounded-lg mt-10"/>
           {/* <img
             height={100}
             width={100}

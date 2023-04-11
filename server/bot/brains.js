@@ -183,13 +183,16 @@ function processMatches_totals(matches, includeStartedMatches = false) {
             });
             
             if (outcomeBBookmaker) {
-              const outcomeAOdds = outcomeA.price;
-              const outcomeBOdds = outcomeBBookmaker.markets
-              .find((m) => m.key === marketType)
-              .outcomes.find((o) => o.name === outcomeB.name).price;
-              
+              const outcomeAOdds = outcomeA.price; // decimal odds of outcome A occuring
+
+              const _temp_outcomeB = outcomeBBookmaker.markets.find((m) => m.key === marketType)
+              const _temp_outcomeB_outcome = _temp_outcomeB.outcomes.find((o) => o.name === outcomeB.name)
+              const outcomeBOdds = _temp_outcomeB_outcome.price;
+
               const impliedOdds = (1 / outcomeAOdds) + (1 / outcomeBOdds);
               
+              if(outcomeA.point != outcomeB.point) continue;
+
               if (impliedOdds < 1) {
                 const boo = {
                     [outcomeA.name]: [outcomeABookmaker.title, outcomeAOdds, outcomeA.point?  outcomeA.point : null],

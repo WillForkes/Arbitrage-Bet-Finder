@@ -25,27 +25,27 @@ function ChartLoader({ d }: { d: Tracker[] }) {
         </Dropdown.Item>
       </Dropdown>
       <div className="grid grid-cols-3 grid-rows-2 gap-4">
-        <div className="bg-gray-800 p-4 rounded-lg shadow">
+        <div className="bg-gray-800 p-4 rounded-lg shadow dark:text-white">
           <h2 className="text-lg font-bold mb-4">Total Profit</h2>
           <p className="text-2xl font-bold ">${stats.totalProfit}</p>
         </div>
-        <div className="bg-gray-800 p-4 rounded-lg shadow">
+        <div className="bg-gray-800 p-4 rounded-lg shadow dark:text-white">
           <h2 className="text-lg font-bold mb-4">Total Stake</h2>
           <p className="text-2xl font-bold">${stats.totalStake}</p>
         </div>
-        <div className="bg-gray-800 p-4 rounded-lg shadow">
+        <div className="bg-gray-800 p-4 rounded-lg shadow dark:text-white">
           <h2 className="text-lg font-bold mb-4">Pending Bets</h2>
           <p className="text-2xl font-bold">{stats.pendingBets}</p>
         </div>
-        <div className="bg-gray-800 p-4 rounded-lg shadow">
+        <div className="bg-gray-800 p-4 rounded-lg shadow dark:text-white">
           <h2 className="text-lg font-bold mb-4">Potential $</h2>
           <p className="text-2xl font-bold">${stats.potentialEarnings}</p>
         </div>
-        <div className="bg-gray-800 p-4 rounded-lg shadow">
+        <div className="bg-gray-800 p-4 rounded-lg shadow dark:text-white">
           <h2 className="text-lg font-bold mb-4">ROI</h2>
           <p className="text-2xl font-bold ">{stats.ROI}</p>
         </div>
-        <div className="bg-gray-800 p-4 rounded-lg shadow">
+        <div className="bg-gray-800 p-4 rounded-lg shadow dark:text-white">
           <h2 className="text-lg font-bold mb-4">Total Bets</h2>
           <p className="text-2xl font-bold">{stats.totalBets}</p>
         </div>

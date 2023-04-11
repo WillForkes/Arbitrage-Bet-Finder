@@ -75,7 +75,7 @@ export default function BetLoader({ bets }: props) {
             <span className="font-bold tracking-wider uppercase dark:text-primary-700">
               Bet Tracker
             </span>
-            <h2 className="text-4xl font-bold lg:text-5xl">
+            <h2 className="text-4xl font-bold lg:text-5xl dark:text-white">
               You have no tracked bets!
             </h2>
           </div>

@@ -7,7 +7,7 @@
     "deploy": "npx prisma migrate deploy",
     "dev": "npm run generate && nodemon --watch \"*\" --ext \"js,json\" --exec \"node app.js\"",
     "build": "npm run generate",
-    "start": "npm run build && node app.js"
+    "start": "npm run build && node ./bin/www"
   },
   "dependencies": {
     "@prisma/client": "^4.11.0",

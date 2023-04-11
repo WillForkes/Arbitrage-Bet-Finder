@@ -136,20 +136,21 @@ app.use(function(err, req, res, next) {
     }       
 });
 
-var PORT = process.env.PORT || 3000
+// var PORT = process.env.PORT || 3000
 
-schedule.scheduleJob('*/5 * * * *', async () => {
-    console.log('Running Scraper');
-    try {
-        await axios.get('http://localhost:' + PORT + '/scraper/run')
-    } catch(e) {
-        console.log(e)
-    }
-});
+// app.listen(PORT, () => {
+//     console.log("listening on port" + process.env.PORT)
+// })
 
-
-app.listen(PORT, () => {
-    console.log("listening on port" + process.env.PORT)
-})
+if(process.env.NODE_ENV != "development") {
+    schedule.scheduleJob('*/5 * * * *', async () => {
+        console.log('Running Scraper');
+        try {
+            await axios.get('http://localhost:' + PORT + '/scraper/run')
+        } catch(e) {
+            console.log(e)
+        }
+    });
+}
 
 module.exports = app;

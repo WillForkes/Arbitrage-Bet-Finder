@@ -5,18 +5,24 @@ import Link from "next/link";
 import { User } from "@/types";
 import Image from "next/image";
 import Logo from "../../../public/arbster.png";
+import { AlertContext } from "@/pages/_app";
+
 export default function Blog() {
     const user: User | null = useContext(UserContext).user;
+    const alertContext = useContext(AlertContext);
 
   return ( 
-    <section id="blog"  className="bg-white dark:bg-gray-900">
-    <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+    <section id="blog"  className="bg-white dark:bg-gray-800 pt-8">
+    <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-8 lg:px-6">
         <div className="mx-auto max-w-screen-sm text-center lg:mb-16 mb-8">
-            <h2 className="mb-4 text-3xl lg:text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Our Blog</h2>
-            <p className="font-light text-gray-500 sm:text-xl dark:text-gray-400">Guides, tips and information relating to Arbster and sports betting</p>
+            <span className="font-bold tracking-wider uppercase dark:text-primary-700">
+                Information
+            </span>
+            <h2 className="mb-4 text-3xl lg:text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">How do I make money with Arbster?</h2>
+            <p className="font-light text-gray-500 sm:text-xl dark:text-gray-400">A great place to start before diving in.</p>
         </div> 
         <div className="grid gap-8 lg:grid-cols-2">
-            <article className="p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+            <article className="p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-900 dark:border-gray-700">
                 <div className="flex justify-between items-center mb-5 text-gray-500">
                     <span className="bg-primary-100 text-primary-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-primary-200 dark:text-primary-800">
                         <svg className="mr-1 w-3 h-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path></svg>
@@ -40,7 +46,7 @@ export default function Blog() {
                     </Link>
                 </div>
             </article> 
-            <article className="p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+            <article className="p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-900 dark:border-gray-700">
                 <div className="flex justify-between items-center mb-5 text-gray-500">
                     <span className="bg-primary-100 text-primary-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-primary-200 dark:text-primary-800">
                         <svg className="mr-1 w-3 h-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z" clipRule="evenodd"></path><path d="M15 7h1a2 2 0 012 2v5.5a1.5 1.5 0 01-3 0V7z"></path></svg>
@@ -65,9 +71,21 @@ export default function Blog() {
                     </Link>
                 </div>
             </article>
-
-        </div>  
+        </div> 
     </div>
+    <div className="mx-auto max-w-screen-sm text-center pb-16">
+        <button
+            className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
+            onClick={() => {
+                alertContext?.setAlert({
+                    msg: "Our blog is currently under construction. Please check back later.",
+                    error: true,
+                  });
+            }}
+            >
+            See More
+        </button>
+    </div> 
   </section>
   );
 }

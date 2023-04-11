@@ -220,10 +220,6 @@ export default function Pricing() {
               </li>
               <li className="flex items-center space-x-3">
                 <HiX className="dark:text-red-600"/>
-                <span>Free unique tips, tricks and tutorial guides</span>
-              </li>
-              <li className="flex items-center space-x-3">
-                <HiX className="dark:text-red-600"/>
                 <span>Discord Server Custom Role</span>
               </li>
               <li className="flex items-center space-x-3">
@@ -413,7 +409,14 @@ export default function Pricing() {
                 <span>SMS bet notifications</span>
               </li>
               <li className="flex items-center space-x-3">
-                <HiX className="dark:text-red-600"/>
+              <svg
+                  className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path>
+                </svg>
                 <span>Prioritised support</span>
               </li>
               <li className="flex items-center space-x-3">
@@ -433,11 +436,6 @@ export default function Pricing() {
               <li className="flex items-center space-x-3">
                 <HiX className="dark:text-red-600"/>
                 <span>API Access</span>
-              </li>
-              
-              <li className="flex items-center space-x-3">
-                <HiX className="dark:text-red-600"/>
-                <span>Free unique tips, tricks and tutorial guides</span>
               </li>
               <li className="flex items-center space-x-3">
                 <HiX className="dark:text-red-600"/>
@@ -501,7 +499,7 @@ export default function Pricing() {
 
             {canActivateTrial() ? (
                 <div className="flex mb-4 mx-auto flex-wrap gap-2">
-                    <Badge icon={HiX}>
+                    <Badge color="red" icon={HiX}>
                         5 Day Free Trial Available
                     </Badge>
                 </div>
@@ -624,7 +622,7 @@ export default function Pricing() {
                 <span>SMS bet notifications</span>
               </li>
               <li className="flex items-center space-x-3">
-                                <svg
+                <svg
                   className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400"
                   fill="currentColor"
                   viewBox="0 0 20 20"
@@ -674,17 +672,6 @@ export default function Pricing() {
                 <span>API Access</span>
               </li>
               
-              <li className="flex items-center space-x-3">
-                                <svg
-                  className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path>
-                </svg>
-                <span>Free unique tips, tricks and tutorial guides</span>
-              </li>
               <li className="flex items-center space-x-3">
                                 <svg
                   className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400"

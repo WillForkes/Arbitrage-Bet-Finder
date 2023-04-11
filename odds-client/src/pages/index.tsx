@@ -19,8 +19,8 @@ export default function Home() {
         <Hero />
         <Stats/>
         <Blog />
-        <WhatIs />
         <Features />
+        <WhatIs />
         <Pricing />
         <Tline />
         <Testimonials />

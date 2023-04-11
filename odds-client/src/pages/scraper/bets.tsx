@@ -29,7 +29,7 @@ export default function Bets() {
                 Risk free betting
             </h2> */}
         <Link
-          href="/FAQ"
+          href="/blog/using-arbitrage-and-positive-ev-tool"
           className="inline-flex justify-between items-center py-1 px-1 pr-4 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
           role="alert"
         >

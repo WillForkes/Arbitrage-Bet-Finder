@@ -3,7 +3,7 @@ import React from "react";
 
 export default function Timeline() {
   return (
-    <section className="bg-white dark:bg-gray-900 p-16">
+    <section className="bg-white dark:bg-gray-800 p-16">
         <div className="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
             <span className="font-bold tracking-wider uppercase dark:text-primary-700">
             Timeline

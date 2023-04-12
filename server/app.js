@@ -146,7 +146,7 @@ if(process.env.NODE_ENV != "development") {
     schedule.scheduleJob('*/5 * * * *', async () => {
         console.log('Running Scraper');
         try {
-            await axios.get('http://localhost:3000/scraper/run')
+            await axios.get('https://api.arbster.com/scraper/run')
         } catch(e) {
             console.log(e)
         }

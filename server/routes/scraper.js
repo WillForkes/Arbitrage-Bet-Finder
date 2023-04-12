@@ -530,6 +530,10 @@ async function sendBatchNotifications(notifications) {
     notifications.forEach(noti => {
         const sendTo = noti.sendTo;
 
+        if(sendTo == undefined || sendTo.length == 0) {
+            return;
+        }
+
         // generate lists of user ids for this notification to be sent to
         let userids_sms = sendTo.map(o => {
             if (o.sms == true) {

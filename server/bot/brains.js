@@ -171,23 +171,29 @@ function processMatches_totals(matches, includeStartedMatches = false) {
         if(marketType !== "totals") continue;
         
         for (let i = 0; i < marketOutcomes.length; i++) {
+          const outcomeABookmaker = bookmaker;
           const outcomeA = marketOutcomes[i];
 
           for (let j = i+1; j < marketOutcomes.length; j++) {
-            const outcomeB = marketOutcomes[j];
-            const outcomeABookmaker = bookmaker;
+            const _outcome_b_name = marketOutcomes[j].name
+            const _outcome_b_points = marketOutcomes[j].point
+
             const outcomeBBookmaker = match.bookmakers.find((bk) => {
               return bk.key !== bookmaker.key 
-              && bk.markets.some((m) => m.key === marketType 
-              && m.outcomes.some((o) => o.name === outcomeB.name));
-            });
-            
+              && bk.markets.some((m) => m.key === "totals" 
+              && m.outcomes.some((o) => o.name === _outcome_b_name
+              && o.point === _outcome_b_points));
+            });            
+
             if (outcomeBBookmaker) {
               const outcomeAOdds = outcomeA.price; // decimal odds of outcome A occuring
 
-              const _temp_outcomeB = outcomeBBookmaker.markets.find((m) => m.key === marketType)
-              const _temp_outcomeB_outcome = _temp_outcomeB.outcomes.find((o) => o.name === outcomeB.name)
-              const outcomeBOdds = _temp_outcomeB_outcome.price;
+              outcomeB = {
+                    name: _outcome_b_name, 
+                    point: _outcome_b_points, 
+                    price: outcomeBBookmaker.markets.find((m) => m.key === "totals").outcomes.find((o) => o.name === _outcome_b_name && o.point === _outcome_b_points).price
+                }
+              const outcomeBOdds = outcomeB.price
 
               const impliedOdds = (1 / outcomeAOdds) + (1 / outcomeBOdds);
               

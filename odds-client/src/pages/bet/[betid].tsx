@@ -7,10 +7,12 @@ import { getBookmakerLogo } from "../../utils";
 import Modal from "@/components/Modal";
 import EVModal from "@/components/EVModal";
 import { EV } from "@/types";
+import SimulateModal from "@/components/SimulateModal";
 
 export default function BetPage() {
   const router = useRouter();
   const [modal, setModal] = useState(false);
+  const [simModal, setSimModal] = useState(false)
   const [bankroll, setBankroll] = useState<null | number>(null);
   const [evm, setEV] = useState(false);
   const [modalBetId, setModalBetId] = useState(0);
@@ -47,6 +49,10 @@ export default function BetPage() {
     setModal(false);
   }
 
+  function closeSimModal() {
+    setSimModal(false);
+  }
+
   function calculateRecommendedBetSize(bet: EV, totalBankroll: number): string {
     // kelly multiplier =  (win prob * net odds of bet) - (lose prob) / net odds of bet
     const winProb = bet.data.winProbability;
@@ -75,6 +81,7 @@ export default function BetPage() {
         />
       )}
       <section className="bg-white dark:bg-gray-900">
+        <SimulateModal isVisible={simModal} id={bet.id} closeModal={closeSimModal} />
         <div className="mx-auto max-w-screen-md py-12">
           <Card>
             {bet ? (
@@ -273,6 +280,12 @@ We are not liable for any losses incurred due to discrepancies between our displ
                 </div>
 
                 <div className="flex items-center space-x-4">
+                    <button
+                    onClick={() => setSimModal(true)}
+                    className=" mr-4 text-white inline-flex items-center bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800"
+                    >
+                        Simulate EV Bet     
+                    </button>
                   {bet.type == "arbitrage" || evm == true ? (
                     <button
                       onClick={() => setModal(true)}
@@ -306,6 +319,7 @@ We are not liable for any losses incurred due to discrepancies between our displ
                       >
                         +
                       </button>
+                      
                     </div>
                   )}
                 </div>

@@ -405,7 +405,8 @@ function simulateBet(n, data) {
         totalBet += betAmount;
 
         if(betResult == "win"){
-            const w = (betAmount * odds) - betAmount;
+            let w = (betAmount * odds) - betAmount;
+            w = w * 0.95 // 5% win fee
             betsWon++;
             amountWon += w;
         } else {

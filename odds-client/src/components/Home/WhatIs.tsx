@@ -19,13 +19,13 @@ export default function Testimonials() {
             Arbitrage betting <p className="dark: text-primary-700 ml-2"> is not gambling</p>
           </h2>
             <p className="mb-4">Arbster offers a unique approach to sports betting with arbitrage betting, 
-            also known as sure betting. Despite the term &quot;betting,&quot; it's not about gambling. 
-            Arbster's proprietary software identifies bookmakers and matches where sure bets exist, guaranteeing a profit regardless of the outcome. 
+            also known as sure betting. Despite the term &quot;betting,&quot; it&apos;s not about gambling. 
+            Arbster&apos;s proprietary software identifies bookmakers and matches where sure bets exist, guaranteeing a profit regardless of the outcome. 
             With Arbster, you simply place bets on both sides and let the results follow. 
-            It's a surefire way to make profit from sports betting without relying on luck.
+            It&apos;s a surefire way to make profit from sports betting without relying on luck.
             </p>
             <p className="mb-4">
-            At Arbster, we offer cutting-edge tools for sports bettors. Our flagship products, the arbitrage betting tool and positive EV betting tool, use proven mathematical models and real-time data to identify profitable opportunities. With our arbitrage betting tool, users can bet on both sides of a game with different sportsbooks, guaranteeing a profit. Our positive EV betting tool identifies situations where sportsbook odds are better than the true odds, allowing users to generate long-term profits. Whether you're a seasoned bettor or just starting out, Arbster is your ideal partner for achieving your sports betting goals.            
+            At Arbster, we offer cutting-edge tools for sports bettors. Our flagship products, the arbitrage betting tool and positive EV betting tool, use proven mathematical models and real-time data to identify profitable opportunities. With our arbitrage betting tool, users can bet on both sides of a game with different sportsbooks, guaranteeing a profit. Our positive EV betting tool identifies situations where sportsbook odds are better than the true odds, allowing users to generate long-term profits. Whether you&apos;re a seasoned bettor or just starting out, Arbster is your ideal partner for achieving your sports betting goals.            
             </p>
             
             <Link className="float-right text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900" href="/#pricing">Start Your Free Trial Now</Link>

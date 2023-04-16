@@ -6,45 +6,33 @@ import Img1 from "../../../public/whatis1.jpg";
 import Img2 from "../../../public/whatis2.jpg";
 import Img3 from "../../../public/whatis3.jpg";
 import Img4 from "../../../public/whatis4.jpg";
+import HowWorks from "../../../public/how-works.webp";
+
+import Link from "next/link";
 
 export default function Testimonials() {
   return (
     <section className="bg-white dark:bg-gray-800 py-12">
       <div className="gap-16 items-center py-8 px-4 mx-auto max-w-screen-xl lg:grid lg:grid-cols-2 lg:py-16 lg:px-6">
         <div className="font-light text-gray-500 sm:text-lg dark:text-gray-400">
-          <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
-            We didn&apos;t reinvent the wheel
+          <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white flex">
+            Arbitrage betting <p className="dark: text-primary-700 ml-2"> is not gambling</p>
           </h2>
+            <p className="mb-4">Arbster offers a unique approach to sports betting with arbitrage betting, 
+            also known as sure betting. Despite the term &quot;betting,&quot; it's not about gambling. 
+            Arbster's proprietary software identifies bookmakers and matches where sure bets exist, guaranteeing a profit regardless of the outcome. 
+            With Arbster, you simply place bets on both sides and let the results follow. 
+            It's a surefire way to make profit from sports betting without relying on luck.
+            </p>
+            <p className="mb-4">
+            At Arbster, we offer cutting-edge tools for sports bettors. Our flagship products, the arbitrage betting tool and positive EV betting tool, use proven mathematical models and real-time data to identify profitable opportunities. With our arbitrage betting tool, users can bet on both sides of a game with different sportsbooks, guaranteeing a profit. Our positive EV betting tool identifies situations where sportsbook odds are better than the true odds, allowing users to generate long-term profits. Whether you're a seasoned bettor or just starting out, Arbster is your ideal partner for achieving your sports betting goals.            
+            </p>
+            
+            <Link className="float-right text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900" href="/#pricing">Start Your Free Trial Now</Link>
 
-            <p className="mb-4">
-            At Arbster, we are passionate about providing sports bettors with the tools they need to succeed in the world of sports betting. Our flagship products, the arbitrage betting tool and the positive EV betting tool, are designed to help our users identify profitable betting opportunities.
-            </p>
-            <p className="mb-4">
-            Using proven mathematical models and real-time data, our arbitrage betting tool scans various sportsbooks to find discrepancies in the odds. By betting on both sides of a game with different sportsbooks, our users can guarantee a profit. This powerful tool has helped our users generate consistent profits and is a key reason why Arbster is a leading name in the world of sports betting.
-            </p>
-            <p className="mb-4">
-            Our positive EV betting tool is designed to identify situations where the odds offered by a sportsbook are better than the true odds of an event occurring. By placing bets in these situations, our users can achieve a positive expected value (EV) and generate profits over the long term.
-            </p>
-            <p>
-            At Arbster, we are committed to providing our users with the best possible tools for sports betting. Whether you are a seasoned bettor or just starting out, our innovative platform and unwavering commitment to excellence make us the perfect partner to help you achieve your sports betting objectives.
-            </p>
         </div>
         <div className="">
-            <Image src={Img4} alt="office content 1" height={500} className="w-full rounded-lg mt-10"/>
-          {/* <img
-            height={100}
-            width={100}
-            className="w-full rounded-lg"
-            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/content/office-long-2.png"
-            alt="office content 1"
-          />
-          <img
-            height={100}
-            width={100}
-            className="mt-4 w-full lg:mt-10 rounded-lg"
-            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/content/office-long-1.png"
-            alt="office content 2"
-          /> */}
+            <Image src={HowWorks} alt="office content 1" height={600} className="w-full rounded-lg mt-10"/>
         </div>
       </div>
     </section>

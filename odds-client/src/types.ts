@@ -59,6 +59,19 @@ export type User = {
     }
 }
 
+export type SimResult = {
+    betData: {
+        ev: string;
+        match_name: string;
+        odds: number;
+        noVigOdds: number;
+    }
+    betsLost: number;
+    betsWon: number;
+    roiPercent: string;
+    simulatedBets: number;
+}
+
 export type Bet = {
     data: {
         match_name: string;

@@ -6,6 +6,7 @@ import { Tabs } from "flowbite-react";
 import SpreadOutcome from "./SpreadOutcome";
 import HedgeOutcome from "./HedgeOutcome";
 import { Card} from "flowbite-react";
+import { SimResult } from "@/types";
 
 export default function SimulateModal({
   isVisible,
@@ -18,7 +19,7 @@ export default function SimulateModal({
 }) {
   const alertContext = useContext(AlertContext);
   const [bets, setBets] = useState<number>(1000);
-  const [simResults, setSimResults] = useState(null);
+  const [simResults, setSimResults] = useState<SimResult | null>(null);
 
   async function simulateEV() {
     try {
@@ -86,7 +87,7 @@ export default function SimulateModal({
                         Odds
                     </dt>
                     <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
-                        {simResults.betData.odds}
+                        {simResults?.betData.odds}
                     </dd>
                 </div>
                 <div>

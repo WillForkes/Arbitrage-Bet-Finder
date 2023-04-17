@@ -15,8 +15,8 @@ export default function blog1() {
                             <div className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
                                 <Image className="mr-4 w-16 h-16 rounded-full" src={Logo} alt="Logo" />
                                 <div>
-                                    <a href="#" rel="author" className="text-xl font-bold text-gray-900 dark:text-white">Arbster Team</a>
-                                    <p className="text-base font-light text-gray-500 dark:text-gray-400">CEO of Arbster</p>
+                                    <a href="#" rel="author" className="text-xl font-bold text-gray-900 dark:text-white">Arbster</a>
+                                    <p className="text-base font-light text-gray-500 dark:text-gray-400">Arbster Team</p>
                                     <p className="text-base font-light text-gray-500 dark:text-gray-400">Feb. 8, 2022</p>
                                 </div>
                             </div>

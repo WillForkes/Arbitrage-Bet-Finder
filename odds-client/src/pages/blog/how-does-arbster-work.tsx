@@ -64,7 +64,7 @@ export default function blog1() {
                         so you can make informed decisions and keep your winning streak going.
                         </li>
                     </ol>
-                    <Link href="/#blog"
+                    <Link href="/blog"
                         className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
                         Back To Blog
                     </Link>     

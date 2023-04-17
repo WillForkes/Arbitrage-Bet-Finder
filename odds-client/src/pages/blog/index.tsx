@@ -20,13 +20,20 @@ export default function Blog() {
             difficulty: "Beginner",
             link: "/blog/using-arbitrage-and-positive-ev-tool"
         },
+        {
+            title: "What is a positive EV bet?",
+            description: "In this blog post, we will explore the concept of positive Expected Value (EV) betting, where you place bets with higher potential payouts than the event's likelihood of occurring. This strategy can lead to long-term profits by consistently making such bets. We will discuss how positive EV bets give you an advantage, increase your chances of making a profit, and suggest arbitrage betting as a no-risk strategy for maximizing positive EV bets.",
+            type: "Information",
+            difficulty: "Intermediate",
+            link: "/blog/what-is-a-positive-ev-bet"
+        },
         
     ]
   return (
     <section id="blog"  className="bg-white dark:bg-gray-900 pt-8">
         <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-8 lg:px-6">
             {blogs.map((blog) => (
-                <article key={blog.title} className="mb-4 p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-900 dark:border-gray-700">
+                <article key={blog.title} className="mb-4 p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
                     <div className="flex justify-between items-center mb-5 text-gray-500">
                         <span className="bg-primary-100 text-primary-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-primary-200 dark:text-primary-800">
                             <svg className="mr-1 w-3 h-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z" clipRule="evenodd"></path><path d="M15 7h1a2 2 0 012 2v5.5a1.5 1.5 0 01-3 0V7z"></path></svg>

@@ -10,6 +10,7 @@ import { UserContext } from "@/pages/_app";
 import { User } from "@/types";
 import { Card } from "flowbite-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Ev() {
   const { data, error } = useSWR("/scraper/all?type=ev", getter, {
@@ -48,14 +49,20 @@ export default function Ev() {
                         ) : (null)}
 
                         {/* CHANGE LINK HERE TO BLOGS PAGE */}
-                        <Link href="/#blog" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                        <Link href="/blog/what-is-a-positive-ev-bet" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
                             Read the blog
                             <svg className="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
                         </Link>  
                     </div>
                     <div className="hidden lg:mt-0 lg:col-span-5 lg:flex">
-                        {/* <img src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/hero/phone-mockup.png" alt="mockup" /> */}
-                        <iframe width="560" height="315" src="https://www.youtube.com/embed/nsl_KBjTC6c" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>            
+                        {/* <video autoPlay loop style={{ width: '500px', height: '500px' }}>
+                            <source src={video1} />
+                        </video>
+                         */}
+                        <iframe width="560" height="315" src="https://streamable.com/e/zs3hsl" frameBorder="0" allowFullScreen>
+                        </iframe>
+
+                        {/* <iframe width="560" height="315" src="https://www.youtube.com/embed/KXF81M6U-b8?start=4" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe> */}
                     </div>           
                 </div>
             </Card>

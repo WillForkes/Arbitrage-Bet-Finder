@@ -274,7 +274,7 @@ export default function EVLoader({ bets, showBets, user }: props) {
                       scope="row"
                       className="items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                      {showBets ? bet.data.key : "MARKET"}
+                      {showBets ? bet.data.key.replace("_", " ") : "MARKET"}
                     </th>
                     <th
                       scope="row"

@@ -15,8 +15,8 @@ export default function blog1() {
                             <div className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
                                 <Image className="mr-4 w-16 h-16 rounded-full" src={Logo} alt="Logo" />
                                 <div>
-                                    <a href="#" rel="author" className="text-xl font-bold text-gray-900 dark:text-white">Arbster Team</a>
-                                    <p className="text-base font-light text-gray-500 dark:text-gray-400">CEO of Arbster</p>
+                                    <a href="#" rel="author" className="text-xl font-bold text-gray-900 dark:text-white">Arbster</a>
+                                    <p className="text-base font-light text-gray-500 dark:text-gray-400">Arbster Team</p>
                                     <p className="text-base font-light text-gray-500 dark:text-gray-400">Feb. 8, 2022</p>
                                 </div>
                             </div>
@@ -64,7 +64,7 @@ export default function blog1() {
                         so you can make informed decisions and keep your winning streak going.
                         </li>
                     </ol>
-                    <Link href="/#blog"
+                    <Link href="/blog"
                         className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
                         Back To Blog
                     </Link>     

@@ -1,6 +1,6 @@
 import { Bet, EV, User } from "@/types";
 import { dateFormat, filterRegion } from "@/utils";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Image from "next/image";
 import EVModal from "./EVModal";
 import { Button, Table, TextInput } from "flowbite-react";
@@ -11,6 +11,7 @@ import Pagination from "./Pagination";
 import { getBookmakerLogo } from "../utils";
 import { Tooltip, Badge, Spinner } from "flowbite-react";
 import Link from "next/link";
+import { UserContext } from "@/pages/_app";
 
 // example
 // {"match_id":"06f491453cb35e153d61c67257f3cb3b","match_name":"Bayern Munich v. Borussia Dortmund","match_start_time":1680366600,"hours_to_start":267.19723500000106,"league":"soccer_germany_bundesliga","key":"h2h","bookmaker":"Betsson","winProbability":0.18587360594795543,"odds":6,"ev":"0.115","region":"eu"}
@@ -35,6 +36,9 @@ export default function EVLoader({ bets, showBets, user }: props) {
   const [paginatedBets, setPaginatedBets] = useState<EV[]>(bets);
   const [bankroll, setBankroll] = useState(0);
   const [matchSearch, setMatchSearch] = useState("");
+
+  // for currency 
+  const u = useContext(UserContext);
 
   function searchBetsByMatch(e: any) {
     if (user) {
@@ -353,7 +357,7 @@ export default function EVLoader({ bets, showBets, user }: props) {
                     <td className="px-10 py-2 pl-2">
                       {showBets && bankroll != 0 && !Number.isNaN(bankroll) ? (
                         <Badge color="success">
-                          ${calculateRecommendedBetSize(bet, bankroll) + ".00"}
+                          {u.currency}{calculateRecommendedBetSize(bet, bankroll) + ".00"}
                         </Badge>
                       ) : (
                         <Badge color="warning">Input Bankroll</Badge>

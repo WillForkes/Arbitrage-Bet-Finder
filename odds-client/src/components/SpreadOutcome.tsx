@@ -7,7 +7,12 @@ export default function SpreadOutcome({ c }: { c: SpreadStake }) {
   const user = useContext(UserContext);
   return (
     <div className="">
-      <p>Profit ${c?.profit}</p>
+      
+      {c ? (
+        <p>Profit: {user.currency}{c?.profit}</p>
+      ) : (null)}
+      
+
       {c?.outcomes.map((outcome: Outcome, i) => (
         <p key={i}>
           {outcome.outcome} wins: {user.currency + outcome.stake} on{" "}

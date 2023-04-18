@@ -28,7 +28,10 @@ export default function Testimonials() {
             At Arbster, we offer cutting-edge tools for sports bettors. Our flagship products, the arbitrage betting tool and positive EV betting tool, use proven mathematical models and real-time data to identify profitable opportunities. With our arbitrage betting tool, users can bet on both sides of a game with different sportsbooks, guaranteeing a profit. Our positive EV betting tool identifies situations where sportsbook odds are better than the true odds, allowing users to generate long-term profits. Whether you&apos;re a seasoned bettor or just starting out, Arbster is your ideal partner for achieving your sports betting goals.            
             </p>
             
-            <Link className="float-right text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900" href="/#pricing">Start Your Free Trial Now</Link>
+            <Link 
+            className="float-right text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900" 
+            href="/#pricing">Start Your Free Trial Now
+            </Link>
 
         </div>
         <div className="">

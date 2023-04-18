@@ -8,11 +8,13 @@ import { createContext, useState } from "react";
 import useSWR from "swr";
 import Alert from "@/components/Alert";
 import Script from "next/script";
+import { regionCurrency } from "@/utils";
 
 export const UserContext = createContext<{
   user: User | null;
   auth: boolean | null;
-}>({ user: null, auth: false });
+  currency: string;
+}>({ user: null, auth: false, currency: "" });
 
 export const AlertContext = createContext<{
   msg: string | null;
@@ -56,7 +58,13 @@ export default function App({ Component, pageProps }: AppProps) {
         `}
       </Script>
       <title>Arbster - #1 Betting Tools</title>
-      <UserContext.Provider value={{ user: user, auth: isAuth }}>
+      <UserContext.Provider
+        value={{
+          user: user,
+          auth: isAuth,
+          currency: user ? regionCurrency(user.dbuser.region) : "",
+        }}
+      >
         <AlertContext.Provider
           value={{
             msg: errorState.msg,

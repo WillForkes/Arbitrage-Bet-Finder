@@ -1,5 +1,5 @@
 import { Tracker } from "@/types";
-import { dateFormat, getBookmakerLogo } from "@/utils";
+import { dateFormat, getBookmakerLogo, regionCurrency } from "@/utils";
 import React, { useState, useContext } from "react";
 import { deleteTrackedBet, updateTrackerStatus } from "@/api";
 import Image from "next/image";
@@ -110,7 +110,8 @@ export default function BetLoader({ bets }: props) {
                     <span className="text-gray-500">Total profit:</span>
                     <span className="dark:text-white">
                       {" "}
-                      ${calculateTotalProfit(bets)}
+                      {regionCurrency(user?.dbuser.region!) +
+                        calculateTotalProfit(bets)}
                     </span>
                   </h5>
                 </div>

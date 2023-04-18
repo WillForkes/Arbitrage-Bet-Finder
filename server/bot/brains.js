@@ -245,93 +245,93 @@ function processPositiveEV(matches, includeStartedMatches = true) {
         for (let j = 0; j < match.bookmakers.length; j++) {
         let bookmaker = match.bookmakers[j];
 
-        for (let k = 0; k < bookmaker.markets.length; k++) {
-            let market = bookmaker.markets[k];
+            for (let k = 0; k < bookmaker.markets.length; k++) {
+                let market = bookmaker.markets[k];
 
-            let homeTeamOutcome = market.outcomes.find(
-                (outcome) => outcome.name === match.home_team || market.key === "totals" && outcome.name === "Over"
-            );
-            let awayTeamOutcome = market.outcomes.find(
-                (outcome) => outcome.name === match.away_team || market.key === "totals" && outcome.name === "Under"
-            );
-            let drawOutcome = market.outcomes.find(
-                (outcome) => outcome.name.toLowerCase() === "draw"
-            );
+                let homeTeamOutcome = market.outcomes.find(
+                    (outcome) => outcome.name === match.home_team || market.key === "totals" && outcome.name === "Over"
+                );
+                let awayTeamOutcome = market.outcomes.find(
+                    (outcome) => outcome.name === match.away_team || market.key === "totals" && outcome.name === "Under"
+                );
+                let drawOutcome = market.outcomes.find(
+                    (outcome) => outcome.name.toLowerCase() === "draw"
+                );
 
-            if(!homeTeamOutcome || !awayTeamOutcome) continue;
+                if(!homeTeamOutcome || !awayTeamOutcome) continue;
 
-            const hasDraw = drawOutcome? true : false;
+                const hasDraw = drawOutcome? true : false;
 
-            // * this is the implied probability of the outcome, with the bookmaker's vig included (so not accurate)
-            ht_impliedProbability = 1 / homeTeamOutcome.price;
-            at_impliedProbability = 1 / awayTeamOutcome.price;
-            draw_impliedProbability = hasDraw ? 1 / drawOutcome.price : 0;
-            sum_impliedProbability = ht_impliedProbability + at_impliedProbability + draw_impliedProbability;
+                // * this is the implied probability of the outcome, with the bookmaker's vig included (so not accurate)
+                ht_impliedProbability = 1 / homeTeamOutcome.price;
+                at_impliedProbability = 1 / awayTeamOutcome.price;
+                draw_impliedProbability = hasDraw ? 1 / drawOutcome.price : 0;
+                sum_impliedProbability = ht_impliedProbability + at_impliedProbability + draw_impliedProbability;
 
-            // * this is the true probability of the outcome, without the bookmaker's vig in percentage
-            ht_noVig = ht_impliedProbability / sum_impliedProbability;
-            at_noVig = at_impliedProbability / sum_impliedProbability;
-            draw_noVig = hasDraw ? draw_impliedProbability / sum_impliedProbability : 0;
+                // * this is the true probability of the outcome, without the bookmaker's vig in percentage
+                ht_noVig = ht_impliedProbability / sum_impliedProbability;
+                at_noVig = at_impliedProbability / sum_impliedProbability;
+                draw_noVig = hasDraw ? draw_impliedProbability / sum_impliedProbability : 0;
 
-            ht_noVig_odds = 1 / ht_noVig;
-            at_noVig_odds = 1 / at_noVig;
-            draw_noVig_odds = hasDraw ? 1 / draw_noVig : 0;
-            
+                ht_noVig_odds = 1 / ht_noVig;
+                at_noVig_odds = 1 / at_noVig;
+                draw_noVig_odds = hasDraw ? 1 / draw_noVig : 0;
+                
 
-            // (Amount won per bet * probability of winning) – (Amount lost per bet * probability of losing)
-            ht_EV = ((homeTeamOutcome.price - 1) * ht_noVig) - (1*(1-ht_noVig))
-            at_EV = ((awayTeamOutcome.price - 1) * at_noVig) - (1*(1-at_noVig))
-            draw_EV = hasDraw ? ((drawOutcome.price - 1) * draw_noVig) - (1*(1-draw_noVig)) : 0
+                // (Amount won per bet * probability of winning) – (Amount lost per bet * probability of losing)
+                ht_EV = ((homeTeamOutcome.price - 1 - 0.05) * ht_noVig) - (1*(1-ht_noVig))
+                at_EV = ((awayTeamOutcome.price - 1 - 0.05) * at_noVig) - (1*(1-at_noVig))
+                draw_EV = hasDraw ? ((drawOutcome.price - 1 - 0.05) * draw_noVig) - (1*(1-draw_noVig)) : 0
 
-            let outcomeToBetOn
-            let winProbability
-            let odds
-            let noVigOdds 
-            let ev
+                let outcomeToBetOn
+                let winProbability
+                let odds
+                let noVigOdds 
+                let ev
 
-            let shouldBet = (ht_EV > 0 || at_EV > 0 || draw_EV > 0) ? true : false;
-            
-            if(ht_EV > 0){
-                outcomeToBetOn = match.home_team
-                winProbability = ht_noVig
-                odds = homeTeamOutcome.price
-                noVigOdds = ht_noVig_odds
-                ev = ht_EV
-            } else if(at_EV > 0){
-                outcomeToBetOn = match.away_team
-                winProbability = at_noVig
-                odds = awayTeamOutcome.price
-                noVigOdds = at_noVig_odds
-                ev = at_EV
-            } else if(draw_EV > 0){
-                outcomeToBetOn = "Draw"
-                winProbability = draw_noVig
-                odds = drawOutcome.price
-                noVigOdds = draw_noVig_odds
-                ev = draw_EV
-            }
-            
-            if(shouldBet) {
-                const matchName = `${match.home_team} v. ${match.away_team}`;
-                const timeToStart = (startTime - Date.now() / 1000) / 3600;
-                const league = match.sport_key;
+                let shouldBet = (ht_EV > 0 || at_EV > 0 || draw_EV > 0) ? true : false;
+                
+                if(ht_EV > 0){
+                    outcomeToBetOn = match.home_team
+                    winProbability = ht_noVig
+                    odds = homeTeamOutcome.price
+                    noVigOdds = ht_noVig_odds
+                    ev = ht_EV
+                } else if(at_EV > 0){
+                    outcomeToBetOn = match.away_team
+                    winProbability = at_noVig
+                    odds = awayTeamOutcome.price
+                    noVigOdds = at_noVig_odds
+                    ev = at_EV
+                } else if(draw_EV > 0){
+                    outcomeToBetOn = "Draw"
+                    winProbability = draw_noVig
+                    odds = drawOutcome.price
+                    noVigOdds = draw_noVig_odds
+                    ev = draw_EV
+                }
+                
+                if(shouldBet) {
+                    const matchName = `${match.home_team} v. ${match.away_team}`;
+                    const timeToStart = (startTime - Date.now() / 1000) / 3600;
+                    const league = match.sport_key;
 
-                positiveBets.push({
-                    match_id: match.id,
-                    match_name: matchName,
-                    team: outcomeToBetOn,
-                    match_start_time: startTime,
-                    hours_to_start: timeToStart,
-                    league,
-                    key: market.key,
-                    bookmaker: bookmaker.title,
-                    winProbability: winProbability,
-                    odds: odds,
-                    noVigOdds: noVigOdds,
-                    ev: ev.toFixed(3),
-                    region: match.region
-                });
-            }
+                    positiveBets.push({
+                        match_id: match.id,
+                        match_name: matchName,
+                        team: outcomeToBetOn,
+                        match_start_time: startTime,
+                        hours_to_start: timeToStart,
+                        league,
+                        key: market.key,
+                        bookmaker: bookmaker.title,
+                        winProbability: winProbability,
+                        odds: odds,
+                        noVigOdds: noVigOdds,
+                        ev: ev.toFixed(3),
+                        region: match.region
+                    });
+                }
 
             }
         }

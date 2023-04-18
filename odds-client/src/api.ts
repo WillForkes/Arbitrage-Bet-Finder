@@ -60,6 +60,10 @@ export async function startFreeTrial(): Promise<any> {
     return await sendApiRequest("POST", "profile/startTrial", true)
 }
 
+export async function simulateEVBet(id: number, bets: number): Promise<any> {
+    return await sendApiRequest("POST", "scraper/ev/simulate", true, {betId: id, bets: bets})
+}
+
 export async function updateNotificationsA(user: {
     email: boolean,
     emaila: string,

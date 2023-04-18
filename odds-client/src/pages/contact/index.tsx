@@ -4,11 +4,16 @@ import React, { useState } from "react";
 import useSWR from "swr";
 import { getter } from "@/api";
 import { Card, TextInput, Label, Checkbox, Button, Textarea} from "flowbite-react";
+import Head from "next/head";
 
 export default function support() {
 
     return (
     <>
+        <Head>
+            <title>Arbster | Contact Us</title>
+            <meta name="description" content="This page helps users to get in contact with our support team" />
+        </Head>
         <section className="dark:bg-gray-900 py-4">
             <div className="mx-auto max-w-screen-md text-center">
                 <span className="font-bold tracking-wider uppercase dark:text-primary-700">

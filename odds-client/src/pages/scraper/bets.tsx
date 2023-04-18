@@ -8,6 +8,7 @@ import { UserContext } from "@/pages/_app";
 import { User } from "@/types";
 import Auth from "@/components/Auth";
 import Link from "next/link";
+import Head from "next/head";
 
 export default function Bets() {
   const { data, error } = useSWR("/scraper/all?type=arbitrage", getter, {
@@ -21,6 +22,10 @@ export default function Bets() {
 
   return (
     <div className="page-offset-x py-8 bg-gray-900">
+        <Head>
+            <title>Arbster | Arbitrage Tool</title>
+            <meta name="description" content="Advanced arbitrage tool for identifying profitable bet opportunities across a range of bookmakers" />
+        </Head>
       <div className="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
         {/* <span className="font-bold tracking-wider uppercase dark:text-primary-700">
                 Arbitrage Tool

@@ -55,7 +55,7 @@ export default function App({ Component, pageProps }: AppProps) {
           gtag('config', 'G-7H7GEWNWCK');
         `}
       </Script>
-      <title>Arbster - #1 Betting Tools</title>
+      <title>Arbster - Sports Betting Tools</title>
       <UserContext.Provider value={{ user: user, auth: isAuth }}>
         <AlertContext.Provider
           value={{

@@ -21,7 +21,7 @@ export default function ProfileDropdown() {
             src={Logo}
             height={60}
             className="w-8 h-8 rounded-full"
-            alt="user photo"
+            alt="User profile picture"
           />
           <span className="block text-sm">{user?.user?.auth0.nickname}</span>
           <span className="block truncate text-sm font-medium">

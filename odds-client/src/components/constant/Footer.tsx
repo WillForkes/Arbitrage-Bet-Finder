@@ -12,7 +12,7 @@ export default function Footer() {
       <div className="mx-auto w-full container p-4 sm:p-6">
         <div className="md:flex md:justify-between">
           <div className="mb-6 md:mb-0">
-            <Image src={Logo} height={65} alt="Footer logo" />
+            <Image src={Logo} height={65} alt="Footer Arbster logo" />
           </div>
           <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
             <div>

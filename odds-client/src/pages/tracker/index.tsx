@@ -9,6 +9,7 @@ import { User } from "@/types";
 import Auth from "@/components/Auth";
 import TrackedBetLoader from "@/components/TrackedBetLoader";
 import ChartLoader from "@/components/ChartLoader";
+import Head from "next/head";
 
 export default function TrackerPage() {
   const { data, error } = useSWR("/tracker/all", getter, {
@@ -19,6 +20,10 @@ export default function TrackerPage() {
 
   return (
     <div className="page-offset-x py-8 bg-gray-900">
+        <Head>
+            <title>Arbster | Bet Tracker</title>
+            <meta name="description" content="Arbsters intuitive bet tracking tool to keep a record of your betting success" />
+        </Head>
       <Auth />
       {data ? (
         <div className="rounded-md grid py-1 gap-6 grid-cols-1 mb-2">

@@ -3,6 +3,7 @@ import { Badge, Tooltip } from "flowbite-react";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "../../../public/arbster.png";
+import Head from "next/head";
 
 export default function Blog() {
     const blogs = [
@@ -31,6 +32,10 @@ export default function Blog() {
     ]
   return (
     <section id="blog"  className="bg-white dark:bg-gray-900 pt-8">
+        <Head>
+            <title>Arbster | Blog</title>
+            <meta name="description" content="Arbster's blog repository containing everything you need to know about our website and how to use our range of tools" />
+        </Head>
         <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-8 lg:px-6">
             {blogs.map((blog) => (
                 <article key={blog.title} className="mb-4 p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">

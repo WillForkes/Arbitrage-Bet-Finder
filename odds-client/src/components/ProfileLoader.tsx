@@ -238,7 +238,7 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                           <Image
                             src={Logo}
                             className="h-8 w-8 rounded-full"
-                            alt="Neil image"
+                            alt="Arbster logo"
                           />
                         </div>
                         <div className="min-w-0 flex-1">

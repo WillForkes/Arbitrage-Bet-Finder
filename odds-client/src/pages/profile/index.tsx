@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import useSWR from "swr";
 import { getter } from "@/api";
 import { Spinner } from "flowbite-react";
+import Head from "next/head";
 
 export default function Profile() {
   // Get profile data
@@ -26,6 +27,10 @@ export default function Profile() {
 
   return (
     <div>
+        <Head>
+            <title>Arbster | Profile</title>
+            <meta name="description" content="Edit and view your profile on Arbster" />
+        </Head>
       {data && invoices ? (
         <ProfileLoader
           user={user}

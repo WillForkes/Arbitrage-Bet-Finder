@@ -16,6 +16,11 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   return (
     <>
+        <Head>
+            <title>Arbster - Sports Betting Tools</title>
+            <meta name="description" content="Discover advanced online sports betting tools at Arbster, including a powerful arbitrage finder and more for maximizing your betting profits." />
+        </Head>
+        
         <Hero />
         <Stats/>
         <Blog />

@@ -11,6 +11,7 @@ import { User } from "@/types";
 import { Card } from "flowbite-react";
 import Link from "next/link";
 import Image from "next/image";
+import Head from "next/head";
 
 export default function Ev() {
   const { data, error } = useSWR("/scraper/all?type=ev", getter, {
@@ -26,6 +27,10 @@ export default function Ev() {
 
   return (
     <div className="page-offset-x py-8 bg-gray-900">
+        <Head>
+            <title>Arbster | Positive EV Tool</title>
+            <meta name="description" content="Advanced positive EV tool for identifying bets where the odds are weighed in your favour" />
+        </Head>
         <div className="mx-auto text-center mb-4 px-4">
             <Card className="rounded-md mb-2">
                 <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">

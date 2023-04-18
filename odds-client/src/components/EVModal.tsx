@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { createBet } from "@/api";
-import { AlertContext } from "@/pages/_app";
+import { AlertContext, UserContext } from "@/pages/_app";
 import { currencyCode } from "@/utils";
 
 export default function EVModal({
@@ -15,6 +15,7 @@ export default function EVModal({
   closeModal: () => void;
 }) {
   const alertContext = useContext(AlertContext);
+  const user = useContext(UserContext);
   const [stake, setStake] = useState<null | number>(null);
 
   async function updateBetSize(e: any) {
@@ -70,13 +71,13 @@ export default function EVModal({
             </button>
           </div>
           <span className="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-green-600 dark:text-green-300">
-            Recommended bet size: ${recBetSize}
+            Recommended bet size: {user.currency + recBetSize}
           </span>
           <form action="" className="max-w-sm mx-auto p-4">
             <input
               type="number"
               value={stake ? stake : ""}
-              placeholder={"Recommended: $" + recBetSize}
+              placeholder={"Recommended: " + user.currency + recBetSize}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               onChange={(e) => updateBetSize(e)}
             />

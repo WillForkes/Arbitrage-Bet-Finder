@@ -32,7 +32,7 @@ export default function EVLoader({ bets, showBets, user }: props) {
     user ? user.dbuser.region : "UK"
   );
   var b: any = filterRegion(regionFilter, bets, user ? true : false);
-  const [paginatedBets, setPaginatedBets] = useState<EV[]>(b.slice(0, 10));
+  const [paginatedBets, setPaginatedBets] = useState<EV[]>(bets);
   const [bankroll, setBankroll] = useState(0);
   const [matchSearch, setMatchSearch] = useState("");
 
@@ -51,6 +51,15 @@ export default function EVLoader({ bets, showBets, user }: props) {
       );
     }
   }
+
+  useEffect(() => {
+    if (user) {
+      setPaginatedBets(
+        filterRegion(regionFilter, bets, user ? true : false) as EV[]
+      );
+      setRegionFilter(user.dbuser.region);
+    }
+  }, [bets]);
 
   function closeModal(): void {
     setModal(false);

@@ -1,10 +1,12 @@
+import { UserContext } from "@/pages/_app";
 import { Tracker } from "@/types";
 import { calculateStats } from "@/utils";
 import { Badge, Dropdown } from "flowbite-react";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 function ChartLoader({ d }: { d: Tracker[] }) {
   var stats = calculateStats(d, "All Time");
+  const user = useContext(UserContext);
   function setTimePeriod(time: string) {
     stats = calculateStats(d, time);
   }
@@ -27,11 +29,15 @@ function ChartLoader({ d }: { d: Tracker[] }) {
       <div className="grid grid-cols-3 grid-rows-2 gap-4">
         <div className="bg-gray-800 p-4 rounded-lg shadow dark:text-white">
           <h2 className="text-lg font-bold mb-4">Total Profit</h2>
-          <p className="text-2xl font-bold ">${stats.totalProfit}</p>
+          <p className="text-2xl font-bold ">
+            {user.currency + stats.totalProfit}
+          </p>
         </div>
         <div className="bg-gray-800 p-4 rounded-lg shadow dark:text-white">
           <h2 className="text-lg font-bold mb-4">Total Stake</h2>
-          <p className="text-2xl font-bold">${stats.totalStake}</p>
+          <p className="text-2xl font-bold">
+            {user.currency + stats.totalStake}
+          </p>
         </div>
         <div className="bg-gray-800 p-4 rounded-lg shadow dark:text-white">
           <h2 className="text-lg font-bold mb-4">Pending Bets</h2>
@@ -39,7 +45,9 @@ function ChartLoader({ d }: { d: Tracker[] }) {
         </div>
         <div className="bg-gray-800 p-4 rounded-lg shadow dark:text-white">
           <h2 className="text-lg font-bold mb-4">Potential $</h2>
-          <p className="text-2xl font-bold">${stats.potentialEarnings}</p>
+          <p className="text-2xl font-bold">
+            {user.currency + stats.potentialEarnings}
+          </p>
         </div>
         <div className="bg-gray-800 p-4 rounded-lg shadow dark:text-white">
           <h2 className="text-lg font-bold mb-4">ROI</h2>

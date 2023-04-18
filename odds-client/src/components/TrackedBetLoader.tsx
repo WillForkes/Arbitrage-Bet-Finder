@@ -16,6 +16,8 @@ interface props {
 
 export default function BetLoader({ bets }: props) {
   const user = useContext(UserContext);
+  const userObj = user.user;
+
   const alertContext = useContext(AlertContext);
   const csvData = [
     ["match_name", "profit", "stake", "settled", "bookmakers", "time"],
@@ -130,8 +132,7 @@ export default function BetLoader({ bets }: props) {
                     </svg>
                     Add new bet
                   </button>
-                  {user?.user.dbuser.plan != "free" ||
-                  user?.user.dbuser.staff ? (
+                  {userObj?.dbuser.plan != "free" || userObj?.dbuser.staff ? (
                     <CSVLink
                       data={csvData}
                       className="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"

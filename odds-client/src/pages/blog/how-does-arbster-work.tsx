@@ -32,7 +32,7 @@ export default function blog1() {
                     <p>
                         Arbitrage betting is a betting strategy that has been used by professional gamblers for decades. However, it requires a significant amount of time, effort, and resources to identify the right opportunities. This is where Arbster comes in. We utilise cutting edge technology and sophisticated algorithms to analyse odds from hundreds of bookmakers worldwide, identifying profitable arbitrage opportunities in real time.
                     </p>
-                    <figure><img src="https://www.gamblingsites.org/app/uploads/2018/10/arbitrage-1.jpg" alt="" />
+                    <figure><img src="https://www.gamblingsites.org/app/uploads/2018/10/arbitrage-1.jpg" alt="Arbitrage betting diagram" />
                         <figcaption>Digital art by gamblingsites.org</figcaption>
                     </figure>
                     <h3>How does Arbster help me with arbitrage betting?</h3>

@@ -8,19 +8,25 @@ import { UserContext } from "@/pages/_app";
 import { User } from "@/types";
 import Auth from "@/components/Auth";
 import Link from "next/link";
+import Head from "next/head";
 
 export default function Bets() {
   const { data, error } = useSWR("/scraper/all?type=arbitrage", getter, {
     refreshInterval: 10000,
   });
   const arbData = data?.arbitrage;
-  const user: User | null = useContext(UserContext).user;
-  const showBets = user
-    ? user.dbuser.plan != "free" || user.dbuser.staff
+  const user: { user: User | null; auth: boolean | null } =
+    useContext(UserContext);
+  const showBets = user.user
+    ? user.user.dbuser.plan != "free" || user.user.dbuser.staff
     : false;
 
   return (
     <div className="page-offset-x py-8 bg-gray-900">
+        <Head>
+            <title>Arbster | Arbitrage Tool</title>
+            <meta name="description" content="Advanced arbitrage tool for identifying profitable bet opportunities across a range of bookmakers" />
+        </Head>
       <div className="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
         {/* <span className="font-bold tracking-wider uppercase dark:text-primary-700">
                 Arbitrage Tool
@@ -52,7 +58,7 @@ export default function Bets() {
 
       {data ? (
         <div className="rounded-md gap-6 grid-cols-1 2xl:grid-cols-2 mb-2">
-          <BetLoader bets={arbData} showBets={showBets} user={user} />
+          <BetLoader bets={arbData} showBets={showBets} user={user.user} />
         </div>
       ) : (
         <div className="mx-auto max-w-screen-md p-64 text-center mb-8 lg:mb-12">

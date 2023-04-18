@@ -119,9 +119,7 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                         Plan Renews/Expires At
                       </dt>
                       <dd className="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
-                        {new Date(
-                          user.dbuser.planExpiresAt
-                        ).toDateString()}
+                        {new Date(user.dbuser.planExpiresAt).toDateString()}
                       </dd>
                     </div>
                   ) : null}
@@ -238,7 +236,7 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                           <Image
                             src={Logo}
                             className="h-8 w-8 rounded-full"
-                            alt="Neil image"
+                            alt="Arbster logo"
                           />
                         </div>
                         <div className="min-w-0 flex-1">

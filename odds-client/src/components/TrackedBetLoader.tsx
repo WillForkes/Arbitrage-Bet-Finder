@@ -1,5 +1,5 @@
 import { Tracker } from "@/types";
-import { dateFormat, getBookmakerLogo } from "@/utils";
+import { dateFormat, getBookmakerLogo, regionCurrency } from "@/utils";
 import React, { useState, useContext } from "react";
 import { deleteTrackedBet, updateTrackerStatus } from "@/api";
 import Image from "next/image";
@@ -15,7 +15,9 @@ interface props {
 }
 
 export default function BetLoader({ bets }: props) {
-  const user: User | null = useContext(UserContext).user;
+  const user = useContext(UserContext);
+  const userObj = user.user;
+
   const alertContext = useContext(AlertContext);
   const csvData = [
     ["match_name", "profit", "stake", "settled", "bookmakers", "time"],
@@ -110,7 +112,7 @@ export default function BetLoader({ bets }: props) {
                     <span className="text-gray-500">Total profit:</span>
                     <span className="dark:text-white">
                       {" "}
-                      ${calculateTotalProfit(bets)}
+                      {user.currency + calculateTotalProfit(bets)}
                     </span>
                   </h5>
                 </div>
@@ -130,7 +132,7 @@ export default function BetLoader({ bets }: props) {
                     </svg>
                     Add new bet
                   </button>
-                  {user?.dbuser.plan != "free" || user?.dbuser.staff ? (
+                  {userObj?.dbuser.plan != "free" || userObj?.dbuser.staff ? (
                     <CSVLink
                       data={csvData}
                       className="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
@@ -276,7 +278,7 @@ export default function BetLoader({ bets }: props) {
 
                         <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                           <div className="flex items-center">
-                            ${bet.totalStake}
+                            {user.currency + bet.totalStake}
                           </div>
                         </td>
 
@@ -290,11 +292,11 @@ export default function BetLoader({ bets }: props) {
                             }`}
                           >
                             {bet.type == "ev" && bet.status == 2 ? (
-                              <p>-${bet.totalStake}</p>
+                              <p>-{user.currency + bet.totalStake}</p>
                             ) : bet.type == "ev" && bet.status == 0 ? (
                               <p>?</p>
                             ) : (
-                              "$" +
+                              user.currency +
                               (bet.totalStake * bet.profitPercentage).toFixed(2)
                             )}
                           </div>

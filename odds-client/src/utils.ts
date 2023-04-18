@@ -190,3 +190,17 @@ export function calculateStats(data: Tracker[], timePeriod?: string) {
     };
   }
   
+  export function regionCurrency(region: string) {
+    switch (region) {
+        case "US":
+            return "$"
+        case "UK":
+            return "£"    
+        case "EU":
+            return "€"
+        case "AU":
+            return "$"
+        default:
+            return ""
+    }
+  }

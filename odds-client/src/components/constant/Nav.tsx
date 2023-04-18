@@ -21,7 +21,7 @@ export default function Nav() {
     <nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
       <div className="container flex flex-wrap items-center justify-between mx-auto">
         <a href="https://arbster.com/" className="flex items-center gap-x-4">
-          <Image src={Logo} height={60} alt="Arbster image" />
+          <Image src={Logo} height={60} alt="Arbster logo" />
           <Badge>Beta</Badge>
         </a>
         <div className="flex items-center md:order-2">
@@ -73,6 +73,16 @@ export default function Nav() {
                 FAQ
               </Link>
             </li>
+            
+            <li>
+              <Link
+                href="/blog"
+                className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+              >
+                Information Blog
+              </Link>
+            </li>
+            
             <li>
               <Link
                 href="/contact"
@@ -119,7 +129,7 @@ export default function Nav() {
                     href="/scraper/bets"
                     className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                   >
-                    Bet Scraper
+                    Arbitrage Tool
                   </Link>
                 </li>
                 <li>
@@ -128,7 +138,7 @@ export default function Nav() {
                     href="/scraper/ev"
                     className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white"
                   >
-                    EV Tool
+                    EV+ Tool
                   </Link>
                 </li>
                 <li>
@@ -140,6 +150,25 @@ export default function Nav() {
                     Bet Tracker
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    onClick={() => toggleMenu()}
+                    href="/FAQ"
+                    className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  >
+                    FAQ
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    onClick={() => toggleMenu()}
+                    href="/blog"
+                    className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  >
+                    Blog
+                  </Link>
+                </li>
+                
               </ul>
             </div>
           )}

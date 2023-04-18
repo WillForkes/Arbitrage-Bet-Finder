@@ -1,6 +1,6 @@
 import { Bet, Plan, User } from "@/types";
 import { dateFormat, filterRegion } from "@/utils";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Image from "next/image";
 import Modal from "./Modal";
 import { Dropdown, TextInput, Toast } from "flowbite-react";
@@ -26,15 +26,25 @@ export default function BetLoader({ bets, showBets, user }: props) {
   const [modal, setModal] = useState(false);
   const [modalBetId, setModalBetId] = useState(0);
   const [regionFilter, setRegionFilter] = useState(
-    user ? user.dbuser.region : "UK"
+    user ? user.dbuser.region : "loading"
   );
   const [pricing, setPricing] = useState(
-    bets.length > 0 && !showBets && (!user || user.dbuser.plan == "free")
+    bets.length > 0 &&
+      !showBets &&
+      (!user || user.dbuser.plan == "free") &&
+      regionFilter != "loading"
   );
 
-  const [paginatedBets, setPaginatedBets] = useState<Bet[]>(
-    filterRegion(regionFilter, bets, user ? true : false) as Bet[]
-  );
+  useEffect(() => {
+    if (user) {
+      setPaginatedBets(
+        filterRegion(regionFilter, bets, user ? true : false) as Bet[]
+      );
+      setRegionFilter(user.dbuser.region);
+    }
+  }, [bets]);
+
+  const [paginatedBets, setPaginatedBets] = useState<Bet[]>(bets);
 
   function closePricing(): void {
     setPricing(false);

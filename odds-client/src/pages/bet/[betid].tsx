@@ -8,6 +8,7 @@ import Modal from "@/components/Modal";
 import EVModal from "@/components/EVModal";
 import { EV } from "@/types";
 import SimulateModal from "@/components/SimulateModal";
+import Head from "next/head";
 
 export default function BetPage() {
   const router = useRouter();
@@ -81,6 +82,10 @@ export default function BetPage() {
         />
       )}
       <section className="bg-white dark:bg-gray-900">
+      <Head>
+            <title>Arbster | Viewing Bet</title>
+            <meta name="description" content="Detailed bet viewing page" />
+        </Head>
         <SimulateModal isVisible={simModal} id={bet.id} closeModal={closeSimModal} />
         <div className="mx-auto max-w-screen-md py-12">
           <Card>

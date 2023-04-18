@@ -2,10 +2,16 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Accordion } from "flowbite-react";
 import Link from "next/link";
+import Head from "next/head";
 
 export default function tos() {
   return (
     <>
+    <Head>
+        <title>Arbster | Terms Of Service</title>
+        <meta name="description" content="Arbster Terms Of Service agreement" />
+    </Head>
+
       <section className="bg-white dark:bg-gray-900">
         <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
           <div className="max-w-screen-lg text-gray-500 sm:text-lg dark:text-gray-400">

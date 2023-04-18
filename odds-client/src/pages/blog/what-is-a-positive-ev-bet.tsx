@@ -28,7 +28,7 @@ export default function blog1() {
                     <p className="lead">
                     Are you looking to increase your chances of winning in sports betting? Look no further! In this blog post, we will delve into the concept of positive Expected Value (EV) betting - what it is, how it works, and how you can benefit from it. Get ready to level up your betting game and boost your chances of making a profit with this powerful strategy!
                     </p>
-                    <figure><img src="https://i0.wp.com/caanberry.com/wp-content/uploads/2023/01/positive-expected-values-betting.jpg" alt="" />
+                    <figure><img src="https://i0.wp.com/caanberry.com/wp-content/uploads/2023/01/positive-expected-values-betting.jpg" alt="Positive EV diagram" />
                         <figcaption>Digital art by Caan Berry</figcaption>
                     </figure>
                     <h3>What is a positive EV bet?</h3>

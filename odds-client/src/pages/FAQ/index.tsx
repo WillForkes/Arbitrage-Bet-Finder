@@ -187,10 +187,8 @@ export default function FAQ() {
                   test the software and see its effectiveness before making a
                   purchase. Get your free trial{" "}
                   <Link
-                    href="/#trial"
+                    href="/#pricing"
                     className="font-medium underline text-primary-600 dark:text-primary-500 hover:no-underline"
-                    target="_blank"
-                    rel="noreferrer"
                   >
                     here
                   </Link>

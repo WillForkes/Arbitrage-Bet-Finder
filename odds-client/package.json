@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "@types/node": "18.14.6",
@@ -23,6 +24,8 @@
     "flowbite": "^1.6.4",
     "flowbite-react": "^0.4.2",
     "next": "13.2.3",
+    "next-sitemap": "^4.0.7",
+    "next-videos": "1.4.1",
     "react": "18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-csv": "^2.2.2",

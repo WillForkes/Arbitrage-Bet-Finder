@@ -4,13 +4,11 @@ import React, { useState, useContext } from "react";
 import Image from "next/image";
 import Modal from "./Modal";
 import { Dropdown, TextInput, Toast } from "flowbite-react";
-import { Region } from "../types";
 import Logo from "/public/arbster.png";
 import { AlertContext } from "@/pages/_app";
-import Pagination from "./Pagination";
 import { getBookmakerLogo } from "@/utils";
 import FreeModal from "./FreeModal";
-import Link from 'next/link';
+import Link from "next/link";
 import { Tooltip, Spinner, Badge } from "flowbite-react";
 
 // example:
@@ -34,9 +32,9 @@ export default function BetLoader({ bets, showBets, user }: props) {
     bets.length > 0 && !showBets && (!user || user.dbuser.plan == "free")
   );
 
-  var b: any[] = filterRegion(regionFilter, bets, user ? true : false);
-
-  const [paginatedBets, setPaginatedBets] = useState<Bet[]>(b);
+  const [paginatedBets, setPaginatedBets] = useState<Bet[]>(
+    filterRegion(regionFilter, bets, user ? true : false) as Bet[]
+  );
 
   function closePricing(): void {
     setPricing(false);
@@ -48,8 +46,7 @@ export default function BetLoader({ bets, showBets, user }: props) {
 
   function updateRegion(region: string) {
     setRegionFilter(region); // ui
-    b = filterRegion(region, bets, user ? true : false); // bets with region filter
-    setPaginatedBets(b);
+    setPaginatedBets(filterRegion(region, bets, user ? true : false) as Bet[]); // bets with region filter
   }
 
   //   function updateItems(page: number) {
@@ -61,10 +58,11 @@ export default function BetLoader({ bets, showBets, user }: props) {
   function searchBetsByMatch(e: any) {
     if (user) {
       if (e != "" || e != null) {
-        b = b.filter((bet) =>
-          bet.data.match_name.toLowerCase().includes(e.toLowerCase())
+        setPaginatedBets(
+          bets.filter((bet) =>
+            bet.data.match_name.toLowerCase().includes(e.toLowerCase())
+          )
         );
-        setPaginatedBets(b);
       }
     }
   }
@@ -171,22 +169,30 @@ export default function BetLoader({ bets, showBets, user }: props) {
               </thead>
               <tbody className={`divide ${showBets ? "" : "blur"}`}>
                 {paginatedBets.map((bet) => (
-                  <tr key={bet.id} className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <th scope="row" className="items-center px-4 py-8 font-medium text-gray-900 whitespace-nowrap dark:text-white underline hover:dark:text-primary-700">
-                        <Tooltip animation="duration-300" content="Click here to view the the details of this bet">
-                            {bet.data?.live == true ? (
-                                <div className="flex mx-auto flex-wrap gap-2">
-                                    <Badge>
-                                        IN PLAY
-                                    </Badge>
-                                </div>
-                            ) : (null)}
-                           
-                            <Link href={`/bet/${bet.id}`}>
-                                {showBets ? bet.data?.match_name : "HOME TEAM v AWAY TEAM"} 
-                            </Link>
-                        </Tooltip>
-                        
+                  <tr
+                    key={bet.id}
+                    className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <th
+                      scope="row"
+                      className="items-center px-4 py-8 font-medium text-gray-900 whitespace-nowrap dark:text-white underline hover:dark:text-primary-700"
+                    >
+                      <Tooltip
+                        animation="duration-300"
+                        content="Click here to view the the details of this bet"
+                      >
+                        {bet.data?.live == true ? (
+                          <div className="flex mx-auto flex-wrap gap-2">
+                            <Badge>IN PLAY</Badge>
+                          </div>
+                        ) : null}
+
+                        <Link href={`/bet/${bet.id}`}>
+                          {showBets
+                            ? bet.data?.match_name
+                            : "HOME TEAM v AWAY TEAM"}
+                        </Link>
+                      </Tooltip>
                     </th>
 
                     <th

@@ -294,7 +294,7 @@ router.get("/all", freeStuff, async function(req, res, next){
 
     // filter through arb bets, if user plan is not "plus" then remove bets with total implied odds <0.9
     arbBets = arbBets.filter(bet => {
-        if(req.user.plan == "plus" || req.user.staff){
+        if(req.user.plan == "pro" || req.user.plan == "plus" || req.user.staff){
             return true;
         }
         const _pg = ((1 / bet.data.total_implied_odds) - 1).toFixed(2) // percentage gain | 0.1 = 10%

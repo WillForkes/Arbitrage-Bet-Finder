@@ -409,7 +409,7 @@ export default function EVLoader({ bets, showBets, user }: props) {
 
           {!showBets ? (
             <Link href="/#pricing">
-                <Image width={700} height={700} src={OverlayImage} alt="your-image-alt" className=" absolute top-28 left-1/2 transform -translate-x-1/2 z-10" />
+                <Image width={700} height={700} src={OverlayImage} alt="your-image-alt" className="rounded-md absolute top-28 left-1/2 transform -translate-x-1/2 z-10" />
             </Link>
             ) : null}
 

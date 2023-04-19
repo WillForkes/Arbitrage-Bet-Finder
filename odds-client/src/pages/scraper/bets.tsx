@@ -15,8 +15,7 @@ export default function Bets() {
     refreshInterval: 10000,
   });
   const arbData = data?.arbitrage;
-  const user: { user: User | null; auth: boolean | null } =
-    useContext(UserContext);
+  const user: { user: User | null; auth: boolean | null } = useContext(UserContext);
   const showBets = user.user
     ? user.user.dbuser.plan != "free" || user.user.dbuser.staff
     : false;
@@ -58,7 +57,7 @@ export default function Bets() {
 
       {data ? (
         <div className="rounded-md gap-6 grid-cols-1 2xl:grid-cols-2 mb-2">
-          <BetLoader bets={arbData} showBets={showBets} user={user.user} />
+          <BetLoader bets={arbData} showBets={showBets}  />
         </div>
       ) : (
         <div className="mx-auto max-w-screen-md p-64 text-center mb-8 lg:mb-12">

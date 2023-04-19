@@ -28,6 +28,13 @@ export default function Blog() {
             difficulty: "Intermediate",
             link: "/blog/what-is-a-positive-ev-bet"
         },
+        {
+            title: "Using the positive EV tool",
+            description: "In this blog post, we take a more detailed look at the positive EV tool to aid your understanding of what each column and indicator means.",
+            type: "Information",
+            difficulty: "Intermediate",
+            link: "/blog/using-the-positive-ev-tool"
+        },
         
     ]
   return (

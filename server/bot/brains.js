@@ -266,6 +266,7 @@ function processPositiveEV(matches, includeStartedMatches = true) {
                 ht_impliedProbability = 1 / homeTeamOutcome.price;
                 at_impliedProbability = 1 / awayTeamOutcome.price;
                 draw_impliedProbability = hasDraw ? 1 / drawOutcome.price : 0;
+                
                 sum_impliedProbability = ht_impliedProbability + at_impliedProbability + draw_impliedProbability;
 
                 // * this is the true probability of the outcome, without the bookmaker's vig in percentage
@@ -292,18 +293,20 @@ function processPositiveEV(matches, includeStartedMatches = true) {
                 let shouldBet = (ht_EV > 0 || at_EV > 0 || draw_EV > 0) ? true : false;
                 
                 if(ht_EV > 0){
-                    outcomeToBetOn = match.home_team
+                    outcomeToBetOn = match.away_team // * Opposite team since it's a lay
                     winProbability = ht_noVig
                     odds = homeTeamOutcome.price
                     noVigOdds = ht_noVig_odds
                     ev = ht_EV
                 } else if(at_EV > 0){
-                    outcomeToBetOn = match.away_team
+                    outcomeToBetOn = match.home_team // * Opposite team since it's a lay - ?
                     winProbability = at_noVig
                     odds = awayTeamOutcome.price
                     noVigOdds = at_noVig_odds
                     ev = at_EV
                 } else if(draw_EV > 0){
+                    continue; // * we don't bet on draws for positive EV
+                    // ! Potential mistake? Look into this...
                     outcomeToBetOn = "Draw"
                     winProbability = draw_noVig
                     odds = drawOutcome.price

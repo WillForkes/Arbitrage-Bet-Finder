@@ -311,14 +311,6 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                     placeholder="name@arbster.com"
                     required={true}
                     value={notifications.emaila}
-                    disabled={
-                      user.dbuser.plan == "pro" ||
-                      user.dbuser.plan == "plus" ||
-                      user.dbuser.plan == "starter" ||
-                      user.dbuser.staff
-                        ? false
-                        : true
-                    }
                     onChange={(e) =>
                       setNotifications({
                         ...notifications,

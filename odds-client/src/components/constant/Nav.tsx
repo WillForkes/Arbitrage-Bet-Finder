@@ -48,14 +48,23 @@ export default function Nav() {
                 Arbitrage Tool
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link
                 href="/scraper/ev"
                 className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
               >
                 Positive EV Tool
               </Link>
+            </li> */}
+            <li>
+              <Link
+                href="https://arbster.getrewardful.com/"
+                className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+              >
+                Affiliates
+              </Link>
             </li>
+            
             <li>
               <Link
                 href="/tracker"
@@ -133,13 +142,21 @@ export default function Nav() {
                   </Link>
                 </li>
                 <li>
-                  <Link
+                {/* <Link
                     onClick={() => toggleMenu()}
                     href="/scraper/ev"
                     className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white"
                   >
                     EV+ Tool
+                  </Link> */}
+                  <Link
+                    onClick={() => toggleMenu()}
+                    href="https://arbster.getrewardful.com/"
+                    className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white"
+                  >
+                    Affiliates
                   </Link>
+                  
                 </li>
                 <li>
                   <Link

@@ -6,12 +6,13 @@ import { getter } from "@/api";
 import EVLoader from "@/components/EV";
 import Auth from "@/components/Auth";
 import { Spinner } from "flowbite-react";
-import { UserContext } from "@/pages/_app";
+import { UserContext, AlertContext } from "@/pages/_app";
 import { User } from "@/types";
 import { Card } from "flowbite-react";
 import Link from "next/link";
 import Image from "next/image";
 import Head from "next/head";
+import Maintainance from '../maintainance';
 
 export default function Ev() {
   const { data, error } = useSWR("/scraper/all?type=ev", getter, {
@@ -19,11 +20,16 @@ export default function Ev() {
   });
   const evData = data?.ev;
   const user: User | null = useContext(UserContext).user;
-  const showBets = user
-    ? user.dbuser.plan == "pro" ||
-      user.dbuser.plan == "plus" ||
-      user.dbuser.staff
-    : false;
+  const alert = useContext(AlertContext);
+
+//   const showBets = user
+//     ? user.dbuser.plan == "pro" ||
+//       user.dbuser.plan == "plus" ||
+//       user.dbuser.staff
+//     : false;
+
+  const showBets = false //! Until we have fixed it
+  
 
   return (
     <div className="page-offset-x py-8 bg-gray-900">
@@ -71,7 +77,11 @@ export default function Ev() {
         </div>
       {data ? (
         <div className="rounded-md gap-6 grid-cols-1 2xl:grid-cols-2 mb-2">
-          <EVLoader bets={evData} showBets={showBets} user={user} />
+          {/* <EVLoader bets={evData} showBets={showBets} user={user} /> */}
+            <div className="mx-auto max-w-screen-md p-24 text-center mb-8 lg:mb-12 font-extrabold dark:text-white">
+
+              <h2>The positive EV tool is currently under maintainance. Please check back later.</h2>
+              </div>
         </div>
       ) : (
         <div className="mx-auto max-w-screen-md p-64 text-center mb-8 lg:mb-12">

@@ -230,6 +230,15 @@ function processMatches_totals(matches, includeStartedMatches = false) {
 }
 
 function processPositiveEV(matches, includeStartedMatches = true) {
+    // Collect the data: You will need to collect data on the odds offered by different bookmakers for a particular event. This can be done using APIs provided by bookmakers or through web scraping.
+
+    // Calculate the implied probabilities: The odds offered by bookmakers represent the implied probability of an outcome occurring. To calculate the implied probability, you can use the following formula: Implied probability = 1 / decimal odds.
+    
+    // Calculate the true probability: To calculate the true probability, you need to use your own analysis or prediction model to estimate the probability of an outcome occurring.
+    
+    // Compare the true probability and implied probability: Once you have the true probability and implied probability, you can compare them to determine if there is a positive expected value bet. If the true probability is higher than the implied probability, then there is a positive expected value bet.
+    
+    // Place the bet: If you find a positive expected value bet, you can place the bet with the bookmaker offering the highest odds.
     let positiveBets = [];
     let totalNoEV = 0
     let totalPositiveEV = 0
@@ -266,7 +275,7 @@ function processPositiveEV(matches, includeStartedMatches = true) {
                 ht_impliedProbability = 1 / homeTeamOutcome.price;
                 at_impliedProbability = 1 / awayTeamOutcome.price;
                 draw_impliedProbability = hasDraw ? 1 / drawOutcome.price : 0;
-                
+
                 sum_impliedProbability = ht_impliedProbability + at_impliedProbability + draw_impliedProbability;
 
                 // * this is the true probability of the outcome, without the bookmaker's vig in percentage
@@ -278,7 +287,6 @@ function processPositiveEV(matches, includeStartedMatches = true) {
                 at_noVig_odds = 1 / at_noVig;
                 draw_noVig_odds = hasDraw ? 1 / draw_noVig : 0;
                 
-
                 // (Amount won per bet * probability of winning) – (Amount lost per bet * probability of losing)
                 ht_EV = ((homeTeamOutcome.price - 1 - 0.05) * ht_noVig) - (1*(1-ht_noVig))
                 at_EV = ((awayTeamOutcome.price - 1 - 0.05) * at_noVig) - (1*(1-at_noVig))
@@ -293,13 +301,13 @@ function processPositiveEV(matches, includeStartedMatches = true) {
                 let shouldBet = (ht_EV > 0 || at_EV > 0 || draw_EV > 0) ? true : false;
                 
                 if(ht_EV > 0){
-                    outcomeToBetOn = match.away_team // * Opposite team since it's a lay
+                    outcomeToBetOn = match.home_team // * Opposite team since it's a lay
                     winProbability = ht_noVig
                     odds = homeTeamOutcome.price
                     noVigOdds = ht_noVig_odds
                     ev = ht_EV
                 } else if(at_EV > 0){
-                    outcomeToBetOn = match.home_team // * Opposite team since it's a lay - ?
+                    outcomeToBetOn = match.away_team // * Opposite team since it's a lay - ?
                     winProbability = at_noVig
                     odds = awayTeamOutcome.price
                     noVigOdds = at_noVig_odds

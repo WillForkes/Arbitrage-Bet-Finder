@@ -180,7 +180,7 @@ export default function EVLoader({ bets, showBets, user }: props) {
                     MARKET
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    BET ON
+                    LAY ON
                   </th>
                   <th scope="col" className="px-4 py-3">
                     EXPECTED VALUE

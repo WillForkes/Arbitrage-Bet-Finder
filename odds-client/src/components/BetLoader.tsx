@@ -5,11 +5,12 @@ import Image from "next/image";
 import Modal from "./Modal";
 import { Dropdown, TextInput, Toast } from "flowbite-react";
 import Logo from "/public/arbster.png";
-import { AlertContext } from "@/pages/_app";
+import { AlertContext, UserContext } from "@/pages/_app";
 import { getBookmakerLogo } from "@/utils";
 import FreeModal from "./FreeModal";
 import Link from "next/link";
 import { Tooltip, Spinner, Badge } from "flowbite-react";
+import OverlayImage from "../../public/freeoverlay.png";
 
 // example:
 // {"match_id":"d3015bfea46b4b86f2407a6845885393","match_name":"St. Louis Cardinals v. Washington Nationals","match_start_time":1679418300,"hours_to_start":3.7805919444561003,"league":"baseball_mlb_preseason","key":"h2h","best_outcome_odds":{"St. Louis Cardinals":["Pinnacle",1.69],"Washington Nationals":["MyBookie.ag",2.55]},"total_implied_odds":0.9839,"region":"eu"}
@@ -17,38 +18,29 @@ import { Tooltip, Spinner, Badge } from "flowbite-react";
 interface props {
   bets: Bet[];
   showBets: boolean;
-  user: User | null;
 }
 
-export default function BetLoader({ bets, showBets, user }: props) {
+export default function BetLoader({ bets, showBets }: props) {
   const alertContext = useContext(AlertContext);
+  const ucontext: { user: User | null; auth: boolean | null } = useContext(UserContext);
+  const user = ucontext.user;
 
   const [modal, setModal] = useState(false);
   const [modalBetId, setModalBetId] = useState(0);
   const [regionFilter, setRegionFilter] = useState(
-    user ? user.dbuser.region : "loading"
+    user ? user.dbuser.region : "UK"
   );
-  const [pricing, setPricing] = useState(
-    bets.length > 0 &&
-      !showBets &&
-      (!user || user.dbuser.plan == "free") &&
-      regionFilter != "loading"
+//   const [pricing, setPricing] = useState(
+//     !ucontext.auth || user?.dbuser.plan == "free"
+//   );
+
+  const [paginatedBets, setPaginatedBets] = useState<Bet[]>(
+    filterRegion(regionFilter, bets, user ? true : false) as Bet[]
   );
 
-  useEffect(() => {
-    if (user) {
-      setPaginatedBets(
-        filterRegion(regionFilter, bets, user ? true : false) as Bet[]
-      );
-      setRegionFilter(user.dbuser.region);
-    }
-  }, [bets]);
-
-  const [paginatedBets, setPaginatedBets] = useState<Bet[]>(bets);
-
-  function closePricing(): void {
-    setPricing(false);
-  }
+//   function closePricing(): void {
+//     setPricing(false);
+//   }
 
   function closeModal(): void {
     setModal(false);
@@ -148,7 +140,7 @@ export default function BetLoader({ bets, showBets, user }: props) {
               </Dropdown.Item>
             </Dropdown>
           </div>
-          {pricing ? <FreeModal closeModal={closePricing} /> : null}
+          {/* {pricing ? <FreeModal closeModal={closePricing} /> : null} */}
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -345,6 +337,7 @@ export default function BetLoader({ bets, showBets, user }: props) {
                 ))}
               </tbody>
             </table>
+            
             {paginatedBets.length === 0 ? (
               <div className="mx-auto max-w-md text-center py-8">
                 <h2 className="text-xl font-bold mb-6 lg:text-2xl dark:text-white">
@@ -356,12 +349,11 @@ export default function BetLoader({ bets, showBets, user }: props) {
             ) : null}
           </div>
 
-          {/* <Pagination
-            currentPage={1}
-            itemsPerPage={10}
-            maxItems={allBets.length}
-            updateItems={updateItems}
-          /> */}
+          {!showBets ? (
+            <Link href="/#pricing">
+                <Image width={700} height={700} src={OverlayImage} alt="your-image-alt" className=" absolute top-72 left-1/2 transform -translate-x-1/2 z-10" />
+            </Link>
+            ) : null}
         </div>
       </div>
     </>

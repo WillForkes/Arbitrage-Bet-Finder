@@ -12,6 +12,7 @@ import { getBookmakerLogo } from "../utils";
 import { Tooltip, Badge, Spinner } from "flowbite-react";
 import Link from "next/link";
 import { UserContext } from "@/pages/_app";
+import OverlayImage from "../../public/freeoverlay.png";
 
 // example
 // {"match_id":"06f491453cb35e153d61c67257f3cb3b","match_name":"Bayern Munich v. Borussia Dortmund","match_start_time":1680366600,"hours_to_start":267.19723500000106,"league":"soccer_germany_bundesliga","key":"h2h","bookmaker":"Betsson","winProbability":0.18587360594795543,"odds":6,"ev":"0.115","region":"eu"}
@@ -24,9 +25,9 @@ interface props {
 
 export default function EVLoader({ bets, showBets, user }: props) {
   const [modal, setModal] = useState(false);
-  const [pricing, setPricing] = useState(
-    bets.length > 0 && !showBets && (!user || user.dbuser.plan == "free")
-  );
+//   const [pricing, setPricing] = useState(
+//     bets.length > 0 && !showBets && (!user || user.dbuser.plan == "free")
+//   );
   const [modalBetId, setModalBetId] = useState(0);
   const [modalRecBetSize, setModalRecBetSize] = useState(0);
   const [regionFilter, setRegionFilter] = useState(
@@ -69,9 +70,9 @@ export default function EVLoader({ bets, showBets, user }: props) {
     setModal(false);
   }
 
-  function closePricing(): void {
-    setPricing(false);
-  }
+//   function closePricing(): void {
+//     setPricing(false);
+//   }
 
   function updateItems(page: number) {
     const start = (page - 1) * 10;
@@ -241,7 +242,7 @@ export default function EVLoader({ bets, showBets, user }: props) {
                   </th>
                 </tr>
               </thead>
-              {pricing ? <FreeModal closeModal={closePricing} /> : null}
+              {/* {pricing ? <FreeModal closeModal={closePricing} /> : null} */}
               <tbody className={`divide ${showBets ? "" : "blur"}`}>
                 {paginatedBets.map((bet) => (
                   <tr
@@ -269,7 +270,7 @@ export default function EVLoader({ bets, showBets, user }: props) {
                           <div className="inline-block w-4 h-4 mr-2 bg-green-700 rounded-full"></div>
                         )}
 
-                        <Link href={`/bet/${bet.id}`}>
+                        <Link href={`/bet/${bet.id}`} className="hover:dark:text-primary-700">
                           {showBets
                             ? bet.data.match_name
                             : "HOME TEAM v AWAY TEAM"}{" "}
@@ -405,6 +406,12 @@ export default function EVLoader({ bets, showBets, user }: props) {
               </div>
             ) : null}
           </div>
+
+          {!showBets ? (
+            <Link href="/#pricing">
+                <Image width={700} height={700} src={OverlayImage} alt="your-image-alt" className=" absolute top-28 left-1/2 transform -translate-x-1/2 z-10" />
+            </Link>
+            ) : null}
 
           <Pagination
             currentPage={1}

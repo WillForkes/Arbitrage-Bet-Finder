@@ -210,31 +210,6 @@ async function clean() {
 
     console.log(`[CLEANER] ${betsToDelete.length} bets deleted (older than ${threshold} minutes).`)
 }
-// router.post("/clean", async function(req, res, next){
-//     const threshold = (req.body.threshold) ? parseInt(req.body.threshold) : 10; // in minutes
-
-//     // Get all bets that are older than 10 minutes
-//     const betsToDelete = await prisma.bet.findMany({
-//         where: {
-//             updatedAt: {
-//                 lt: new Date(Date.now() - (threshold * 60 * 1000))
-//             }
-//         }
-//     })
-
-//     // Delete all bets that are older than 10 minutes
-//     for(let i = 0; i < betsToDelete.length; i++){
-//         await prisma.bet.delete({
-//             where: {
-//                 id: betsToDelete[i].id
-//             }
-//         })
-//     }
-
-//     console.log(`[CLEANER] ${betsToDelete.length} bets deleted (older than ${threshold} minutes).`)
-//     res.json({"status": "ok", "Message": `${betsToDelete.length} bets deleted (older than ${threshold} minutes).`});
-        
-// })
 
 router.get("/all", freeStuff, async function(req, res, next){
     let arbBets = []
@@ -246,13 +221,11 @@ router.get("/all", freeStuff, async function(req, res, next){
         res.status(400).json({"error": "Missing bet type."});
         return;
     }
-    
+
     if(req.user.plan == "free" && req.user.staff == false) {
-        arbBets = [{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:7},{id:8},{id:9},{id:10}]
-        evBets = [{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:7},{id:8},{id:9},{id:10}]
         res.json({"status": "ok", "data": {
-            "arbitrage": arbBets,
-            "ev": evBets
+            "arbitrage": [{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:7},{id:8},{id:9},{id:10}],
+            "ev": [{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:7},{id:8},{id:9},{id:10}]
         }});
         return
     }
@@ -406,7 +379,6 @@ function simulateBet(n, data) {
 
         if(betResult == "win"){
             let w = (betAmount * odds) - betAmount;
-            w = w * 0.95 // 5% win fee
             betsWon++;
             amountWon += w;
         } else {

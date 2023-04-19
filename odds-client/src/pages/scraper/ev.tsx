@@ -79,7 +79,7 @@ export default function Ev() {
         <div className="rounded-md gap-6 grid-cols-1 2xl:grid-cols-2 mb-2">
           {/* <EVLoader bets={evData} showBets={showBets} user={user} /> */}
             <div className="mx-auto max-w-screen-md p-24 text-center mb-8 lg:mb-12 font-extrabold dark:text-white">
-
+                <Spinner aria-label="Loading spinner" />
               <h2>The positive EV tool is currently under maintainance. Please check back later.</h2>
               </div>
         </div>

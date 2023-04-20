@@ -1,13 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Image from "next/image";
 import { Accordion } from "flowbite-react";
 import Link from "next/link";
 import Script from "next/script";
+import { useRouter } from 'next/router'
+import { Spinner } from "flowbite-react";
+import { getOrderFromStripePaymentID, getter } from "@/api"
+import useSWR from "swr";
 
-export default function Maintainance() {
-  return (
+export default function SuccessSubscriptionPage() {
+    // Get session_id query param
+    const router = useRouter()
+    const { session_id } = router.query
+    const { data, error } = useSWR("/payment/" + session_id, getter);
+
+    if(error || !data || data?.payment.status=="inactive" || data?.stripePayment.status != "complete") {
+        return (
+            <div className="flex justify-center items-center h-screen dark:bg-gray-900">
+                <h2 className="text-2xl font-semibold">Locating order...</h2>
+                <Spinner />
+            </div>
+        )
+    }
+
+    const orderSubtotal = data.stripePayment.amount_total / 100
+
+
+    return (
     <>
       <section className="bg-white dark:bg-gray-900">
+        <img src={"https://www.shareasale.com/sale.cfm?tracking=" + session_id + "&amount=" + orderSubtotal.toFixed(2) + "&merchantID=140600&transtype=sale&currency=GBP"} width="1" height="1" />
+
         <div className="mx-auto py-64 relative p-4 w-full max-w-md h-full md:h-auto">
           <div className="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
             <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900 p-2 flex items-center justify-center mx-auto mb-3.5">
@@ -41,3 +64,4 @@ export default function Maintainance() {
     </>
   );
 }
+

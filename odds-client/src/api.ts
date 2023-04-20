@@ -64,6 +64,10 @@ export async function simulateEVBet(id: number, bets: number): Promise<any> {
     return await sendApiRequest("POST", "scraper/ev/simulate", true, {betId: id, bets: bets})
 }
 
+export async function getOrderFromStripePaymentID(paymentId: string): Promise<any> {
+    return await sendApiRequest("GET", `payment/${paymentId}`, true)
+}
+
 export async function updateNotificationsA(user: {
     email: boolean,
     emaila: string,

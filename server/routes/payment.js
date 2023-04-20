@@ -337,6 +337,54 @@ router.post("/webhook", async (request, response) => {
     response.json({"status": "ok"})
 });
 
+router.get("/:paymentid", async (req, res) => {
+    const paymentid = req.params.paymentid
+    if(!paymentid || paymentid.length < 1 || paymentid == "undefined"){
+        res.status(404).json({
+            "status": "error",
+            "data": {
+                message: "Payment session not found."
+            }
+        })
+        return;
+    }
+
+
+    const payment = await prisma.subscription.findUnique({
+        where: {
+            stripePaymentId: paymentid
+        }
+    })
+
+    const stripePayment = await getPayment(paymentid)
+
+    if(!payment || !stripePayment){
+        res.status(404).json({
+            "status": "error",
+            "data": {
+                message: "Payment session not found."
+            }
+        })
+        return;
+    }
+
+    // check if updated at is less than 15 minutes ago
+    const now = new Date()
+    const fifteenMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000) //! acc 5 mins not 15
+
+    if(payment.updatedAt < fifteenMinutesAgo){
+        res.status(404).json({
+            "status": "error",
+            "data": {
+                message: "Payment session has expired for affiliate checking."
+            }
+        })
+        return;
+    }
+    
+    res.json({status: "ok", data: {payment: payment, stripePayment: stripePayment}})
+})
+
 
 async function getSub(subid){
     const subscription = await stripe.subscriptions.retrieve(subid);
@@ -353,6 +401,15 @@ async function getSub(subid){
             return key;
         }
     }
+}
+
+async function getPayment(paymentid){
+    const payment = await stripe.checkout.sessions.retrieve(paymentid);
+    if(!payment){
+        return null;
+    }
+
+    return payment;
 }
 
 module.exports = router;

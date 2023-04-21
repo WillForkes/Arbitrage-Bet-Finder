@@ -29,7 +29,6 @@ export default function SuccessSubscriptionPage() {
     return (
     <>
       <section className="bg-white dark:bg-gray-900">
-        <img src={"https://www.shareasale.com/sale.cfm?tracking=" + session_id + "&amount=" + orderSubtotal.toFixed(2) + "&merchantID=140600&transtype=sale&currency=GBP"} width="1" height="1" />
 
         <div className="mx-auto py-64 relative p-4 w-full max-w-md h-full md:h-auto">
           <div className="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">

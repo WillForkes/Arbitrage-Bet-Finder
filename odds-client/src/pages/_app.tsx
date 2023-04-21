@@ -44,7 +44,6 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <div className="bg-gray-700">
-        <Script src="https://www.dwin1.com/50937.js" type="text/javascript" defer />
 
       <Script
         src="https://www.googletagmanager.com/gtag/js?id=G-7H7GEWNWCK"

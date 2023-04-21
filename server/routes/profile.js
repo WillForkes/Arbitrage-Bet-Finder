@@ -17,20 +17,36 @@ if(process.env.NODE_ENV == 'development') {
 // * Update whitelisted bookies
 router.post('/whitelist', checkUser, async function(req, res, next) {
     // update bookmaker whitelist on user profile
-    console.log(req.body.add)
-    newWhitelist = [...new Set(req.body.add)]
-    await prisma.user.update({
-        where: {
-            authid: req.user.authid
-        },
-        data: {
-            whitelist: JSON.stringify(newWhitelist)
-        }
-    })
-    
-    res.status(200).json({"status": "ok", "data": {
-        "whitelist": newWhitelist
-    }})
+
+    if(req.body.add.length == 0) {
+        await prisma.user.update({
+            where: {
+                authid: req.user.authid
+            },
+            data: {
+                whitelist: "[]"
+            }
+        })
+        res.status(200).json({"status": "ok", "data": {
+            "whitelist": []
+        }})
+        return;
+    } else {
+        newWhitelist = [...new Set(req.body.add)]
+        await prisma.user.update({
+            where: {
+                authid: req.user.authid
+            },
+            data: {
+                whitelist: JSON.stringify(newWhitelist)
+            }
+        })
+        
+        res.status(200).json({"status": "ok", "data": {
+            "whitelist": newWhitelist
+        }})
+    }
+
 });
 
 // * Get whitelisted bookies

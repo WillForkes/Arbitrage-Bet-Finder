@@ -534,7 +534,7 @@ async function sendBatchNotifications(notifications) {
 
         // ! Send BULK EMAIL
         axios.post(process.env.BASEURL + "/notification/email", {
-            userids: userids_sms,
+            userids: userids_email,
             betid: noti.id
         }).then((res) => {
                 console.log("Sent email notifications!");

@@ -229,6 +229,89 @@ function processMatches_totals(matches, includeStartedMatches = false) {
   return arbitrageBets;
 }
 
+function processMatches_spreads(matches, includeStartedMatches = false) {
+    const arbitrageBets = [];
+  
+    for (const match of matches) {
+        const startTime = parseInt(match.commence_time);
+        const timeToStart = (startTime - Date.now() / 1000) / 3600;
+        let isLive = false
+
+        if(startTime < Date.now() / 1000) {
+            isLive=true
+            if (!includeStartedMatches) {
+                continue;
+            }
+        }
+
+
+        for (const bookmaker of match.bookmakers) {
+            for (const market of bookmaker.markets) {
+            
+                const marketOutcomes = market.outcomes;
+                const marketType = market.key;
+
+                if(marketType !== "spreads") continue;
+                
+                for (let i = 0; i < marketOutcomes.length; i++) {
+                    const outcomeABookmaker = bookmaker;
+                    const outcomeA = marketOutcomes[i];
+
+                    for (let j = i+1; j < marketOutcomes.length; j++) {
+                        const _outcome_b_name = marketOutcomes[j].name
+                        const _outcome_b_points = marketOutcomes[j].point
+
+                        const outcomeBBookmaker = match.bookmakers.find((bk) => {
+                            return bk.key !== bookmaker.key 
+                            && bk.markets.some((m) => m.key === "spreads" 
+                            && m.outcomes.some((o) => o.name === _outcome_b_name
+                            && o.point === _outcome_b_points));
+                    });            
+
+                    if (outcomeBBookmaker) {
+                        const outcomeAOdds = outcomeA.price; // decimal odds of outcome A occuring
+
+                        outcomeB = {
+                            name: _outcome_b_name, 
+                            point: _outcome_b_points, 
+                            price: outcomeBBookmaker.markets.find((m) => m.key === "spreads").outcomes.find((o) => o.name === _outcome_b_name && o.point === _outcome_b_points).price
+                        }
+                        const outcomeBOdds = outcomeB.price
+
+                        const impliedOdds = (1 / outcomeAOdds) + (1 / outcomeBOdds);
+                        
+                        if (impliedOdds < 1) {
+                            const boo = {
+                                [outcomeA.name]: [outcomeABookmaker.title, outcomeAOdds, outcomeA.point?  outcomeA.point : null],
+                                [outcomeB.name]: [outcomeBBookmaker.title, outcomeBOdds, outcomeB.point? outcomeB.point : null]
+                            };
+
+                            const arbitrageBet = {
+                                match_id: match.id,
+                                match_name: match.home_team + " v. " + match.away_team,
+                                match_start_time: startTime,
+                                hours_to_start: timeToStart,
+                                league: match.sport_key,
+                                key: "spreads",
+                                best_outcome_odds: boo,
+                                total_implied_odds: impliedOdds,
+                                region: match.region,
+                                live: isLive
+                            };
+
+                            arbitrageBets.push(arbitrageBet);
+                        }
+                    }
+                }
+            }
+            }
+        }
+    }
+
+    return arbitrageBets;
+}
+
+
 function processPositiveEV(matches, includeStartedMatches = true) {
     // Collect the data: You will need to collect data on the odds offered by different bookmakers for a particular event. This can be done using APIs provided by bookmakers or through web scraping.
 
@@ -384,8 +467,9 @@ async function getArbitrageOpportunities(cutoff) {
     // process matches
     let arbResults_totals = await processMatches_totals(data, includeStartedMatches=true);
     let arbResult_h2h = await processMatches_h2h(data, includeStartedMatches=true);
-    let arbResults = [...arbResult_h2h.concat(arbResults_totals)]
-
+    let arbResult_spreads = await processMatches_spreads(data, includeStartedMatches=true);
+    let arbResults = [...arbResult_h2h.concat(arbResults_totals).concat(arbResult_spreads)] 
+ 
     //let evResults = await processPositiveEV(data, includeStartedMatches=false);
     let evResults = await processPositiveEV(data);
     evResults = [...evResults]
@@ -393,8 +477,9 @@ async function getArbitrageOpportunities(cutoff) {
     // filter opportunities
     // more than 0, less than 1 - cutoff, and greater than 0.85
     const arbitrageOpportunities = Array.from(arbResults).filter(x => {
-        const _pg = ((1 / x.total_implied_odds) - 1).toFixed(2) // percentage gain | 0.1 = 10%
+        const _pg = parseFloat(((1 / x.total_implied_odds) - 1).toFixed(3)) // percentage gain | 0.1 = 10%
         
+        if(x.key == "spreads") { console.log(_pg) }
         return 0 < x.total_implied_odds 
         && _pg > cutoff 
         && _pg < 0.15
@@ -414,7 +499,7 @@ async function getArbitrageOpportunities(cutoff) {
         }
     }
 
-    if (SAVE_JSON) {
+    if (true) {
         const data = JSON.stringify(file_data, null, 2);
 
         const filename = `data_${Date.now()}.json`;

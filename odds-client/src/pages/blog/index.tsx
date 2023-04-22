@@ -35,6 +35,16 @@ export default function Blog() {
             difficulty: "Intermediate",
             link: "/blog/using-the-positive-ev-tool"
         },
+
+        {
+            title: "Tips to Avoid Getting Banned by Bookmakers",
+            description: "In this blog post, we take a look at how bookmakers use patterns to identify arbitrage bettors and how you can avoid getting banned!",
+            type: "Information",
+            difficulty: "Intermediate",
+            link: "/blog/tips-to-avoid-getting-banned"
+        },
+
+        
         
     ]
   return (

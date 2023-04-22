@@ -1,7 +1,7 @@
 // import ../bot/scraper.js
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
-const { returnBettingOpportunities } = require('../bot/scraper.js');
+const { returnBettingOpportunities, updateInplayOpportunities } = require('../bot/scraper.js');
 var express = require('express');
 let { checkUser } = require('../middleware/checkUser');
 let { freeStuff } = require('../middleware/freeStuff');
@@ -9,9 +9,7 @@ var router = express.Router();
 const axios = require('axios');
 
 
-router.get("/run" ,async function(req, res, next) {
-    // * Check for required querys params and set defaults
-    const cutoff = (req.query.cutoff) ? req.query.cutoff : 0.01; // in percentage
+router.get("/run", async function(req, res, next) {
 
     // * Get most recently updated bet
     const mostRecentBet = await prisma.bet.findFirst({
@@ -24,7 +22,7 @@ router.get("/run" ,async function(req, res, next) {
     // * Get arbitrage data
     let data
     try {
-        data = await returnBettingOpportunities(cutoff, lastUpdated)
+        data = await returnBettingOpportunities(0.01, lastUpdated)
     }  catch (error) {
         res.status(500).json({
             "error": "Failed to run scraper. Details: " + error
@@ -177,6 +175,99 @@ router.get("/run" ,async function(req, res, next) {
     }
 
 });
+
+router.get("/run/inplay", async function(req, res) {
+    let inplay = await prisma.bet.findMany({
+        orderBy: {
+            createdAt: "desc"
+        }
+    })
+    inplay = inplay.filter(x => JSON.parse(x.data).live == true)
+
+    // * Get most recent bet
+    const mostRecentBet = inplay[0];
+    const lastUpdated = (mostRecentBet) ? new Date(mostRecentBet.updatedAt) : new Date(0);
+
+    // * Run scraper
+    let data
+    try {
+        data = await updateInplayOpportunities(inplay, 0.01, lastUpdated);
+    }  catch (error) {
+        res.status(500).json({
+            "error": "Failed to run scraper. Details: " + error
+        });
+        return
+    }
+
+    if(!data){
+        res.status(200).json({"status": "ok", "message": "Data already up to date."});
+        return;
+    }
+
+    // ! TEMPORARY UNTIL EV IS DONE ////////////////////////////////////
+    data = data.data.arbitrage
+
+    // * update bets
+    let totalUpdated = 0;
+    for(let i = 0; i < data.length; i++){
+    
+        for(let j = 0; j < inplay.length; j++){
+            if(data[i].match_id == JSON.parse(inplay[j].data).match_id){
+                try {
+                    await prisma.bet.update({
+                        where: {
+                            id: inplay[j].id
+                        },
+                        data: {
+                            data: JSON.stringify(data[i]),
+                        }
+                    })
+                    totalUpdated++;
+                } catch {
+                    if(process.env.NODE_ENV != "development") {
+                        res.status(500).json({"error": "Failed to update inplay data in database."});
+                        return;
+                    }
+                    continue;
+                }
+                break;
+            }
+        }
+    }
+
+    // * remove bets that dont exist anymore
+    let totalRemoved = 0;
+    for(let i = 0; i < inplay.length; i++){
+        let found = false;
+        for(let j = 0; j < data.length; j++){
+            if(data[j].match_id == JSON.parse(inplay[i].data).match_id){
+                found = true;
+                break;
+            }
+        }
+        if(!found){
+            try {
+                await prisma.bet.delete({
+                    where: {
+                        id: inplay[i].id
+                    }
+                })
+                totalRemoved++;
+            } catch {
+                if(process.env.NODE_ENV != "development") {
+                    res.status(500).json({"error": "Failed to delete inplay data in database."});
+                    return;
+                }
+                continue;
+            }
+        }
+    }
+
+    res.json({"status": "ok", data: {
+        "total_updated": totalUpdated,
+        "total_removed": totalRemoved
+    }});
+})
 
 router.get("/bookmakers", async function(req, res) {
     try {

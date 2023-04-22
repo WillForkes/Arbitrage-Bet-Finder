@@ -151,6 +151,17 @@ if(process.env.NODE_ENV != "development") {
             console.log(e)
         }
     });
+
+    schedule.scheduleJob("*/30 * * * * *", async () => {
+        console.log('Running In-play Match Updater');
+        try {
+            await axios.get('https://api.arbster.com/scraper/run/inplay')
+        } catch(e) {
+            console.log(e)
+        }
+    });
+
+    
 }
 
 module.exports = app;

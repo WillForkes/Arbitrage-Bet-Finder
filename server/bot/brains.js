@@ -311,6 +311,52 @@ function processMatches_spreads(matches, includeStartedMatches = false) {
     return arbitrageBets;
 }
 
+async function getMatchByID(limiter, id, sport, region) {
+    const url = `${BASE_URL}/sports/${sport}/odds/`;
+    const escapedUrl = encodeURI(url);
+    let returndata = []
+    const markets = ["h2h","spreads","totals"].join(",")
+
+    // * FOREACH REGION GET DATA
+    let querystring = {
+        apiKey: API_KEY,
+        regions: region,
+        oddsFormat: 'decimal',
+        dateFormat: 'unix',
+        markets: markets,
+        eventIds: id
+    };
+
+    querystringencoded = new URLSearchParams(querystring).toString();
+
+    // ! USED FOR RATE LIMITING REQUESTS TO THE API CUZ THEY HAVE RATE LIMITS >:O
+    _uri = escapedUrl + "?" + querystringencoded
+    let response
+    try {
+        response = await limiter.get(_uri)
+    } catch (err) {
+        if(process.env.NODE_ENV == "development") {
+            console.log("Failed to fetch data for " + sport + " in " + region + "(" + err.response.data.message + ")");
+        }
+        return false;
+    }
+
+    let filtered_response = response.data.filter(item => item !== 'message');
+
+    if(process.env.NODE_ENV == "development") {
+        console.log(`[${id}] Fetched in play match data for ${sport} in ${region}`)
+    }
+
+    if(filtered_response[0] == undefined) {
+        return false;
+    }
+
+    const match = filtered_response[0]
+
+    match.region = region
+    match.market = querystring.markets
+    return match;
+}
 
 function processPositiveEV(matches, includeStartedMatches = true) {
     // Collect the data: You will need to collect data on the odds offered by different bookmakers for a particular event. This can be done using APIs provided by bookmakers or through web scraping.
@@ -479,7 +525,6 @@ async function getArbitrageOpportunities(cutoff) {
     const arbitrageOpportunities = Array.from(arbResults).filter(x => {
         const _pg = parseFloat(((1 / x.total_implied_odds) - 1).toFixed(3)) // percentage gain | 0.1 = 10%
         
-        if(x.key == "spreads") { console.log(_pg) }
         return 0 < x.total_implied_odds 
         && _pg > cutoff 
         && _pg < 0.15
@@ -499,7 +544,7 @@ async function getArbitrageOpportunities(cutoff) {
         }
     }
 
-    if (true) {
+    if (SAVE_JSON) {
         const data = JSON.stringify(file_data, null, 2);
 
         const filename = `data_${Date.now()}.json`;
@@ -514,4 +559,58 @@ async function getArbitrageOpportunities(cutoff) {
     return file_data
 }
 
-module.exports = {getArbitrageOpportunities}
+async function getInplayOpportunities(inplay_data, cutoff) {
+    // create rate limiter axios object for getting match data from API
+    const limiter = rateLimit(axios.create(), { maxRequests: 12, perMilliseconds: 1000, maxRPS: 10 }) // ! Adjust timings?
+
+    // get raw match data from the match ids for each inplay_data object
+    let raw_data = await Promise.all([...inplay_data].map(async (match) => {
+        const betData = JSON.parse(match.data)
+        const match_id = betData.match_id;
+        const sport = betData.league;
+        const region = betData.region;
+        const rmd = getMatchByID(limiter, match_id, sport, region)
+        return rmd
+    }));
+    raw_data = raw_data.filter(item => item != false)
+
+    // process matches
+    let arbResults_totals = await processMatches_totals(raw_data, includeStartedMatches=true);
+    let arbResult_h2h = await processMatches_h2h(raw_data, includeStartedMatches=true);
+    let arbResult_spreads = await processMatches_spreads(raw_data, includeStartedMatches=true);
+
+    let arbResults = [...arbResult_h2h.concat(arbResults_totals).concat(arbResult_spreads)] 
+
+    // TODO:  let evResults = await processPositiveEV(data, includeStartedMatches=false);
+    // TODO:  let evResults = await processPositiveEV(data);
+    // TODO:  evResults = [...evResults]
+
+    // filter opportunities
+    // more than 0, less than 1 - cutoff, and greater than 0.85
+    const arbitrageOpportunities = Array.from(arbResults).filter(x => {
+        const _pg = parseFloat(((1 / x.total_implied_odds) - 1).toFixed(3)) // percentage gain | 0.1 = 10%
+        
+        return 0 < x.total_implied_odds 
+        && _pg > cutoff 
+        && _pg < 0.15
+    });
+    
+    // TODO: const EVOpportunities = Array.from(evResults).filter(x => x.ev < 0.3 && x.ev > 0.03);
+
+    // sort array by hours_to_start in ascending order
+    arbitrageOpportunities.sort((a, b) => a.hours_to_start - b.hours_to_start);
+    // TODO: EVOpportunities.sort((a, b) => a.ev - b.ev);
+
+    // save data to json file if SAVE_DATA is true
+    const file_data = {
+        "created": Date.now(), 
+        "data": {
+            "arbitrage":arbitrageOpportunities,
+            "ev":[]
+        }
+    }
+
+    return file_data
+}
+
+module.exports = {getArbitrageOpportunities, getInplayOpportunities}

@@ -25,7 +25,7 @@ export default function Testimonials() {
             It&apos;s a surefire way to make profit from sports betting without relying on luck.
             </p>
             <p className="mb-4">
-            At Arbster, we offer cutting-edge tools for sports bettors. Our flagship products, the arbitrage betting tool and positive EV betting tool, use proven mathematical models and real-time data to identify profitable opportunities. With our arbitrage betting tool, users can bet on both sides of a game with different sportsbooks, guaranteeing a profit. Our positive EV betting tool identifies situations where sportsbook odds are better than the true odds, allowing users to generate long-term profits. Whether you&apos;re a seasoned bettor or just starting out, Arbster is your ideal partner for achieving your sports betting goals.            
+            At Arbster, we offer cutting-edge tools for sports bettors. Our flagship product, the arbitrage betting tool, uses proven mathematical models and real-time data to identify profitable opportunities. With our arbitrage betting tool, users can bet on both sides of a game with different sportsbooks, guaranteeing a profit. Arbster is your ideal partner for achieving your sports betting goals.            
             </p>
             
             <Link 

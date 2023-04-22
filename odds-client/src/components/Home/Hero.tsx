@@ -3,7 +3,9 @@ import { Badge, Tooltip } from "flowbite-react";
 import { UserContext } from "@/pages/_app";
 import Link from "next/link";
 import { User } from "@/types";
-
+import { TextInput } from "flowbite-react";
+import { HiMail } from "react-icons/hi";
+import router from "next/router";
 
 export default function Hero() {
     const user: User | null = useContext(UserContext).user;
@@ -81,16 +83,41 @@ export default function Hero() {
                     Our intuitive tools put you in control of your sports betting success
                 </p>
 
-                <a href="#pricing" className="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
+                {/* <div className="inline-flex relative">
+                    <input
+                        className="inline-flex items-center justify-center px-5 py-3 mr-3 pl-10 text-base font-medium text-white rounded-lg bg-gray-700 hover:bg-gray-600 focus:ring-4 dark:focus:ring-primary-900"
+                        type="text"
+                        placeholder="john@gmail.com"
+                    />
+                    <button
+                        type="button"
+                        className="absolute left-3 top-1/2 transform -translate-y-1/2 bg-transparent border-none cursor-pointer"
+                    >
+                        <HiMail className="h-5 w-5" />
+                    </button>
+                </div> */}
+
+                <button
+                onClick={() => {
+                    if (user?.dbuser.plan == "free" || user?.dbuser.trialActivated == false) {
+                        router.push("/pricing");
+                    } else if(!user) {
+                        router.push("/auth/login");
+                    } else {
+                        router.push("/pricing");
+                    }
+                }}
+                className="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
+                >
                     {user?.dbuser.plan == "free" || user?.dbuser.trialActivated == false || !user ? (
-                        "Start your free trial"
+                        "Try For Free"
                     ) : (
                         "View Pricing"
                     )}
-                </a>
-                {/* CHANGE LINK HERE TO BLOGS PAGE */}
-                <Link href="/#blog" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
-                    Learn how it works
+                </button>
+
+                <Link href="/blog/how-does-arbster-work" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                    How it works
                     <svg className="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
                 </Link>  
             </div>

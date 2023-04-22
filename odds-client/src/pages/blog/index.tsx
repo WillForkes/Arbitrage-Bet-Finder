@@ -37,8 +37,8 @@ export default function Blog() {
         },
 
         {
-            title: "Tips to Avoid Getting Banned by Bookmakers",
-            description: "In this blog post, we take a look at how bookmakers use patterns to identify arbitrage bettors and how you can avoid getting banned!",
+            title: "Avoiding detection from the bookies",
+            description: "In this blog post, we take a look at how bookmakers use patterns to identify arbitrage bettors and how you can avoid getting your account limited or suspended. ",
             type: "Information",
             difficulty: "Intermediate",
             link: "/blog/tips-to-avoid-getting-banned"

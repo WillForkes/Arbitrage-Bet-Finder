@@ -1,10 +1,15 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import Head from "next/head";
 
 export default function Affiliate() {
   return (
     <section className="bg-white dark:bg-gray-900">
+        <Head>
+            <title>Arbster | Affiliate Program</title>
+            <meta name="description" content="Earn 50% commission on all sales made through your affiliate link. Join our affiliate program today!" />
+        </Head>
       <div className="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
         <div className="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
           <span className="font-bold tracking-wider uppercase dark:text-primary-700">

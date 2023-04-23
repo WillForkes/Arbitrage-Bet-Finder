@@ -57,7 +57,22 @@ export default function App({ Component, pageProps }: AppProps) {
 
           gtag('config', 'G-7H7GEWNWCK');
         `}
+        
       </Script>
+
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-7Q0SCQMKH4');
+        `}
+        
+      </Script>
+
+      <Script src="https://www.googletagmanager.com/gtag/js?id=G-7Q0SCQMKH4"></Script>
+
       <title>Arbster - Sports Betting Tools</title>
       <UserContext.Provider
         value={{

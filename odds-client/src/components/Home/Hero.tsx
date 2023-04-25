@@ -123,7 +123,7 @@ export default function Hero() {
             </div>
             <div className="hidden lg:mt-0 lg:col-span-5 lg:flex">
                 {/* <img src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/hero/phone-mockup.png" alt="mockup" /> */}
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/nsl_KBjTC6c" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>            
+                <iframe width="500" height="315" src="https://www.youtube.com/embed/nsl_KBjTC6c" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>            
             </div>           
         </div>
         {/* INCLUDE THIS SECTION WHEN WE GET TESTIMONIALS AND REFERENCES */}

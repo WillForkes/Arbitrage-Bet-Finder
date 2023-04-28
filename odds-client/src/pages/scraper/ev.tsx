@@ -75,19 +75,23 @@ export default function Ev() {
                 </div>
             </Card>
         </div>
-      {data ? (
+
+    <div className="rounded-md gap-6 grid-cols-1 2xl:grid-cols-2 mb-2">
+        {/* <EVLoader bets={evData} showBets={showBets} user={user} /> */}
+        <div className="mx-auto max-w-screen-md p-24 text-center mb-8 lg:mb-12 font-extrabold dark:text-white">
+            <Spinner aria-label="Loading spinner" />
+            <h2>The positive EV tool is currently under development. We estimate to have this operational within 2 months.</h2>
+            </div>
+    </div>
+      {/* {data ? (
         <div className="rounded-md gap-6 grid-cols-1 2xl:grid-cols-2 mb-2">
-          {/* <EVLoader bets={evData} showBets={showBets} user={user} /> */}
-            <div className="mx-auto max-w-screen-md p-24 text-center mb-8 lg:mb-12 font-extrabold dark:text-white">
-                <Spinner aria-label="Loading spinner" />
-              <h2>The positive EV tool is currently under maintainance. Please check back later.</h2>
-              </div>
+          <EVLoader bets={evData} showBets={showBets} user={user} />
         </div>
       ) : (
         <div className="mx-auto max-w-screen-md p-64 text-center mb-8 lg:mb-12">
           <Spinner aria-label="Default status example" />
         </div>
-      )}
+      )} */}
     </div>
   );
 }

@@ -6,8 +6,8 @@ export default function Features() {
         <div className="max-w-screen-xl px-4  mx-auto text-center lg:px-4">
             <dl className="grid max-w-screen-md gap-16 mx-auto text-gray-900 sm:grid-cols-3 dark:text-white">
                 <div className="flex flex-col items-center justify-center">
-                    <dt className="mb-2 text-3xl md:text-4xl font-extrabold">150+</dt>
-                    <dd className="font-light text-gray-500 dark:text-gray-400">Satisfied Customers</dd>
+                    <dt className="mb-2 text-3xl md:text-4xl font-extrabold">80%+</dt>
+                    <dd className="font-light text-gray-500 dark:text-gray-400">Satisfaction Rate</dd>
                 </div>
                 <div className="flex flex-col items-center justify-center">
                     <dt className="mb-2 text-3xl md:text-4xl font-extrabold">100,000+</dt>

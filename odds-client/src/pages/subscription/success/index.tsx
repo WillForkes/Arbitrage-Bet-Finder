@@ -13,7 +13,7 @@ export default function SuccessSubscriptionPage() {
     const router = useRouter()
     const { session_id } = router.query
     const { data, error } = useSWR("/payment/" + session_id, getter);
-
+    console.log(data)
     if(error || !data || data?.payment.status=="inactive" || data?.stripePayment.status != "complete") {
         return (
             <div className="flex justify-center items-center h-screen dark:bg-gray-900">
@@ -22,9 +22,6 @@ export default function SuccessSubscriptionPage() {
             </div>
         )
     }
-
-    const orderSubtotal = data.stripePayment.amount_total / 100
-
 
     return (
     <>

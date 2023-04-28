@@ -251,7 +251,7 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                           </p>
                           <p className="truncate text-sm text-gray-500 dark:text-gray-400">
                             {/* If starter - 29.99, if pro, 49.99, if plus 99.99 */}
-                            ${invoice.amount_paid / 100}
+                            {invoice.amount_paid / 100}
                           </p>
                         </div>
                         <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">

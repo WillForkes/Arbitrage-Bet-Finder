@@ -52,8 +52,9 @@ const plans = {
 
 // * Get profile data
 router.post('/create', checkUser, async (req, res) => {
-    let ref = req.query.ref ? req.query.ref : new Date().getTime().toString()
-    let trial = req.body.trial ? req.body.trial : false
+    const ref = req.query.ref ? req.query.ref : new Date().getTime().toString()
+    const trial = req.body.trial ? req.body.trial : false
+    const withBuyItNowDiscount = req.body.withBuyItNowDiscount ? req.body.withBuyItNowDiscount : false
     let user = req.user
     
     if(!req.body.plan){
@@ -91,9 +92,19 @@ router.post('/create', checkUser, async (req, res) => {
         cancel_url: (environment == "development") ? 
         "http://localhost:3001/subscription/failure" :
         "https://arbster.com/subscription/failure",
-        client_reference_id: ref,
-        allow_promotion_codes: true,
+        client_reference_id: ref
     }
+
+    if(withBuyItNowDiscount) {
+        sessionObj.discounts = [
+            {
+                coupon: withBuyItNowDiscount ? "BUYITNOW" : null
+            }
+        ]
+    } else {
+        sessionObj.allow_promotion_codes = true
+    }
+
     if(trial == true) {
         sessionObj.subscription_data = {
             trial_period_days: 5,

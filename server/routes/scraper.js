@@ -27,6 +27,7 @@ router.get("/run", async function(req, res, next) {
         res.status(500).json({
             "error": "Failed to run scraper. Details: " + error
         });
+        console.log(error.stack)
         return
     }
     

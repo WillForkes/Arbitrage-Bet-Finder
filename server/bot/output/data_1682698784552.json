@@ -1,0 +1,938 @@
+{
+  "created": 1682698784552,
+  "data": {
+    "arbitrage": [
+      {
+        "match_id": "9e387c0c03b49c54f91e76aa57539677",
+        "match_name": "Villarreal v. Espanyol",
+        "match_start_time": 1682616678,
+        "hours_to_start": -22.807368055582046,
+        "league": "soccer_spain_la_liga",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Espanyol": [
+            "888sport",
+            1001
+          ],
+          "Villarreal": [
+            "LiveScore Bet",
+            1.08
+          ],
+          "Draw": [
+            "Paddy Power",
+            451
+          ]
+        },
+        "total_implied_odds": 0.9291,
+        "region": "uk",
+        "live": true
+      },
+      {
+        "match_id": "9e387c0c03b49c54f91e76aa57539677",
+        "match_name": "Villarreal v. Espanyol",
+        "match_start_time": 1682616678,
+        "hours_to_start": -22.807362222207917,
+        "league": "soccer_spain_la_liga",
+        "key": "totals",
+        "best_outcome_odds": {
+          "Under": [
+            "Unibet",
+            1.09,
+            6.5
+          ],
+          "Over": [
+            "Matchbook",
+            15,
+            6.5
+          ]
+        },
+        "total_implied_odds": 0.984097859327217,
+        "region": "eu",
+        "live": true
+      },
+      {
+        "match_id": "9e387c0c03b49c54f91e76aa57539677",
+        "match_name": "Villarreal v. Espanyol",
+        "match_start_time": 1682616678,
+        "hours_to_start": -22.807362222207917,
+        "league": "soccer_spain_la_liga",
+        "key": "totals",
+        "best_outcome_odds": {
+          "Over": [
+            "Matchbook",
+            15,
+            6.5
+          ],
+          "Under": [
+            "Unibet",
+            1.09,
+            6.5
+          ]
+        },
+        "total_implied_odds": 0.984097859327217,
+        "region": "eu",
+        "live": true
+      },
+      {
+        "match_id": "9e387c0c03b49c54f91e76aa57539677",
+        "match_name": "Villarreal v. Espanyol",
+        "match_start_time": 1682616678,
+        "hours_to_start": -22.807362222207917,
+        "league": "soccer_spain_la_liga",
+        "key": "totals",
+        "best_outcome_odds": {
+          "Over": [
+            "Matchbook",
+            15,
+            6.5
+          ],
+          "Under": [
+            "Mr Green",
+            1.09,
+            6.5
+          ]
+        },
+        "total_implied_odds": 0.984097859327217,
+        "region": "uk",
+        "live": true
+      },
+      {
+        "match_id": "9e387c0c03b49c54f91e76aa57539677",
+        "match_name": "Villarreal v. Espanyol",
+        "match_start_time": 1682616678,
+        "hours_to_start": -22.807362222207917,
+        "league": "soccer_spain_la_liga",
+        "key": "totals",
+        "best_outcome_odds": {
+          "Under": [
+            "Unibet",
+            1.11,
+            6.5
+          ],
+          "Over": [
+            "TAB",
+            15,
+            6.5
+          ]
+        },
+        "total_implied_odds": 0.9675675675675675,
+        "region": "au",
+        "live": true
+      },
+      {
+        "match_id": "9e387c0c03b49c54f91e76aa57539677",
+        "match_name": "Villarreal v. Espanyol",
+        "match_start_time": 1682616678,
+        "hours_to_start": -22.807362222207917,
+        "league": "soccer_spain_la_liga",
+        "key": "totals",
+        "best_outcome_odds": {
+          "Over": [
+            "TAB",
+            15,
+            6.5
+          ],
+          "Under": [
+            "Unibet",
+            1.11,
+            6.5
+          ]
+        },
+        "total_implied_odds": 0.9675675675675675,
+        "region": "au",
+        "live": true
+      },
+      {
+        "match_id": "c7cb6800b310ec95b0cb7883514f9e60",
+        "match_name": "Valencia v. Valladolid",
+        "match_start_time": 1682616745,
+        "hours_to_start": -22.788751111096808,
+        "league": "soccer_spain_la_liga",
+        "key": "totals",
+        "best_outcome_odds": {
+          "Under": [
+            "MyBookie.ag",
+            1.65,
+            2.5
+          ],
+          "Over": [
+            "Pinnacle",
+            2.94,
+            2.5
+          ]
+        },
+        "total_implied_odds": 0.9461966604823748,
+        "region": "eu",
+        "live": true
+      },
+      {
+        "match_id": "c7cb6800b310ec95b0cb7883514f9e60",
+        "match_name": "Valencia v. Valladolid",
+        "match_start_time": 1682616745,
+        "hours_to_start": -22.788751111096808,
+        "league": "soccer_spain_la_liga",
+        "key": "totals",
+        "best_outcome_odds": {
+          "Over": [
+            "Pinnacle",
+            2.94,
+            2.5
+          ],
+          "Under": [
+            "MyBookie.ag",
+            1.65,
+            2.5
+          ]
+        },
+        "total_implied_odds": 0.9461966604823748,
+        "region": "eu",
+        "live": true
+      },
+      {
+        "match_id": "9066a8ca1588bd698e683952c2a97fcf",
+        "match_name": "AS Monaco v. Maccabi Tel Aviv",
+        "match_start_time": 1682619329,
+        "hours_to_start": -22.07097416665819,
+        "league": "basketball_euroleague",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "AS Monaco": [
+            "Barstool Sportsbook",
+            1.17
+          ],
+          "Maccabi Tel Aviv": [
+            "Bovada",
+            10
+          ]
+        },
+        "total_implied_odds": 0.9547,
+        "region": "us",
+        "live": true
+      },
+      {
+        "match_id": "c5ff1e7a9836d125073cfe53fb6086d0",
+        "match_name": "Chicago Cubs v. San Diego Padres",
+        "match_start_time": 1682619591,
+        "hours_to_start": -21.998196388880412,
+        "league": "baseball_mlb",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Chicago Cubs": [
+            "MyBookie.ag",
+            1.4
+          ],
+          "San Diego Padres": [
+            "Bovada",
+            3.75
+          ]
+        },
+        "total_implied_odds": 0.981,
+        "region": "us",
+        "live": true
+      },
+      {
+        "match_id": "17eb6c0e57f0a03f69ab260d46ecb3f9",
+        "match_name": "Real Madrid v. KK Partizan NIS",
+        "match_start_time": 1682621138,
+        "hours_to_start": -21.568474166658188,
+        "league": "basketball_euroleague",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "KK Partizan NIS": [
+            "Pinnacle",
+            2.18
+          ],
+          "Real Madrid": [
+            "Betclic",
+            2.65
+          ],
+          "Draw": [
+            "Betclic",
+            14
+          ]
+        },
+        "total_implied_odds": 0.9075,
+        "region": "eu",
+        "live": true
+      },
+      {
+        "match_id": "a085aa8beb661722ad957e5d8c15f798",
+        "match_name": "Southampton v. Bournemouth",
+        "match_start_time": 1682621230,
+        "hours_to_start": -21.542913055552376,
+        "league": "soccer_epl",
+        "key": "totals",
+        "best_outcome_odds": {
+          "Over": [
+            "Unibet",
+            2.04,
+            1.5
+          ],
+          "Under": [
+            "Pinnacle",
+            2.02,
+            1.5
+          ]
+        },
+        "total_implied_odds": 0.9852455833818676,
+        "region": "eu",
+        "live": true
+      },
+      {
+        "match_id": "49633cbefc7dd09d211d763a921693bf",
+        "match_name": "Rotherham United v. Cardiff City",
+        "match_start_time": 1682622143,
+        "hours_to_start": -21.289301388859748,
+        "league": "soccer_efl_champ",
+        "key": "totals",
+        "best_outcome_odds": {
+          "Under": [
+            "MyBookie.ag",
+            2.1,
+            2.5
+          ],
+          "Over": [
+            "SugarHouse",
+            1.95,
+            2.5
+          ]
+        },
+        "total_implied_odds": 0.989010989010989,
+        "region": "us",
+        "live": true
+      },
+      {
+        "match_id": "49633cbefc7dd09d211d763a921693bf",
+        "match_name": "Rotherham United v. Cardiff City",
+        "match_start_time": 1682622143,
+        "hours_to_start": -21.289301388859748,
+        "league": "soccer_efl_champ",
+        "key": "totals",
+        "best_outcome_odds": {
+          "Over": [
+            "SugarHouse",
+            1.95,
+            2.5
+          ],
+          "Under": [
+            "MyBookie.ag",
+            2.1,
+            2.5
+          ]
+        },
+        "total_implied_odds": 0.989010989010989,
+        "region": "us",
+        "live": true
+      },
+      {
+        "match_id": "49633cbefc7dd09d211d763a921693bf",
+        "match_name": "Rotherham United v. Cardiff City",
+        "match_start_time": 1682622143,
+        "hours_to_start": -21.289301388859748,
+        "league": "soccer_efl_champ",
+        "key": "totals",
+        "best_outcome_odds": {
+          "Over": [
+            "Barstool Sportsbook",
+            1.97,
+            2.5
+          ],
+          "Under": [
+            "MyBookie.ag",
+            2.1,
+            2.5
+          ]
+        },
+        "total_implied_odds": 0.9838046893884457,
+        "region": "us",
+        "live": true
+      },
+      {
+        "match_id": "49633cbefc7dd09d211d763a921693bf",
+        "match_name": "Rotherham United v. Cardiff City",
+        "match_start_time": 1682622143,
+        "hours_to_start": -21.289301388859748,
+        "league": "soccer_efl_champ",
+        "key": "totals",
+        "best_outcome_odds": {
+          "Over": [
+            "TwinSpires",
+            1.97,
+            2.5
+          ],
+          "Under": [
+            "MyBookie.ag",
+            2.1,
+            2.5
+          ]
+        },
+        "total_implied_odds": 0.9838046893884457,
+        "region": "us",
+        "live": true
+      },
+      {
+        "match_id": "49633cbefc7dd09d211d763a921693bf",
+        "match_name": "Rotherham United v. Cardiff City",
+        "match_start_time": 1682622143,
+        "hours_to_start": -21.289301388859748,
+        "league": "soccer_efl_champ",
+        "key": "totals",
+        "best_outcome_odds": {
+          "Over": [
+            "Unibet",
+            1.97,
+            2.5
+          ],
+          "Under": [
+            "MyBookie.ag",
+            2.1,
+            2.5
+          ]
+        },
+        "total_implied_odds": 0.9838046893884457,
+        "region": "us",
+        "live": true
+      },
+      {
+        "match_id": "49633cbefc7dd09d211d763a921693bf",
+        "match_name": "Rotherham United v. Cardiff City",
+        "match_start_time": 1682622143,
+        "hours_to_start": -21.289301388859748,
+        "league": "soccer_efl_champ",
+        "key": "totals",
+        "best_outcome_odds": {
+          "Over": [
+            "BetMGM",
+            2,
+            2.5
+          ],
+          "Under": [
+            "MyBookie.ag",
+            2.1,
+            2.5
+          ]
+        },
+        "total_implied_odds": 0.9761904761904762,
+        "region": "us",
+        "live": true
+      },
+      {
+        "match_id": "66ca5a121b5ddc4763cf1708222be377",
+        "match_name": "Tottenham Hotspur v. Manchester United",
+        "match_start_time": 1682622903,
+        "hours_to_start": -21.078199999994702,
+        "league": "soccer_epl",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Manchester United": [
+            "Suprabets",
+            1.6
+          ],
+          "Tottenham Hotspur": [
+            "Nordic Bet",
+            6.5
+          ],
+          "Draw": [
+            "Betfair",
+            4.9
+          ]
+        },
+        "total_implied_odds": 0.9829,
+        "region": "eu",
+        "live": true
+      },
+      {
+        "match_id": "7fcc46ae9003261d8acb437711dbc42c",
+        "match_name": "San Francisco Giants v. St. Louis Cardinals",
+        "match_start_time": 1682624700,
+        "hours_to_start": -20.5790294444561,
+        "league": "baseball_mlb",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "San Francisco Giants": [
+            "Nordic Bet",
+            1.74
+          ],
+          "St. Louis Cardinals": [
+            "Matchbook",
+            2.44
+          ]
+        },
+        "total_implied_odds": 0.9845,
+        "region": "eu",
+        "live": true
+      },
+      {
+        "match_id": "ab6d007629b7a28f73a19dd937ebde21",
+        "match_name": "Athletic Bilbao v. Sevilla",
+        "match_start_time": 1682625600,
+        "hours_to_start": -20.329034722248714,
+        "league": "soccer_spain_la_liga",
+        "key": "spreads",
+        "best_outcome_odds": {
+          "Athletic Bilbao": [
+            "Betfair",
+            1.91
+          ],
+          "Sevilla": [
+            "Matchbook",
+            5
+          ],
+          "Draw": [
+            "1xBet",
+            3.76
+          ]
+        },
+        "total_implied_odds": 0.9895,
+        "region": "eu",
+        "live": true
+      },
+      {
+        "match_id": "f78da5fdea95266c4ba0fa4220fb336a",
+        "match_name": "Toronto Maple Leafs v. Tampa Bay Lightning",
+        "match_start_time": 1682636400,
+        "hours_to_start": -17.329021944469876,
+        "league": "icehockey_nhl",
+        "key": "totals",
+        "best_outcome_odds": {
+          "Over": [
+            "1xBet",
+            2.19,
+            6.5
+          ],
+          "Under": [
+            "MyBookie.ag",
+            1.94,
+            6.5
+          ]
+        },
+        "total_implied_odds": 0.9720849220919834,
+        "region": "eu",
+        "live": true
+      },
+      {
+        "match_id": "f78da5fdea95266c4ba0fa4220fb336a",
+        "match_name": "Toronto Maple Leafs v. Tampa Bay Lightning",
+        "match_start_time": 1682636400,
+        "hours_to_start": -17.329021944469876,
+        "league": "icehockey_nhl",
+        "key": "totals",
+        "best_outcome_odds": {
+          "Under": [
+            "MyBookie.ag",
+            1.94,
+            6.5
+          ],
+          "Over": [
+            "1xBet",
+            2.19,
+            6.5
+          ]
+        },
+        "total_implied_odds": 0.9720849220919834,
+        "region": "eu",
+        "live": true
+      },
+      {
+        "match_id": "f78da5fdea95266c4ba0fa4220fb336a",
+        "match_name": "Toronto Maple Leafs v. Tampa Bay Lightning",
+        "match_start_time": 1682636400,
+        "hours_to_start": -17.329021944469876,
+        "league": "icehockey_nhl",
+        "key": "totals",
+        "best_outcome_odds": {
+          "Under": [
+            "BetOnline.ag",
+            1.99,
+            6.5
+          ],
+          "Over": [
+            "1xBet",
+            2.19,
+            6.5
+          ]
+        },
+        "total_implied_odds": 0.9591335673802803,
+        "region": "eu",
+        "live": true
+      },
+      {
+        "match_id": "f78da5fdea95266c4ba0fa4220fb336a",
+        "match_name": "Toronto Maple Leafs v. Tampa Bay Lightning",
+        "match_start_time": 1682636400,
+        "hours_to_start": -17.329021944469876,
+        "league": "icehockey_nhl",
+        "key": "totals",
+        "best_outcome_odds": {
+          "Under": [
+            "Pinnacle",
+            1.94,
+            6.5
+          ],
+          "Over": [
+            "1xBet",
+            2.19,
+            6.5
+          ]
+        },
+        "total_implied_odds": 0.9720849220919834,
+        "region": "eu",
+        "live": true
+      },
+      {
+        "match_id": "466f5e785e70b4ab0d3af03ae5295a5a",
+        "match_name": "Detroit Tigers v. Baltimore Orioles",
+        "match_start_time": 1682721600,
+        "hours_to_start": 6.337636944452922,
+        "league": "baseball_mlb",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Baltimore Orioles": [
+            "1xBet",
+            1.93
+          ],
+          "Detroit Tigers": [
+            "BetOnline.ag",
+            2.15
+          ]
+        },
+        "total_implied_odds": 0.9833,
+        "region": "eu",
+        "live": false
+      },
+      {
+        "match_id": "6eeda6f9ef46ea20228185a54553b0c0",
+        "match_name": "Miami Marlins v. Chicago Cubs",
+        "match_start_time": 1682721600,
+        "hours_to_start": 6.337636944452922,
+        "league": "baseball_mlb",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Chicago Cubs": [
+            "1xBet",
+            2.14
+          ],
+          "Miami Marlins": [
+            "BetOnline.ag",
+            1.92
+          ]
+        },
+        "total_implied_odds": 0.9881,
+        "region": "eu",
+        "live": false
+      },
+      {
+        "match_id": "6df6648cc29a3b658b2b0e5819101be4",
+        "match_name": "Houston Astros v. Philadelphia Phillies",
+        "match_start_time": 1682727000,
+        "hours_to_start": 7.837636944452922,
+        "league": "baseball_mlb",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Houston Astros": [
+            "BetOnline.ag",
+            1.66
+          ],
+          "Philadelphia Phillies": [
+            "1xBet",
+            2.65
+          ]
+        },
+        "total_implied_odds": 0.9798,
+        "region": "eu",
+        "live": false
+      },
+      {
+        "match_id": "e8ccf07374e3e52a2420110ce3f308f3",
+        "match_name": "Penrith Panthers v. Wests Tigers",
+        "match_start_time": 1682760900,
+        "hours_to_start": 17.25430305553807,
+        "league": "rugbyleague_nrl",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Penrith Panthers": [
+            "Pinnacle",
+            1.14
+          ],
+          "Wests Tigers": [
+            "MyBookie.ag",
+            31.74
+          ],
+          "Draw": [
+            "Marathon Bet",
+            46
+          ]
+        },
+        "total_implied_odds": 0.9304,
+        "region": "eu",
+        "live": false
+      },
+      {
+        "match_id": "e8ccf07374e3e52a2420110ce3f308f3",
+        "match_name": "Penrith Panthers v. Wests Tigers",
+        "match_start_time": 1682760900,
+        "hours_to_start": 17.25430305553807,
+        "league": "rugbyleague_nrl",
+        "key": "spreads",
+        "best_outcome_odds": {
+          "Penrith Panthers": [
+            "Bovada",
+            1.12
+          ],
+          "Wests Tigers": [
+            "MyBookie.ag",
+            31.74
+          ],
+          "Draw": [
+            "William Hill (US)",
+            46
+          ]
+        },
+        "total_implied_odds": 0.9461,
+        "region": "us",
+        "live": false
+      },
+      {
+        "match_id": "e197375ec8a2ef53f7af941baec15868",
+        "match_name": "Crystal Palace v. West Ham United",
+        "match_start_time": 1682767800,
+        "hours_to_start": 19.170966666671966,
+        "league": "soccer_epl",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Crystal Palace": [
+            "Betfair",
+            2.8
+          ],
+          "West Ham United": [
+            "Unibet",
+            3.05
+          ],
+          "Draw": [
+            "Suprabets",
+            3.34
+          ]
+        },
+        "total_implied_odds": 0.9844,
+        "region": "eu",
+        "live": false
+      },
+      {
+        "match_id": "cb302e887d16776e0ce55e12a5a8571b",
+        "match_name": "Union Berlin v. Bayer Leverkusen",
+        "match_start_time": 1682775000,
+        "hours_to_start": 21.170966111090447,
+        "league": "soccer_germany_bundesliga",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Bayer Leverkusen": [
+            "BetUS",
+            3
+          ],
+          "Union Berlin": [
+            "BetUS",
+            3.4
+          ],
+          "Draw": [
+            "LowVig.ag",
+            3.45
+          ]
+        },
+        "total_implied_odds": 0.9173,
+        "region": "us",
+        "live": false
+      },
+      {
+        "match_id": "8655a2425de23ef57a5c9831e0733bfb",
+        "match_name": "Los Angeles Kings v. Edmonton Oilers",
+        "match_start_time": 1682820480,
+        "hours_to_start": 33.80431111110581,
+        "league": "icehockey_nhl",
+        "key": "totals",
+        "best_outcome_odds": {
+          "Under": [
+            "Virgin Bet",
+            2.15,
+            6.5
+          ],
+          "Over": [
+            "Casumo",
+            2,
+            6.5
+          ]
+        },
+        "total_implied_odds": 0.9651162790697674,
+        "region": "uk",
+        "live": false
+      },
+      {
+        "match_id": "8655a2425de23ef57a5c9831e0733bfb",
+        "match_name": "Los Angeles Kings v. Edmonton Oilers",
+        "match_start_time": 1682820480,
+        "hours_to_start": 33.80431111110581,
+        "league": "icehockey_nhl",
+        "key": "totals",
+        "best_outcome_odds": {
+          "Over": [
+            "Casumo",
+            2,
+            6.5
+          ],
+          "Under": [
+            "Virgin Bet",
+            2.15,
+            6.5
+          ]
+        },
+        "total_implied_odds": 0.9651162790697674,
+        "region": "uk",
+        "live": false
+      },
+      {
+        "match_id": "aa04b375f59242e564783590f37d2bb9",
+        "match_name": "Granada CF v. SD Eibar",
+        "match_start_time": 1682872200,
+        "hours_to_start": 48.1709580555227,
+        "league": "soccer_spain_segunda_division",
+        "key": "spreads",
+        "best_outcome_odds": {
+          "Granada CF": [
+            "Matchbook",
+            3.15,
+            -0.5
+          ],
+          "SD Eibar": [
+            "MyBookie.ag",
+            1.71,
+            0.5
+          ]
+        },
+        "total_implied_odds": 0.9022556390977443,
+        "region": "eu",
+        "live": false
+      },
+      {
+        "match_id": "3950e78bce279115dd19bf965eb7e923",
+        "match_name": "Sampdoria v. Torino",
+        "match_start_time": 1683129600,
+        "hours_to_start": 119.6709658333328,
+        "league": "soccer_italy_serie_a",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Sampdoria": [
+            "Suprabets",
+            4.33
+          ],
+          "Torino": [
+            "1xBet",
+            2.13
+          ],
+          "Draw": [
+            "1xBet",
+            3.46
+          ]
+        },
+        "total_implied_odds": 0.9894,
+        "region": "eu",
+        "live": false
+      },
+      {
+        "match_id": "c61e2be218cf2e6f1aa5d71378dc99c3",
+        "match_name": "Fulham v. Leicester City",
+        "match_start_time": 1683554400,
+        "hours_to_start": 237.6709663889143,
+        "league": "soccer_epl",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Fulham": [
+            "Suprabets",
+            2.56
+          ],
+          "Leicester City": [
+            "1xBet",
+            3.02
+          ],
+          "Draw": [
+            "Suprabets",
+            3.82
+          ]
+        },
+        "total_implied_odds": 0.9835,
+        "region": "eu",
+        "live": false
+      },
+      {
+        "match_id": "b2f1e1c06b3afe6c21a7806e1c650a03",
+        "match_name": "Real Madrid v. Manchester City",
+        "match_start_time": 1683658800,
+        "hours_to_start": 266.6709580555227,
+        "league": "soccer_uefa_champs_league",
+        "key": "spreads",
+        "best_outcome_odds": {
+          "Real Madrid": [
+            "Pinnacle",
+            3.02,
+            null
+          ],
+          "Manchester City": [
+            "1xBet",
+            1.68,
+            null
+          ]
+        },
+        "total_implied_odds": 0.9263639230526648,
+        "region": "eu",
+        "live": false
+      },
+      {
+        "match_id": "b2f1e1c06b3afe6c21a7806e1c650a03",
+        "match_name": "Real Madrid v. Manchester City",
+        "match_start_time": 1683658800,
+        "hours_to_start": 266.6709580555227,
+        "league": "soccer_uefa_champs_league",
+        "key": "spreads",
+        "best_outcome_odds": {
+          "Manchester City": [
+            "1xBet",
+            1.68,
+            null
+          ],
+          "Real Madrid": [
+            "Pinnacle",
+            3.02,
+            null
+          ]
+        },
+        "total_implied_odds": 0.9263639230526648,
+        "region": "eu",
+        "live": false
+      },
+      {
+        "match_id": "b2f1e1c06b3afe6c21a7806e1c650a03",
+        "match_name": "Real Madrid v. Manchester City",
+        "match_start_time": 1683658800,
+        "hours_to_start": 266.670964722236,
+        "league": "soccer_uefa_champs_league",
+        "key": "h2h",
+        "best_outcome_odds": {
+          "Manchester City": [
+            "Unibet",
+            2.35
+          ],
+          "Real Madrid": [
+            "Suprabets",
+            3.32
+          ],
+          "Draw": [
+            "Suprabets",
+            3.84
+          ]
+        },
+        "total_implied_odds": 0.9872,
+        "region": "eu",
+        "live": false
+      }
+    ],
+    "ev": []
+  }
+}

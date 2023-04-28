@@ -1,6 +1,4 @@
 //! api docs: https://the-odds-api.com/liveapi/guides/v4/#schema-2
-
-
 const axios = require('axios');
 const rateLimit = require('axios-rate-limit');
 const fs = require('fs');
@@ -38,7 +36,7 @@ async function getData(sport, regions, limiter=null) {
     const url = `${BASE_URL}/sports/${sport}/odds/`;
     const escapedUrl = encodeURI(url);
     let returndata = []
-    const markets = ["h2h","spreads","totals"].join(",")
+    const markets = ["h2h","spreads", "totals"].join(",")
 
     // * FOREACH REGION GET DATA
     for(let i=0; i<regions.length; i++){
@@ -146,7 +144,7 @@ function processMatches_h2h(matches, includeStartedMatches = false) {
     return arbBets
 }
 
-function processMatches_totals(matches, includeStartedMatches = false) {
+async function processMatches_totals(matches, includeStartedMatches = false) {
     const arbitrageBets = [];
   
   for (const match of matches) {
@@ -161,75 +159,72 @@ function processMatches_totals(matches, includeStartedMatches = false) {
         }
     }
     
-    
-    for (const bookmaker of match.bookmakers) {
-      for (const market of bookmaker.markets) {
+    for (let bookmaker of match.bookmakers) {
+        for (let market of bookmaker.markets) {
         
-        const marketOutcomes = market.outcomes;
-        const marketType = market.key;
+            const marketOutcomes = market.outcomes;
+            const marketType = market.key;
 
-        if(marketType !== "totals") continue;
-        
-        for (let i = 0; i < marketOutcomes.length; i++) {
-          const outcomeABookmaker = bookmaker;
-          const outcomeA = marketOutcomes[i];
+            if(marketType !== "totals") continue;
+            
+            for (let i = 0; i < marketOutcomes.length; i++) {
+                const outcomeABookmaker = bookmaker;
+                const outcomeA = marketOutcomes[i];
+                
+                const _outcome_b_name = (outcomeA.name == "Over") ? "Under" : "Over";
+                const _outcome_b_points = outcomeA.point
 
-          for (let j = i+1; j < marketOutcomes.length; j++) {
-            const _outcome_b_name = marketOutcomes[j].name
-            const _outcome_b_points = marketOutcomes[j].point
+                const outcomeBBookmaker = match.bookmakers.find((bk) => {
+                    return bk.key !== bookmaker.key 
+                    && bk.markets.some((m) => m.key === "totals" 
+                    && m.outcomes.some((o) => o.name === _outcome_b_name
+                    && o.point === _outcome_b_points));
+                });            
 
-            const outcomeBBookmaker = match.bookmakers.find((bk) => {
-              return bk.key !== bookmaker.key 
-              && bk.markets.some((m) => m.key === "totals" 
-              && m.outcomes.some((o) => o.name === _outcome_b_name
-              && o.point === _outcome_b_points));
-            });            
+                if (outcomeBBookmaker) {
+                    const outcomeAOdds = outcomeA.price; // decimal odds of outcome A occuring
 
-            if (outcomeBBookmaker) {
-              const outcomeAOdds = outcomeA.price; // decimal odds of outcome A occuring
+                    outcomeB = {
+                        name: _outcome_b_name, 
+                        point: _outcome_b_points, 
+                        price: outcomeBBookmaker.markets.find((m) => m.key === "totals").outcomes.find((o) => o.name === _outcome_b_name && o.point === _outcome_b_points).price
+                    }
+                    const outcomeBOdds = outcomeB.price
 
-              outcomeB = {
-                    name: _outcome_b_name, 
-                    point: _outcome_b_points, 
-                    price: outcomeBBookmaker.markets.find((m) => m.key === "totals").outcomes.find((o) => o.name === _outcome_b_name && o.point === _outcome_b_points).price
+                    const impliedOdds = (1 / outcomeAOdds) + (1 / outcomeBOdds);
+                    
+                    if(outcomeA.point != outcomeB.point) continue;
+
+                    if (impliedOdds < 1) {
+                        const boo = {
+                            [outcomeA.name]: [outcomeABookmaker.title, outcomeAOdds, outcomeA.point?  outcomeA.point : null],
+                            [outcomeB.name]: [outcomeBBookmaker.title, outcomeBOdds, outcomeB.point? outcomeB.point : null]
+                        };
+
+                        const arbitrageBet = {
+                            match_id: match.id,
+                            match_name: match.home_team + " v. " + match.away_team,
+                            match_start_time: startTime,
+                            hours_to_start: timeToStart,
+                            league: match.sport_key,
+                            key: marketType,
+                            best_outcome_odds: boo,
+                            total_implied_odds: impliedOdds,
+                            region: match.region,
+                            live: isLive
+                        };
+                        arbitrageBets.push(arbitrageBet);
+                        }
+                    }
                 }
-              const outcomeBOdds = outcomeB.price
-
-              const impliedOdds = (1 / outcomeAOdds) + (1 / outcomeBOdds);
-              
-              if(outcomeA.point != outcomeB.point) continue;
-
-              if (impliedOdds < 1) {
-                const boo = {
-                    [outcomeA.name]: [outcomeABookmaker.title, outcomeAOdds, outcomeA.point?  outcomeA.point : null],
-                    [outcomeB.name]: [outcomeBBookmaker.title, outcomeBOdds, outcomeB.point? outcomeB.point : null]
-                };
-
-                const arbitrageBet = {
-                  match_id: match.id,
-                  match_name: match.home_team + " v. " + match.away_team,
-                  match_start_time: startTime,
-                  hours_to_start: timeToStart,
-                  league: match.sport_key,
-                  key: marketType,
-                  best_outcome_odds: boo,
-                  total_implied_odds: impliedOdds,
-                  region: match.region,
-                  live: isLive
-                };
-                arbitrageBets.push(arbitrageBet);
-              }
             }
-          }
         }
-      }
     }
-  }
   
-  return arbitrageBets;
+    return arbitrageBets;
 }
 
-function processMatches_spreads(matches, includeStartedMatches = false) {
+async function processMatches_spreads(matches, includeStartedMatches = false ) {
     const arbitrageBets = [];
   
     for (const match of matches) {
@@ -252,21 +247,20 @@ function processMatches_spreads(matches, includeStartedMatches = false) {
                 const marketType = market.key;
 
                 if(marketType !== "spreads") continue;
-                
+
                 for (let i = 0; i < marketOutcomes.length; i++) {
                     const outcomeABookmaker = bookmaker;
                     const outcomeA = marketOutcomes[i];
+                    
+                    const _outcome_b_points = outcomeA.point * -1
+                    const _outcome_b_name = (outcomeA.name == match.home_team) ? match.away_team : match.home_team;
 
-                    for (let j = i+1; j < marketOutcomes.length; j++) {
-                        const _outcome_b_name = marketOutcomes[j].name
-                        const _outcome_b_points = marketOutcomes[j].point
-
-                        const outcomeBBookmaker = match.bookmakers.find((bk) => {
-                            return bk.key !== bookmaker.key 
-                            && bk.markets.some((m) => m.key === "spreads" 
-                            && m.outcomes.some((o) => o.name === _outcome_b_name
-                            && o.point === _outcome_b_points));
-                    });            
+                    const outcomeBBookmaker = match.bookmakers.find((bk) => {
+                        return bk.key !== bookmaker.key 
+                        && bk.markets.some((m) => m.key === "spreads" 
+                        && m.outcomes.some((o) => o.name === _outcome_b_name
+                        && o.point === _outcome_b_points));
+                    });
 
                     if (outcomeBBookmaker) {
                         const outcomeAOdds = outcomeA.price; // decimal odds of outcome A occuring
@@ -303,7 +297,6 @@ function processMatches_spreads(matches, includeStartedMatches = false) {
                         }
                     }
                 }
-            }
             }
         }
     }
@@ -358,141 +351,89 @@ async function getMatchByID(limiter, id, sport, region) {
     return match;
 }
 
-function processPositiveEV(matches, includeStartedMatches = true) {
-    // Collect the data: You will need to collect data on the odds offered by different bookmakers for a particular event. This can be done using APIs provided by bookmakers or through web scraping.
-
-    // Calculate the implied probabilities: The odds offered by bookmakers represent the implied probability of an outcome occurring. To calculate the implied probability, you can use the following formula: Implied probability = 1 / decimal odds.
-    
-    // Calculate the true probability: To calculate the true probability, you need to use your own analysis or prediction model to estimate the probability of an outcome occurring.
-    
-    // Compare the true probability and implied probability: Once you have the true probability and implied probability, you can compare them to determine if there is a positive expected value bet. If the true probability is higher than the implied probability, then there is a positive expected value bet.
-    
-    // Place the bet: If you find a positive expected value bet, you can place the bet with the bookmaker offering the highest odds.
-    let positiveBets = [];
-    let totalNoEV = 0
-    let totalPositiveEV = 0
-
-    for (let i = 0; i < matches.length; i++) {
-        let match = matches[i];
-        const startTime = parseInt(match.commence_time);
-        const timeToStart = (startTime - Date.now() / 1000) / 3600;
-        if (!includeStartedMatches && startTime < Date.now() / 1000) {
-            continue;
-        }
-
-        for (let j = 0; j < match.bookmakers.length; j++) {
-        let bookmaker = match.bookmakers[j];
-
-            for (let k = 0; k < bookmaker.markets.length; k++) {
-                let market = bookmaker.markets[k];
-
-                let homeTeamOutcome = market.outcomes.find(
-                    (outcome) => outcome.name === match.home_team || market.key === "totals" && outcome.name === "Over"
-                );
-                let awayTeamOutcome = market.outcomes.find(
-                    (outcome) => outcome.name === match.away_team || market.key === "totals" && outcome.name === "Under"
-                );
-                let drawOutcome = market.outcomes.find(
-                    (outcome) => outcome.name.toLowerCase() === "draw"
-                );
-
-                if(!homeTeamOutcome || !awayTeamOutcome) continue;
-
-                const hasDraw = drawOutcome? true : false;
-
-                // * this is the implied probability of the outcome, with the bookmaker's vig included (so not accurate)
-                ht_impliedProbability = 1 / homeTeamOutcome.price;
-                at_impliedProbability = 1 / awayTeamOutcome.price;
-                draw_impliedProbability = hasDraw ? 1 / drawOutcome.price : 0;
-
-                sum_impliedProbability = ht_impliedProbability + at_impliedProbability + draw_impliedProbability;
-
-                // * this is the true probability of the outcome, without the bookmaker's vig in percentage
-                ht_noVig = ht_impliedProbability / sum_impliedProbability;
-                at_noVig = at_impliedProbability / sum_impliedProbability;
-                draw_noVig = hasDraw ? draw_impliedProbability / sum_impliedProbability : 0;
-
-                ht_noVig_odds = 1 / ht_noVig;
-                at_noVig_odds = 1 / at_noVig;
-                draw_noVig_odds = hasDraw ? 1 / draw_noVig : 0;
+async function addAlternatives(data) {
+    // ! For alternative outcomes - ONLY WORKS FOR USA
+    let newData = []
+    for(let match of data) {
+        const matchIndex = data.indexOf(match)
+        const americanSports = [
+            "americanfootball_cfl",
+            "americanfootball_ncaaf",
+            "americanfootball_nfl",
+            "americanfootball_nfl_super_bowl_winner",
+            "americanfootball_xfl",
+            "baseball_mlb",
+            "baseball_mlb_preseason",
+            "baseball_mlb_world_series_winner",
+            "basketball_nba",
+            "basketball_nba_championship_winner",
+            "basketball_wnba",
+            "basketball_ncaab"]
+            
+        if(americanSports.includes(match.sport_key)) {
+            try {
+                const bookmakerList = match.bookmakers.map(bk => bk.key).join(",")
+                const markets = "alternate_totals,alternate_spreads"
+                const url = `${BASE_URL}/sports/${match.sport_key}/events/${match.id}/odds?apiKey=${API_KEY}&markets=${markets}&oddsFormat=decimal&bookmakers=${bookmakerList}`
+                const alt_resp = await axios.get(url)
                 
-                // (Amount won per bet * probability of winning) – (Amount lost per bet * probability of losing)
-                ht_EV = ((homeTeamOutcome.price - 1 - 0.05) * ht_noVig) - (1*(1-ht_noVig))
-                at_EV = ((awayTeamOutcome.price - 1 - 0.05) * at_noVig) - (1*(1-at_noVig))
-                draw_EV = hasDraw ? ((drawOutcome.price - 1 - 0.05) * draw_noVig) - (1*(1-draw_noVig)) : 0
-
-                let outcomeToBetOn
-                let winProbability
-                let odds
-                let noVigOdds 
-                let ev
-
-                let shouldBet = (ht_EV > 0 || at_EV > 0 || draw_EV > 0) ? true : false;
-                
-                if(ht_EV > 0){
-                    outcomeToBetOn = match.home_team // * Opposite team since it's a lay
-                    winProbability = ht_noVig
-                    odds = homeTeamOutcome.price
-                    noVigOdds = ht_noVig_odds
-                    ev = ht_EV
-                } else if(at_EV > 0){
-                    outcomeToBetOn = match.away_team // * Opposite team since it's a lay - ?
-                    winProbability = at_noVig
-                    odds = awayTeamOutcome.price
-                    noVigOdds = at_noVig_odds
-                    ev = at_EV
-                } else if(draw_EV > 0){
-                    continue; // * we don't bet on draws for positive EV
-                    // ! Potential mistake? Look into this...
-                    outcomeToBetOn = "Draw"
-                    winProbability = draw_noVig
-                    odds = drawOutcome.price
-                    noVigOdds = draw_noVig_odds
-                    ev = draw_EV
-                }
-                
-                if(shouldBet) {
-                    const matchName = `${match.home_team} v. ${match.away_team}`;
-                    const timeToStart = (startTime - Date.now() / 1000) / 3600;
-                    const league = match.sport_key;
-
-                    positiveBets.push({
-                        match_id: match.id,
-                        match_name: matchName,
-                        team: outcomeToBetOn,
-                        match_start_time: startTime,
-                        hours_to_start: timeToStart,
-                        league,
-                        key: market.key,
-                        bookmaker: bookmaker.title,
-                        winProbability: winProbability,
-                        odds: odds,
-                        noVigOdds: noVigOdds,
-                        ev: ev.toFixed(3),
-                        region: match.region
-                    });
+                if(process.env.NODE_ENV == "development") {
+                    console.log(`Finding alternatives for match (${match.home_team} v. ${match.away_team})`)
                 }
 
+                if(alt_resp.data.bookmakers.length > 0) {
+                    // returns match data with bookmakers that have alternate totals
+                    // add the outcomes to the correct bookmaker market outcomes
+                    for(let z=0; z<alt_resp.data.bookmakers.length; z++){
+                        let bookmaker = alt_resp.data.bookmakers[z]
+                        let data_bookmakerIndex = match.bookmakers.findIndex(bk => bk.key == bookmaker.key)
+
+                        // identify the totals market
+                        for(let market of bookmaker.markets) {
+
+                            if(market.key == "alternate_totals") {
+                                // add the outcomes to the totals market
+                                let totalsMarketIndex = match.bookmakers[data_bookmakerIndex].markets.findIndex(market => market.key == "totals")
+                                
+                                //concat the alternate totals outcomes to the totals market outcomes
+                                matchIndex[matchIndex].bookmakers[data_bookmakerIndex].markets[totalsMarketIndex].outcomes = match.bookmakers[data_bookmakerIndex].markets[totalsMarketIndex].outcomes.concat(market.outcomes)
+                                console.log("Added alternate totals for " + bookmaker.key + " sport:" + match.sport_key + " in " + match.region)
+                            }
+                            else if(market.key == "alternate_spreads") {
+                                // add the outcomes to the totals market
+                                let totalsMarketIndex = match.bookmakers[data_bookmakerIndex].markets.findIndex(market => market.key == "spreads")
+
+                                //concat the alternate totals outcomes to the totals market outcomes
+                                data[matchIndex].bookmakers[data_bookmakerIndex].markets[totalsMarketIndex].outcomes = match.bookmakers[data_bookmakerIndex].markets[totalsMarketIndex].outcomes.concat(market.outcomes)
+                                console.log("Added alternate spreads for " + bookmaker.key + " sport:" + match.sport_key + " in " + match.region)
+                            }
+                        }
+                    }
+                }
+            } catch (error) {
+                if(process.env.NODE_ENV == "development") {
+                    console.log("Failed to fetch alternate totals for " + match.sport_key + " in " + match.region + "(" + error + ")");
+                }
+                continue
             }
         }
     }
-    
-    return positiveBets;
+
+    return data
 }
 
 // ! Function to get arbitrage opportunities from the above functions
 async function getArbitrageOpportunities(cutoff) {
     // ! DEMO MODE - READ FROM demo_data.json and return that
     let data
+    let limiter = rateLimit(axios.create(), { maxRequests: 12, perMilliseconds: 1000, maxRPS: 10 }) // ! Adjust timings?
+
     if(DEMO) {
         data = fs.readFileSync(path.join(__dirname, "output", "raw.json"))
         data = JSON.parse(data)
     } else {
     // regions
         const regions = ['eu', 'uk', 'au', 'us'];
-
-        // create rate limiter axios object for getting match data from API
-        const limiter = rateLimit(axios.create(), { maxRequests: 12, perMilliseconds: 1000, maxRPS: 10 }) // ! Adjust timings?
 
         // get array of sports
         // TODO: Just add sports to array as they dont change
@@ -503,22 +444,21 @@ async function getArbitrageOpportunities(cutoff) {
                 .filter(item => item !== 'message')
                 .value();
         });
-        
-
     }
+
 
     // write data to output/raw.json
     fs.writeFileSync(path.join(__dirname, "output", "raw.json"), JSON.stringify(data))
- 
+
+    // ! IF PROCESS ENV PROD - ADD
+    data = await addAlternatives(data)
+
     // process matches
     let arbResults_totals = await processMatches_totals(data, includeStartedMatches=true);
     let arbResult_h2h = await processMatches_h2h(data, includeStartedMatches=true);
     let arbResult_spreads = await processMatches_spreads(data, includeStartedMatches=true);
     let arbResults = [...arbResult_h2h.concat(arbResults_totals).concat(arbResult_spreads)] 
  
-    //let evResults = await processPositiveEV(data, includeStartedMatches=false);
-    let evResults = await processPositiveEV(data);
-    evResults = [...evResults]
 
     // filter opportunities
     // more than 0, less than 1 - cutoff, and greater than 0.85
@@ -529,18 +469,16 @@ async function getArbitrageOpportunities(cutoff) {
         && _pg > cutoff 
         && _pg < 0.15
     });
-    const EVOpportunities = Array.from(evResults).filter(x => x.ev < 0.3 && x.ev > 0.03);
 
     // sort array by hours_to_start in ascending order
     arbitrageOpportunities.sort((a, b) => a.hours_to_start - b.hours_to_start);
-    EVOpportunities.sort((a, b) => a.ev - b.ev);
 
     // save data to json file if SAVE_DATA is true
     const file_data = {
         "created": Date.now(), 
         "data": {
             "arbitrage":arbitrageOpportunities,
-            "ev":EVOpportunities
+            "ev":[]
         }
     }
 

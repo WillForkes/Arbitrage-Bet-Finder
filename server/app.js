@@ -73,6 +73,18 @@ app.get('/', (req, res) => {
 });
 
 app.get('/sign-up', (req, res) => {
+    // * Redirect to Auth0 sign up page
+
+    // check if referrer is from auth0 from headers
+    if(!req.headers.referer) {
+        if(process.env.NODE_ENV == "development"){
+            res.redirect('http://localhost:3001')
+        } else {
+            res.redirect('https://arbster.com')
+        }
+        return
+    }
+
     res.oidc.login({
         authorizationParams: {
             screen_hint: 'signup',

@@ -380,18 +380,18 @@ router.get("/:paymentid", async (req, res) => {
     }
 
     // check if updated at is less than 15 minutes ago
-    const now = new Date()
-    const fifteenMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000) //! acc 5 mins not 15
+    // const now = new Date()
+    // const fifteenMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000) //! acc 5 mins not 15
 
-    if(payment.updatedAt < fifteenMinutesAgo){
-        res.status(404).json({
-            "status": "error",
-            "data": {
-                message: "Payment session has expired for affiliate checking."
-            }
-        })
-        return;
-    }
+    // if(payment.updatedAt < fifteenMinutesAgo){
+    //     res.status(404).json({
+    //         "status": "error",
+    //         "data": {
+    //             message: "Payment session has expired for affiliate checking."
+    //         }
+    //     })
+    //     return;
+    // }
     
     res.json({status: "ok", data: {payment: payment, stripePayment: stripePayment}})
 })
@@ -415,9 +415,19 @@ async function getSub(subid){
 }
 
 async function getPayment(paymentid){
-    const payment = await stripe.checkout.sessions.retrieve(paymentid);
+    let payment = await stripe.checkout.sessions.retrieve(paymentid);
     if(!payment){
         return null;
+    }
+
+    const invoiceId = payment.invoice;
+    const invoice = await stripe.invoices.retrieve(invoiceId);
+    let code = null
+    if(invoice) {
+        code = invoice.discount.coupon?.name
+    }
+    if(code){
+        payment.discount_code = code
     }
 
     return payment;

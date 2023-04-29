@@ -76,7 +76,7 @@ app.get('/sign-up', (req, res) => {
     // * Redirect to Auth0 sign up page
 
     // check if referrer is from auth0 from headers
-    if(!req.headers.referer) {
+    if(!req.headers.referer || req.headers.referer?.includes("auth0")) {
         if(process.env.NODE_ENV == "development"){
             res.redirect('http://localhost:3001')
         } else {

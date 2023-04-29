@@ -7,10 +7,67 @@ let { checkUser } = require('../middleware/checkUser');
 let { freeStuff } = require('../middleware/freeStuff');
 var router = express.Router();
 const axios = require('axios');
+const { runGenerator } = require('../bot/lib/processData');
+
+
+router.post("/new", async function(req, res, next) {
+    const { data } = req.body;
+    if(!data) {
+        res.status(500).json({"status": "error", "message": "No data supplied"});
+        return;
+    }
+
+    // * Insert arbitrage data into database - update records if already exist
+    let betid = null;
+    let found = false;
+
+    await prisma.bet.findMany().then(async (existingBets) => {
+        // If bet already exists - update it
+        for (let j = 0; j < existingBets.length; j++) {
+            const parsedBetData = JSON.parse(existingBets[j].data);
+            if (data.match_id == parsedBetData.match_id) {
+                try {
+                    await prisma.bet.update({
+                        where: {
+                            id: existingBets[j].id
+                        },
+                        data: {
+                            data: JSON.stringify(data),
+                        }
+                    })
+                    betid = existingBets[j].id;
+                } catch {
+                    continue
+                }
+
+                found = true;
+
+                res.json({"status": "ok", "message": "Bet updated", "betid": betid});
+                return;
+            }
+        }
+    });
+
+    // If bet doesn't exist - insert it
+    if (!found) {
+        try {
+            const newBet = await prisma.bet.create({
+                data: {
+                    data: JSON.stringify(data),
+                }
+            })
+
+            res.json({"status": "ok", "message": "New bet inserted", "betid":newBet.id});
+            return;
+        } catch {
+            res.status(500).json({"status": "error", "message": "Error inserting new bet"});
+            return;
+        }
+    }
+});
 
 
 router.get("/run", async function(req, res, next) {
-
     // * Get most recently updated bet
     const mostRecentBet = await prisma.bet.findFirst({
         orderBy: {
@@ -20,161 +77,28 @@ router.get("/run", async function(req, res, next) {
     const lastUpdated = (mostRecentBet) ? new Date(mostRecentBet.updatedAt) : new Date(0);
 
     // * Get arbitrage data
-    let data
+    let scrapeResult
     try {
-        data = await returnBettingOpportunities(0.01, lastUpdated)
-    }  catch (error) {
-        res.status(500).json({
-            "error": "Failed to run scraper. Details: " + error
-        });
-        console.log(error.stack)
-        return
+        scrapeResult = await returnBettingOpportunities(lastUpdated);
+    } catch{
+        res.json({"status": "error", "message": "Failed to run scraper. See error logs for more details."});
     }
-    
-    if(!data) {
+
+    if(!scrapeResult){
         res.status(200).json({"status": "ok", "message": "Data already up to date."});
         return;
     }
 
-    // * Insert arbitrage data into database - update records if already exist
-    let betsToInsert = [];
-    let updatedCount = 0;
-    const arbitrageData = data.data.arbitrage;
-    let newArbBets = 0
-    const evData = data.data.ev;
-    let newEVBets = 0
-
-    await prisma.bet.findMany().then(async (existingBets) => {
-
-        // ! Insert/update arbitrage
-        for (let i = 0; i < arbitrageData.length; i++) {
-            let found = false;
-
-            // If bet already exists - update it
-            for (let j = 0; j < existingBets.length; j++) {
-                const parsedBetData = JSON.parse(existingBets[j].data);
-                if (arbitrageData[i].match_id == parsedBetData.match_id && existingBets[j].type =="arbitrage") {
-                    try {
-                        await prisma.bet.update({
-                            where: {
-                                id: existingBets[j].id
-                            },
-                            data: {
-                                data: JSON.stringify(arbitrageData[i]),
-                            }
-                        })
-                    } catch {
-                        continue
-                        // res.status(500).json({"error": "Failed to update arbitrage data in database."});
-                        // return;
-                    }
-
-                    updatedCount++;
-                    found = true;
-                    break;
-                }
-            }
-
-            if(!found){
-                newArbBets++;
-                betsToInsert.push([JSON.stringify(arbitrageData[i]), "arbitrage"]);
-            }
-        }
-
-        // ! Insert/update ev
-        for (let i = 0; i < evData.length; i++) {
-            let found = false;
-
-            // If bet already exists - update it
-            for (let j = 0; j < existingBets.length; j++) {
-                const parsedBetData = JSON.parse(existingBets[j].data);
-                if (evData[i].match_id == parsedBetData.match_id && existingBets[j].type =="ev") {
-                    try {
-                        await prisma.bet.update({
-                            where: {
-                                id: existingBets[j].id
-                            },
-                            data: {
-                                data: JSON.stringify(evData[i]),
-                            }
-                        })
-                    } catch {
-                        continue
-                        // res.status(500).json({"error": "Failed to update EV record in database."});
-                        // return;
-                    }
-
-                    updatedCount++;
-                    found = true;
-                    break;
-                }
-            }
-
-            if(!found){
-                newEVBets++;
-                betsToInsert.push([JSON.stringify(evData[i]), "ev"]);
-            }
-        }            
-    });
-
-    // Insert new bets
-    try {
-        for(let i = 0; i < betsToInsert.length; i++){
-            const toput = betsToInsert[i];
-            await prisma.bet.create({
-                data: {
-                    data: toput[0],
-                    type: toput[1]
-                }
-            })
-
-            // ! TEMPORARY ////////////////////////////////////
-            var book = [];
-            const pjson = JSON.parse(toput[0]);
-            toput[1] == "ev" ? 
-            book.push(pjson.bookmaker) : 
-            Object.keys(pjson.best_outcome_odds).map(key => book.push(pjson.best_outcome_odds[key][0]));
-            for (const x of book) {
-                try {
-                    await prisma.bookmaker.create({
-                        data: {
-                            bookName: x
-                        }
-                    })
-                } catch {
-                    continue;
-                }
-            }
-            // ! TEMPORARY ////////////////////////////////////
-            
-        }
-    } catch(e){ 
-        console.log(e);
-        res.status(500).json({"error": "Failed to create new bet records in database."});
-        return;
-    }
-
-    res.json({"status": "ok", "data":{
-        "new_arb_bets": newArbBets,
-        "new_ev_bets": newEVBets,
-        "total_new_bets": betsToInsert.length,
-        "updated_bets": updatedCount
-
-    }, 
-    "Message": `${betsToInsert.length} new bets found. ${updatedCount} bets updated.`
-    });
-
-    console.log(`[SCRAPER] ${betsToInsert.length} new bets found. (${newArbBets} arb, ${newEVBets} EV) ${updatedCount} bets updated.`)
-
-    // clean old bets
+    // * Clean old bets
     await clean();
 
-    // send notifications
+    // * Send notifications
     if(process.env.NODE_ENV != "development") {
         const notisToSend = await getNotifications();
         await sendBatchNotifications(notisToSend);
     }
 
+    res.json({"status": "ok", "message": "Scraper run completed."});
 });
 
 router.get("/run/inplay", async function(req, res) {
@@ -190,84 +114,21 @@ router.get("/run/inplay", async function(req, res) {
     const lastUpdated = (mostRecentBet) ? new Date(mostRecentBet.updatedAt) : new Date(0);
 
     // * Run scraper
-    let data
+    let scrapeResult
     try {
-        data = await updateInplayOpportunities(inplay, 0.01, lastUpdated);
-    }  catch (error) {
-        res.status(500).json({
-            "error": "Failed to run scraper. Details: " + error
-        });
-        return
+        scrapeResult = await updateInplayOpportunities(inplay, lastUpdated);
+    } catch{
+        res.json({"status": "error", "message": "Failed to run scraper. See error logs for more details."});
     }
 
-    if(!data){
+    if(!scrapeResult){
         res.status(200).json({"status": "ok", "message": "Data already up to date."});
         return;
     }
 
-    // ! TEMPORARY UNTIL EV IS DONE ////////////////////////////////////
-    data = data.data.arbitrage
+    await clean(inplay=true);
 
-    // * update bets
-    let totalUpdated = 0;
-    for(let i = 0; i < data.length; i++){
-    
-        for(let j = 0; j < inplay.length; j++){
-            if(data[i].match_id == JSON.parse(inplay[j].data).match_id){
-                try {
-                    await prisma.bet.update({
-                        where: {
-                            id: inplay[j].id
-                        },
-                        data: {
-                            data: JSON.stringify(data[i]),
-                        }
-                    })
-                    totalUpdated++;
-                } catch {
-                    if(process.env.NODE_ENV != "development") {
-                        res.status(500).json({"error": "Failed to update inplay data in database."});
-                        return;
-                    }
-                    continue;
-                }
-                break;
-            }
-        }
-    }
-
-    // * remove bets that dont exist anymore
-    let totalRemoved = 0;
-    for(let i = 0; i < inplay.length; i++){
-        let found = false;
-        for(let j = 0; j < data.length; j++){
-            if(data[j].match_id == JSON.parse(inplay[i].data).match_id){
-                found = true;
-                break;
-            }
-        }
-        if(!found){
-            try {
-                await prisma.bet.delete({
-                    where: {
-                        id: inplay[i].id
-                    }
-                })
-                totalRemoved++;
-            } catch {
-                if(process.env.NODE_ENV != "development") {
-                    res.status(500).json({"error": "Failed to delete inplay data in database."});
-                    return;
-                }
-                continue;
-            }
-        }
-    }
-
-    res.json({"status": "ok", data: {
-        "total_updated": totalUpdated,
-        "total_removed": totalRemoved
-    }});
+    res.json({"status": "ok", "message": "In-play scraper run completed."});
 })
 
 router.get("/bookmakers", async function(req, res) {
@@ -279,10 +140,10 @@ router.get("/bookmakers", async function(req, res) {
     }
 })
 
-async function clean() {
-    const threshold = 10; // in minutes
+async function clean(inplay=false) {
+    const threshold = (inplay) ? 2 : 10; // in minutes
 
-    // Get all bets that are older than 10 minutes
+    // Get all bets that are older than 2/10 minutes
     const betsToDelete = await prisma.bet.findMany({
         where: {
             updatedAt: {
@@ -293,11 +154,23 @@ async function clean() {
 
     // Delete all bets that are older than 10 minutes
     for(let i = 0; i < betsToDelete.length; i++){
-        await prisma.bet.delete({
-            where: {
-                id: betsToDelete[i].id
+
+        if(inplay) {
+            if(JSON.parse(betsToDelete[i].data).live == true) {
+                await prisma.bet.delete({
+                    where: {
+                        id: betsToDelete[i].id
+                    }
+                })
             }
-        })
+        } else {
+            await prisma.bet.delete({
+                where: {
+                    id: betsToDelete[i].id
+                }
+            })
+        }
+        
     }
 
     console.log(`[CLEANER] ${betsToDelete.length} bets deleted (older than ${threshold} minutes).`)

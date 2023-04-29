@@ -13,7 +13,7 @@ export default function SuccessSubscriptionPage() {
     const router = useRouter()
     const { session_id } = router.query
     const { data, error } = useSWR("/payment/" + session_id, getter);
-    console.log(data)
+
     if(error || !data || data?.payment.status=="inactive" || data?.stripePayment.status != "complete") {
         return (
             <div className="flex justify-center items-center h-screen dark:bg-gray-900">
@@ -22,6 +22,14 @@ export default function SuccessSubscriptionPage() {
             </div>
         )
     }
+
+    <Script id="grow_affiliate_succcess_tracking">
+        {`
+            tdconv('init', '2353477', {'element': 'iframe' });
+            tdconv('track', 'sale', {'transactionId':'${data.stripePayment.id}', 'ordervalue':[${data.stripePayment.amount_total / 1000}], 'voucher':'[${data.stripePayment.discount_code}]', 'currency':'GBP', 'event':436265});
+        `}
+    </Script>
+
 
     return (
     <>

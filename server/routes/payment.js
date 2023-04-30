@@ -238,10 +238,12 @@ router.post("/webhook", async (request, response) => {
             })
 
             // check if subscription is trial
-            const trial_days = data.object.lines.data[0]?.plan.trial_period_days ? data.object.lines.data[0]?.plan.trial_period_days : 0
-            const pea = new Date(Date.now() + (trial_days + 30) * 24 * 60 * 60 * 1000) // * 30 days + trial days from now
+            const periodEnds = new Date(data.object.lines.data[0].period.end * 1000)
 
-            if(trial_days > 0) {
+            // get total days until period ends
+            const daysUntilPeriodEnds = Math.floor((periodEnds - Date.now()) / (1000 * 60 * 60 * 24))
+
+            if(daysUntilPeriodEnds > 31) {
                 // update user to say they've used their trial period if they have
                 const u = await prisma.subscription.findUnique({
                     where: {
@@ -269,7 +271,7 @@ router.post("/webhook", async (request, response) => {
                 },
                 data: {
                     status: "active",
-                    planExpiresAt: pea
+                    planExpiresAt: periodEnds
                 }
             })
 
@@ -424,7 +426,7 @@ async function getPayment(paymentid){
     const invoice = await stripe.invoices.retrieve(invoiceId);
     let code = null
     if(invoice) {
-        code = invoice.discount.coupon?.name
+        code = invoice.discount?.coupon.name
     }
     if(code){
         payment.discount_code = code

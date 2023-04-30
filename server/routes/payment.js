@@ -307,7 +307,7 @@ router.post("/webhook", async (request, response) => {
 
         case 'customer.subscription.deleted':
             // * Subscription ended (no renewal)
-            const csd_subId = data.object.subscription
+            const csd_subId = data.object.id
             await prisma.subscription.update({
                 where: {
                     stripeSubscriptionId: csd_subId

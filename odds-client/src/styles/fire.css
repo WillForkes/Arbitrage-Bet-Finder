@@ -1,0 +1,15 @@
+@keyframes fire-glow {
+    0% {
+      text-shadow: 0 0 5px #ff3d00, 0 0 10px #ff3d00, 0 0 15px #ff3d00;
+    }
+    50% {
+      text-shadow: 0 0 10px #ff3d00, 0 0 20px #ff3d00, 0 0 30px #ff3d00;
+    }
+    100% {
+      text-shadow: 0 0 5px #ff3d00, 0 0 10px #ff3d00, 0 0 15px #ff3d00;
+    }
+  }
+  
+  .fire-glow-animation {
+    animation: fire-glow 2s infinite;
+  }

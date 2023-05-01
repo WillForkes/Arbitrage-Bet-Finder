@@ -4,9 +4,9 @@ import React, { useContext } from "react";
 
 export default function HedgeOutcome({ c }: { c: Hedge }) {
   const user = useContext(UserContext);
+
   return (
     <div className="">
-        
       {c?.outcomes.map((outcome, i) => (
         <div className="mb-2" key={i}>
           <p>

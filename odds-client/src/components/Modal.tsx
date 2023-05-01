@@ -1,8 +1,8 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { createBet, spreadStake, hedgeStake } from "@/api";
 import { Hedge, SpreadStake } from "@/types";
 import { AlertContext } from "@/pages/_app";
-import { Tabs } from "flowbite-react";
+import { Spinner, Tabs } from "flowbite-react";
 import SpreadOutcome from "./SpreadOutcome";
 import HedgeOutcome from "./HedgeOutcome";
 
@@ -17,6 +17,7 @@ export default function Modal({
 }) {
   const alertContext = useContext(AlertContext);
   const [stake, setStake] = useState<number | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const [outcome, setOutcome] = useState<SpreadStake | Hedge | null>(null);
   const [calculator, setCalculator] = useState("Spread");
 
@@ -29,12 +30,13 @@ export default function Modal({
   }
 
   async function getProfit(e: any) {
+    if (e == null) return;
     try {
-      setStake(e.target.value); // set stake variable to input value
+      // set stake variable to input value
       if (calculator == "Spread") {
-        var data = await spreadStake(id, parseInt(e.target.value));
+        var data = await spreadStake(id, parseInt(e));
       } else {
-        var data = await hedgeStake(id, parseInt(e.target.value));
+        var data = await hedgeStake(id, parseInt(e));
       }
 
       // * var data = await hedgeStake(id, parseInt(e.target.value));  <-- This works however profit needs altering so that it's a mean of all outcome profits
@@ -58,6 +60,16 @@ export default function Modal({
 
     closeModal();
   }
+
+  useEffect(() => {
+    setLoading(true);
+    const timeOutId = setTimeout(() => {
+      getProfit(stake);
+      setLoading(false);
+    }, 300);
+
+    return () => clearTimeout(timeOutId);
+  }, [stake]);
 
   if (isVisible == false) return null;
 
@@ -87,7 +99,7 @@ export default function Modal({
               <span className="sr-only">Close modal</span>
             </button>
           </div>
-          <ul className="hidden text-sm font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400">
+          <ul className="text-sm font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400">
             <li className="w-full">
               <a
                 href="#"
@@ -114,12 +126,23 @@ export default function Modal({
               value={stake ? stake : ""}
               placeholder="0.00"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              onChange={(e) => getProfit(e)}
+              onChange={(e) => setStake(parseInt(e.target.value))}
             />
-            {calculator == "Spread" ? (
-              <SpreadOutcome c={outcome as SpreadStake} />
+          </form>
+          <div className="outcomes px-2 py-4">
+            {!loading ? (
+              <div className="calculator">
+                {calculator == "Spread" ? (
+                  <SpreadOutcome c={outcome as SpreadStake} />
+                ) : (
+                  <HedgeOutcome c={outcome as Hedge} />
+                )}
+              </div>
             ) : (
-              <HedgeOutcome c={outcome as Hedge} />
+              <div className="loading">
+                <h3>Loading</h3>
+                <Spinner />
+              </div>
             )}
             <button
               onClick={(e) => newBet(e)}
@@ -127,7 +150,7 @@ export default function Modal({
             >
               I&apos;ve placed this bet!
             </button>
-          </form>
+          </div>
         </div>
       </div>
     </div>

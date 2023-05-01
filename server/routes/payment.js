@@ -22,11 +22,14 @@ const plans = {
     development: {
         starter: {
             product: "prod_NVYfBet3viHe4o",
-            price: "price_1MkXYIIHDYxT34IbkE19iCXo",
+            // UNTIL SALE ENDS price: "price_1MkXYIIHDYxT34IbkE19iCXo",
+            price: "price_1N35rGIHDYxT34IbrLDiQ1XO"
         },
         pro: {
             product: "prod_NVqC83Czr0Jdd8",
+            //UNTIL SALE ENDS price: "price_1MkoVfIHDYxT34Ib6l0gtszK"
             price: "price_1MkoVfIHDYxT34Ib6l0gtszK"
+
         },
         plus: {
             product: "prod_NVqDJv7gq5PcDY",
@@ -36,11 +39,13 @@ const plans = {
     production: {
         starter: {
             product: "prod_Na2rmk2tCbxeNT",
-            price: "price_1MoslhIHDYxT34Ib0J6WfI17",
+            // UNTIL SALE ENDS price: "price_1MoslhIHDYxT34Ib0J6WfI17",
+            price: "price_1N35u3IHDYxT34Ib0fubvzQO"
         },
         pro: {
             product: "prod_Na2sQ1ihM9ZPru",
-            price: "price_1Mosn2IHDYxT34IbYB1EtElA"
+            price: "price_1N35tTIHDYxT34IbEswCHRGv"
+            // UNTIL SALE ENDS price: "price_1Mosn2IHDYxT34IbYB1EtElA"
         },
         plus: {
             product: "prod_Na2uAK0JaQGa47",

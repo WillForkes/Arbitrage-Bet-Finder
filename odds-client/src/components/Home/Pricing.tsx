@@ -146,9 +146,9 @@ export default function Pricing() {
                 </h2>
 
                 {/* Span badge with dashed border containing "BETARELEASE" 10% off code */}
-                <div className="mx-auto flex justify-center items-baseline my-4 dark:bg-main-700 border-dashed border-2 max-w-md rounded-md ">
-                    <span className="mr-2 text-2xl font-extrabold">BETA RELEASE SALE</span>
-                    <span className="flex mr-2 text-2xl font-semibold">Ends 20th May</span>
+                <div className="mx-auto flex justify-center items-baseline my-4 max-w-md ">
+                    <span className="mr-2 text-2xl font-extrabold fire-glow-animation">BETA RELEASE SALE</span>
+                    <span className="flex mr-2 text-2xl font-semibold fire-glow-animation">Ends 20th May</span>
                 </div>
             </div>
 
@@ -160,7 +160,6 @@ export default function Pricing() {
                         </h5>
 
                         <div className="flex items-baseline text-gray-900 dark:text-white">
-                            <p className="text-xl font-semibold text-gray-600 mr-2"><s>£29.99</s></p>
 
                             <span className="text-3xl font-semibold">
                                 £
@@ -168,9 +167,14 @@ export default function Pricing() {
                             <span className="text-5xl font-extrabold tracking-tight">
                                 19
                             </span>
+                            <span className="text-xl font-extrabold tracking-tight">
+                                .99
+                            </span>
                             <span className="ml-1 text-xl font-normal text-gray-500 dark:text-gray-400">
                                 /month
                             </span>
+                            <p className="text-xl font-semibold text-gray-600 ml-4"><s>£29.99</s></p>
+
                         </div>
                         <ul
                         role="list"
@@ -257,7 +261,7 @@ export default function Pricing() {
                             getButtons("starter")
                         ) : (
                             <Link
-                                className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
+                                className="text-white bg-main-600 hover:bg-main-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
                                 href="/auth/login"
                             >
                                 {getButtonText("starter")}
@@ -273,16 +277,20 @@ export default function Pricing() {
                         </h5>
                         
                         <div className="flex items-baseline text-gray-900 dark:text-white">
-                            <p className="text-xl font-semibold text-gray-600 mr-2"><s>£49.99</s></p>
                             <span className="text-3xl font-semibold">
                                 £
                             </span>
                             <span className="text-5xl font-extrabold tracking-tight">
                                 39
                             </span>
+                            <span className="text-xl font-extrabold tracking-tight">
+                                .99
+                            </span>
                             <span className="ml-1 text-xl font-normal text-gray-500 dark:text-gray-400">
                                 /month
                             </span>
+                            <p className="text-xl font-semibold text-gray-600 ml-4"><s>£49.99</s></p>
+
                         </div>
                         <ul
                         role="list"
@@ -369,7 +377,7 @@ export default function Pricing() {
                             getButtons("pro")
                         ) : (
                             <Link
-                                className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
+                                className="text-white bg-main-600 hover:bg-main-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
                                 href="/auth/login"
                             >
                                 {getButtonText("pro")}

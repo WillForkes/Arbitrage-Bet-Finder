@@ -9,6 +9,7 @@ import useSWR from "swr";
 import Alert from "@/components/Alert";
 import Script from "next/script";
 import { regionCurrency } from "@/utils";
+import '@/styles/fire.css';
 
 export const UserContext = createContext<{
   user: User | null;

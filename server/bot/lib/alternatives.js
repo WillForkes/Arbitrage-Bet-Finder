@@ -2,7 +2,6 @@ const axios = require('axios');
 const rateLimit = require('axios-rate-limit');
 const fs = require('fs');
 const path = require('path');
-
 const {
     chain
 } = require('lodash');
@@ -10,26 +9,29 @@ const {
     BASE_URL,
     API_KEY
 } = require('../constants');
+const { processMatches_h2h, processMatches_spreads, processMatches_totals} = require('./processData')
+const { runGenerator, onYield } = require('./generator')
 
 async function addAlternatives(data) {
     // ! For alternative outcomes - ONLY WORKS FOR USA
-    let newData = []
+    let workers = []
+    const americanSports = [
+        "americanfootball_cfl",
+        "americanfootball_ncaaf",
+        "americanfootball_nfl",
+        "americanfootball_nfl_super_bowl_winner",
+        "americanfootball_xfl",
+        "baseball_mlb",
+        "baseball_mlb_preseason",
+        "baseball_mlb_world_series_winner",
+        "basketball_nba",
+        "basketball_nba_championship_winner",
+        "basketball_wnba",
+        "basketball_ncaab"
+    ]
+
     for(let match of data) {
         const matchIndex = data.indexOf(match)
-        const americanSports = [
-            "americanfootball_cfl",
-            "americanfootball_ncaaf",
-            "americanfootball_nfl",
-            "americanfootball_nfl_super_bowl_winner",
-            "americanfootball_xfl",
-            "baseball_mlb",
-            "baseball_mlb_preseason",
-            "baseball_mlb_world_series_winner",
-            "basketball_nba",
-            "basketball_nba_championship_winner",
-            "basketball_wnba",
-            "basketball_ncaab"
-        ]
 
         // Check if match is live ! cant have live matches as processing time for alts is too long and they update too fast
         const startTime = parseInt(match.commence_time);
@@ -75,6 +77,11 @@ async function addAlternatives(data) {
                         }
                     }
                 }
+
+                const w1 = runGenerator(() => processMatches_h2h([match], includeStartedMatches = true), onYield);
+                const w2 = runGenerator(() => processMatches_totals([match], includeStartedMatches = true), onYield);
+                const w3 = runGenerator(() => processMatches_spreads([match], includeStartedMatches = true), onYield);
+                workers.push(w1, w2, w3)
             } catch (error) {
                 if(process.env.NODE_ENV == "development") {
                     console.log("[ALTERANTIVES] Error fetching alternatives: ", error);
@@ -84,7 +91,7 @@ async function addAlternatives(data) {
         }
     }
 
-    return data
+    return workers
 }
 
 module.exports = {addAlternatives}

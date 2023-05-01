@@ -10,7 +10,8 @@ const {
     BASE_URL,
     API_KEY
 } = require('../constants');
-
+const { processMatches_h2h, processMatches_spreads, processMatches_totals} = require('./processData')
+const { runGenerator, onYield } = require('./generator')
 
 async function getSports() {
     const url = `${BASE_URL}/sports/`;
@@ -33,6 +34,7 @@ async function getData(sport, regions, limiter=null) {
     const url = `${BASE_URL}/sports/${sport}/odds/`;
     const escapedUrl = encodeURI(url);
     let returndata = []
+    let workers = []
     const markets = ["h2h","spreads", "totals"].join(",")
 
     // * FOREACH REGION GET DATA
@@ -73,11 +75,20 @@ async function getData(sport, regions, limiter=null) {
             }
         }
 
+        // Run generators on the matches
+        if(filtered_response.length > 0) {
+            const w1 = runGenerator(() => processMatches_h2h(filtered_response, includeStartedMatches = true), onYield);
+            const w2 = runGenerator(() => processMatches_totals(filtered_response, includeStartedMatches = true), onYield);
+            const w3 = runGenerator(() => processMatches_spreads(filtered_response, includeStartedMatches = true), onYield);
+            workers.push(w1, w2, w3)
+        }
+
         if(process.env.NODE_ENV == "development") {
             console.log(`Fetched ${returndata.length} matches for ${sport} in ${region} (${i+1}/${regions.length})`)
         }
     };
-    return returndata
+
+    return {"workers": workers, "data": returndata};
 }
 
 async function getMatchByID(limiter, id, sport, region) {

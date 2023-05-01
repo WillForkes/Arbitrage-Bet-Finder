@@ -5,12 +5,9 @@ const fs = require('fs');
 const path = require('path');
 const { chain } = require('lodash');
 const {
-    BASE_URL,
-    API_KEY,
-    DEMO,
-    SAVE_JSON
+    DEMO
 } = require('./constants');
-const {getSports, getData, getMatchByID} = require('./lib/loadData')
+const { getSports, getData, getMatchByID} = require('./lib/loadData')
 const { processMatches_h2h, processMatches_spreads, processMatches_totals} = require('./lib/processData')
 const { runGenerator, onYield } = require('./lib/generator')
 const { addAlternatives } = require('./lib/alternatives')
@@ -110,40 +107,34 @@ const sports = [
 
 // ! Function to get arbitrage opportunities from the above functions
 async function getArbitrageOpportunities() {
-    let data;
+    let data = [];
     let limiter = rateLimit(axios.create(), { maxRequests: 12, perMilliseconds: 1000, maxRPS: 10 }); // ! Adjust timings?
+    let workers = []
 
     if (DEMO) {
         // use demo data
         data = fs.readFileSync(path.join(__dirname, "output", "raw.json"));
         data = JSON.parse(data);
-    } else {
-        // regions
-        const regions = ['eu', 'uk', 'au', 'us'];
 
+        const h2h_worker = runGenerator(() => processMatches_h2h(data, includeStartedMatches = true), onYield);
+        const totals_worker = runGenerator(() => processMatches_totals(data, includeStartedMatches = true), onYield);
+        const spreads_worker = runGenerator(() => processMatches_spreads(data, includeStartedMatches = true), onYield);
+        workers.push(h2h_worker, totals_worker, spreads_worker);
+    } else {
         // get data for each match and all regions
-        data = chain(await Promise.all([...sports].map((sport) => getData(sport, regions, limiter))))
-            .flatten()
-            .filter((item) => item !== 'message')
-            .value();
+        chain(await Promise.all([...sports].map((sport) => getData(sport, ["eu", "uk", "au", "us"], limiter).then((response) => {
+            data.push(...response.data)
+            workers.push(...response.workers);
+        }))));
+
     }
 
-    // write data to output/raw.json
-    fs.writeFileSync(path.join(__dirname, "output", "raw.json"), JSON.stringify(data));
-
-    // process matches
-    const h2h = runGenerator(() => processMatches_h2h(data, includeStartedMatches = true), onYield);
-    const totals = runGenerator(() => processMatches_totals(data, includeStartedMatches = true), onYield);
-    const spreads = runGenerator(() => processMatches_spreads(data, includeStartedMatches = true), onYield);
-
-    data = await addAlternatives(data);
-
-    const h2h_withalt = runGenerator(() => processMatches_h2h(data, includeStartedMatches = true), onYield);
-    const totals_withalt = runGenerator(() => processMatches_totals(data, includeStartedMatches = true), onYield);
-    const spreads_withalt = runGenerator(() => processMatches_spreads(data, includeStartedMatches = true), onYield);
+    // add alternatives and process matches
+    alt_workers = await addAlternatives(data);
+    workers.push(...alt_workers);
 
     try {
-        await Promise.all([h2h, totals, spreads]);
+        await Promise.all(workers);
         console.log("[SCRAPER] Run processing complete. Alternatives not included.");
         return true;
     } catch (error) {

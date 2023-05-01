@@ -169,7 +169,6 @@ async function* processMatches_spreads(matches, includeStartedMatches = false ) 
             }
         }
 
-
         for (const bookmaker of match.bookmakers) {
             for (const market of bookmaker.markets) {
             

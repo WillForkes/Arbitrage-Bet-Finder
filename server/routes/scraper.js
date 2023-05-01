@@ -86,6 +86,7 @@ router.get("/run", async function(req, res, next) {
     }
 
     if(!scrapeResult){
+        console.log("[SCRAPER] Data already up to date!")
         res.status(200).json({"status": "ok", "message": "Data already up to date."});
         return;
     }

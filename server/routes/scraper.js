@@ -80,7 +80,8 @@ router.get("/run", async function(req, res, next) {
     let scrapeResult
     try {
         scrapeResult = await returnBettingOpportunities(lastUpdated);
-    } catch{
+    } catch(error) {
+        console.log("[SCRAPER] Failed to run scraper. Error: " + error)
         res.json({"status": "error", "message": "Failed to run scraper. See error logs for more details."});
     }
 
@@ -97,6 +98,8 @@ router.get("/run", async function(req, res, next) {
         const notisToSend = await getNotifications();
         await sendBatchNotifications(notisToSend);
     }
+
+    console.log("[SCRAPER] Scraper run completed.")
 
     res.json({"status": "ok", "message": "Scraper run completed."});
 });

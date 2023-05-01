@@ -52,6 +52,10 @@ export default function Pricing() {
   }
 
   function canActivateTrial() {
+    if(user?.dbuser.trialActivated == false && user?.dbuser.plan != "free") {
+        return false // user bought for the discounted price
+    }
+
     if (user?.dbuser.trialActivated == false || !user) {
       return true;
     } else {

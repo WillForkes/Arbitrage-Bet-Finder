@@ -131,17 +131,20 @@ async function getArbitrageOpportunities() {
     // write data to output/raw.json
     fs.writeFileSync(path.join(__dirname, "output", "raw.json"), JSON.stringify(data));
 
-    // ! IF PROCESS ENV PROD - ADD
+    // process matches
+    const h2h = runGenerator(() => processMatches_h2h(data, includeStartedMatches = true), onYield);
+    const totals = runGenerator(() => processMatches_totals(data, includeStartedMatches = true), onYield);
+    const spreads = runGenerator(() => processMatches_spreads(data, includeStartedMatches = true), onYield);
+
     data = await addAlternatives(data);
 
-    // process matches
-    const h2h = runGenerator(() => processMatches_h2h(data, (includeStartedMatches = true)), onYield);
-    const totals = runGenerator(() => processMatches_totals(data, (includeStartedMatches = true)), onYield);
-    const spreads = runGenerator(() => processMatches_spreads(data, (includeStartedMatches = true)), onYield);
+    const h2h_withalt = runGenerator(() => processMatches_h2h(data, includeStartedMatches = true), onYield);
+    const totals_withalt = runGenerator(() => processMatches_totals(data, includeStartedMatches = true), onYield);
+    const spreads_withalt = runGenerator(() => processMatches_spreads(data, includeStartedMatches = true), onYield);
 
     try {
         await Promise.all([h2h, totals, spreads]);
-        console.log("[SCRAPER] Run processing complete.");
+        console.log("[SCRAPER] Run processing complete. Alternatives not included.");
         return true;
     } catch (error) {
         console.error("Error occurred during processing:", error);

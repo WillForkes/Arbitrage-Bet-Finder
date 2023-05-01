@@ -25,7 +25,7 @@ router.post("/new", async function(req, res, next) {
         // If bet already exists - update it
         for (let j = 0; j < existingBets.length; j++) {
             const parsedBetData = JSON.parse(existingBets[j].data);
-            if (data.match_id == parsedBetData.match_id) {
+            if (data.match_id == parsedBetData.match_id && data.total_implied_odds.toFixed(2) == parsedBetData.total_implied_odds.toFixed(2)) {
                 try {
                     await prisma.bet.update({
                         where: {

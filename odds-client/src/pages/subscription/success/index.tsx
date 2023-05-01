@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 import { Spinner } from "flowbite-react";
 import { getOrderFromStripePaymentID, getter } from "@/api"
 import useSWR from "swr";
-
+import Head from "next/head";
 export default function SuccessSubscriptionPage() {
     // Get session_id query param
     const router = useRouter()
@@ -23,16 +23,14 @@ export default function SuccessSubscriptionPage() {
         )
     }
 
-    <Script id="grow_affiliate_succcess_tracking">
-        {`
-            tdconv('init', '2353477', {'element': 'iframe' });
-            tdconv('track', 'sale', {'transactionId':'${data.stripePayment.id}', 'ordervalue':[${data.stripePayment.amount_total / 1000}], 'voucher':'[${data.stripePayment.discount_code}]', 'currency':'GBP', 'event':436265});
-        `}
-    </Script>
-
-
     return (
     <>
+        <Script id="grow_affiliate_succcess_tracking">
+            {`
+                tdconv('init', '2353477', {'element': 'iframe' });
+                tdconv('track', 'sale', {'transactionId':'${data.stripePayment.id}', 'ordervalue':[${data.stripePayment.amount_total / 1000}], 'voucher':'[${data.stripePayment.discount_code}]', 'currency':'GBP', 'event':436265});
+            `}
+        </Script>
       <section className="bg-white dark:bg-gray-900">
 
         <div className="mx-auto py-64 relative p-4 w-full max-w-md h-full md:h-auto">

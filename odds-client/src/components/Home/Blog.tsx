@@ -54,9 +54,9 @@ export default function Blog() {
                         </span>
                         <span className="text-sm">Beginner</span>
                     </div>
-                    <h2 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"><a href="#">Using our arbitrage and positive EV tool</a></h2>
+                    <h2 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"><a href="#">Learn how Arbitrage Betting works</a></h2>
                     <p className="mb-5 font-light text-gray-500 dark:text-gray-400">
-                        Discover how to effectively utilize Arbster&quot;s arbitrage and positive expected value (EV) tools with our comprehensive tutorial and straightforward explanations. Whether you&quot;re a beginner or new to Arbster, our step-by-step guide will provide you with the knowledge and skills needed to leverage these powerful tools for profitable betting strategies. Say goodbye to confusion and hello to confident betting with Arbster.
+                    Discover the secrets of arbitrage betting in our comprehensive guide. Learn how to make guaranteed profits by capitalizing on differing odds across multiple bookmakers, complete with examples, analogies, and formulas. This blog post is targeted at newcomers to the arbitrage market to help you get to grips with the underlying knowledge of how Arbster works. Unleash the potential of this low-risk betting strategy and start earning today!
                     </p>
                     <div className="flex justify-between items-center">
                         <div className="flex items-center space-x-4">
@@ -65,7 +65,7 @@ export default function Blog() {
                                 Arbster
                             </span>
                         </div>
-                        <Link href="/blog/using-arbitrage-and-positive-ev-tool" className="inline-flex items-center font-medium text-primary-600 dark:text-primary-500 hover:underline">
+                        <Link href="/blog/learn-how-arbitrage-works" className="inline-flex items-center font-medium text-primary-600 dark:text-primary-500 hover:underline">
                             Read more
                             <svg className="ml-2 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
                         </Link>

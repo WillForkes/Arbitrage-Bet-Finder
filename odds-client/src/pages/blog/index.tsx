@@ -15,11 +15,18 @@ export default function Blog() {
             link: "/blog/how-does-arbster-work"
         },
         {
-            title: "Using our arbitrage and positive EV tool",
-            description: "Discover how to effectively utilize Arbster&quot;s arbitrage and positive expected value (EV) tools with our comprehensive tutorial and straightforward explanations. Whether you&quot;re a beginner or new to Arbster, our step-by-step guide will provide you with the knowledge and skills needed to leverage these powerful tools for profitable betting strategies. Say goodbye to confusion and hello to confident betting with Arbster.",
+            title: "Learn how Arbitrage Betting works",
+            description: "Discover the secrets of arbitrage betting in our comprehensive guide. Learn how to make guaranteed profits by capitalizing on differing odds across multiple bookmakers, complete with examples, analogies, and formulas. Unleash the potential of this low-risk betting strategy and start earning today!",
+            type: "Information",
+            difficulty: "Intermediate",
+            link: "/blog/learn-how-arbitrage-works"
+        },
+        {
+            title: "How to use our arbitrage tool",
+            description: "Discover how to effectively utilize Arbster&quot;s arbitrage tools with our comprehensive tutorial and straight forward explanations. Whether you&quot;re a beginner or new to Arbster, our step-by-step guide will provide you with the knowledge and skills needed to leverage these powerful tools for profitable betting strategies. Say goodbye to confusion and hello to confident betting with Arbster.",
             type: "Introduction",
             difficulty: "Beginner",
-            link: "/blog/using-arbitrage-and-positive-ev-tool"
+            link: "/blog/using-arbitrage-tool"
         },
         {
             title: "What is a positive EV bet?",
@@ -27,24 +34,21 @@ export default function Blog() {
             type: "Information",
             difficulty: "Intermediate",
             link: "/blog/what-is-a-positive-ev-bet"
-        },
-        {
-            title: "Using the positive EV tool",
-            description: "In this blog post, we take a more detailed look at the positive EV tool to aid your understanding of what each column and indicator means.",
-            type: "Information",
-            difficulty: "Intermediate",
-            link: "/blog/using-the-positive-ev-tool"
-        },
-
+        },      
         {
             title: "Avoiding detection from the bookies",
             description: "In this blog post, we take a look at how bookmakers use patterns to identify arbitrage bettors and how you can avoid getting your account limited or suspended. ",
             type: "Information",
             difficulty: "Intermediate",
             link: "/blog/tips-to-avoid-getting-banned"
-        },
-
-        
+        }
+        // {
+        //     title: "Using the positive EV tool",
+        //     description: "In this blog post, we take a more detailed look at the positive EV tool to aid your understanding of what each column and indicator means.",
+        //     type: "Information",
+        //     difficulty: "Intermediate",
+        //     link: "/blog/using-the-positive-ev-tool"
+        // },  
         
     ]
   return (

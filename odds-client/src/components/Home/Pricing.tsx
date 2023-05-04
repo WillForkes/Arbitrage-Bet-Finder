@@ -85,7 +85,10 @@ export default function Pricing() {
                     disabled={user?.dbuser.plan == plan}
                 >
                     Buy Now (15% Off)
+
+                    
                 </button>
+                
             </div>
         </>)
     } else {

@@ -4,440 +4,87 @@ const prisma = new PrismaClient()
 var express = require('express');
 let { checkUser } = require('../middleware/checkUser');
 var router = express.Router();
-const Stripe = require('stripe');
+const paypal = require('paypal-rest-sdk');
 
-const environment = process.env.NODE_ENV || 'development';
-let stripe;
-let endpointSecret;
+// PayPal Setup
+const clientId = (process.env.NODE_ENV == "development") ? process.env.PAYPAL_CLIENT_ID_SANDBOX : process.env.PAYPAL_CLIENT_ID_LIVE;
+const clientSecret = (process.env.NODE_ENV == "development") ? process.env.PAYPAL_SECRET_SANDBOX : process.env.PAYPAL_SECRET_LIVE;
 
-if(process.env.NODE_ENV == 'development') {
-    stripe = Stripe(process.env.STRIPE_TEST_SECRET);
-    endpointSecret = process.env.STRIPE_TEST_SIGNING_SECRET;
-} else {
-    stripe = Stripe(process.env.STRIPE_LIVE_SECRET);
-    endpointSecret = process.env.STRIPE_LIVE_SIGNING_SECRET;
-}
+paypal.configure({
+    mode: 'sandbox', // Replace with 'live' when you're ready to go live
+    client_id: clientId,
+    client_secret: clientSecret
+});
 
 const plans = {
     development: {
-        starter: {
-            product: "prod_NVYfBet3viHe4o",
-            // UNTIL SALE ENDS price: "price_1MkXYIIHDYxT34IbkE19iCXo",
-            price: "price_1N35rGIHDYxT34IbrLDiQ1XO"
-        },
-        pro: {
-            product: "prod_NVqC83Czr0Jdd8",
-            //UNTIL SALE ENDS price: "price_1MkoVfIHDYxT34Ib6l0gtszK"
-            price: "price_1MkoVfIHDYxT34Ib6l0gtszK"
-
-        },
-        plus: {
-            product: "prod_NVqDJv7gq5PcDY",
-            price: "price_1MkoWdIHDYxT34IbBmT9Sy8a"
-        }
+        starter: "P-0V898368738325322MRJ5WCY",
+        pro: "P-9GY62972LS0576048MRJ5WSA"
     },
-    production: {
-        starter: {
-            product: "prod_Na2rmk2tCbxeNT",
-            // UNTIL SALE ENDS price: "price_1MoslhIHDYxT34Ib0J6WfI17",
-            price: "price_1N35u3IHDYxT34Ib0fubvzQO"
-        },
-        pro: {
-            product: "prod_Na2sQ1ihM9ZPru",
-            price: "price_1N35tTIHDYxT34IbEswCHRGv"
-            // UNTIL SALE ENDS price: "price_1Mosn2IHDYxT34IbYB1EtElA"
-        },
-        plus: {
-            product: "prod_Na2uAK0JaQGa47",
-            price: "price_1MosoaIHDYxT34Ib7dw5npCF"
-        }
+    live: {
+        starter: "P-5FP73547Y4167462XMRJJATY",
+        pro: "P-3SR57382CD0013426MRJJAEI"
     }
+
 }
 
-
-// * Get profile data
-router.post('/create', checkUser, async (req, res) => {
-    const ref = req.query.ref ? req.query.ref : new Date().getTime().toString()
-    const trial = req.body.trial ? req.body.trial : false
-    const withBuyItNowDiscount = req.body.withBuyItNowDiscount ? req.body.withBuyItNowDiscount : false
-    let user = req.user
-    
-    if(!req.body.plan){
-        res.status(500).json({"error": "Error creating payment link. No plan supplied."})
-        return
-    }
-    if(user.plan != "free" && user.plan != "trial"){
-        res.status(500).json({"error": "Error creating payment link. User already has a plan."})
-        return
-    }
-
-    const plan = req.body.plan
-    const productid = plans[environment][plan].product
-    const priceid = plans[environment][plan].price
-
-    if(!productid || !priceid){
-        res.status(500).json({"error": "Error creating payment link. Invalid plan selected."})
-        return;
-    }
-
-    let sessionObj = {
-        mode: 'subscription',
-        line_items: [
-            {
-                price: priceid,
-                quantity: 1,
-            },
-        ],
-        // {CHECKOUT_SESSION_ID} is a string literal; do not change it!
-        // the actual Session ID is returned in the query parameter when your customer
-        // is redirected to the success page.
-        success_url: (environment== "development") ? 
-        "http://localhost:3001/subscription/success?session_id={CHECKOUT_SESSION_ID}" :
-        "https://arbster.com/subscription/success?session_id={CHECKOUT_SESSION_ID}",
-        cancel_url: (environment == "development") ? 
-        "http://localhost:3001/subscription/failure" :
-        "https://arbster.com/subscription/failure",
-        client_reference_id: ref
-    }
-
-    if(withBuyItNowDiscount) {
-        sessionObj.discounts = [
-            {
-                coupon: withBuyItNowDiscount ? "BUYITNOW" : null
-            }
-        ]
-    } else {
-        sessionObj.allow_promotion_codes = true
-    }
-
-    if(trial == true) {
-        sessionObj.subscription_data = {
-            trial_period_days: 5,
+//////////////////// ! FUNCTIONS ////////////////////
+async function getSubscriptionPaypal(id) {
+    paypal.billingPlan.get(id, function (error, billingPlan) {
+        if (error) {
+            console.log(error.response);
+            throw error;
+        } else {
+            return billingPlan;
         }
-    }
-
-
-    const session = await stripe.checkout.sessions.create(sessionObj);
-    const dbpayment = await prisma.subscription.create({
-        data: {
-            userId: user.authid,
-            stripePaymentId: session.id,
-            plan: plan,
-            planExpiresAt: new Date() // * this gets updated after payment is successful
-        }
-    })
-
-    if(!dbpayment){
-        res.status(500).json({"error": "Error inserting payment into database!"})
-        return;
-    }
-
-    res.json({
-        "status":"ok",
-        "data": {
-            "url": session.url,
-            "object": session
-        }
-    })
-});
-
-
-router.get("/portal", checkUser, async (req, res) => {
-    let user = req.user
-    
-    // get subscriptions on user with status "active"
-    const dbuser = await prisma.user.findUnique({
-        where: {
-            authid: user.authid
-        },
-        include: {
-            subscription: {
-                where: {
-                    stripeCustomerId: {
-                        not: null
-                    }
-                }
-            }
-        }
-    })
-
-    if(!dbuser){
-        res.status(500).json({"error": "Error getting user from database!"})
-        return;
-    }
-    if(!dbuser.subscription[0]){
-        res.status(500).json({"error": "User has not subscribed to any plans in the past."})
-        return;
-    }
-
-    const sub = dbuser.subscription[0]
-    const returnUrl = process.env.NODE_ENV == "development" ? "http://localhost:3001/profile" : "https://arbster.com/profile";
-    const customerId = sub.stripeCustomerId;
-
-    const portalSession = await stripe.billingPortal.sessions.create({
-        customer: customerId,
-        return_url: returnUrl,
     });
+}
 
-    res.json({
-        "status": "ok", 
-        "data": {
-            "url": portalSession.url
+
+
+//////////////////// ! PAYPAL ////////////////////
+router.post('/create-subscription', async (req, res) => {
+    const plan = req.body.plan; // Get the plan ID from the request body
+    const planId = plans[process.env.NODE_ENV][plan]
+
+    const now = new Date();
+    const tenSecondsLater = new Date(now.getTime() + 10 * 1000);
+    const isoFormat = tenSecondsLater.toISOString();
+    var billingAgreementAttributes = {
+        "name": "Arbster",
+        "description": "Agreement for Fast Speed Plan",
+        "start_date": isoFormat,
+        "plan": {
+            "id": planId
+        },
+        "payer": {
+            "payment_method": "paypal"
+        },
+    };
+
+    paypal.billingAgreement.create(billingAgreementAttributes, function (error, billingAgreement) {
+        if (error) {
+            console.log(error);
+            throw error;
+        } else {
+            console.log("Create Billing Agreement Response");
+            //console.log(billingAgreement);
+            for (var index = 0; index < billingAgreement.links.length; index++) {
+                if (billingAgreement.links[index].rel === 'approval_url') {
+                    var approval_url = billingAgreement.links[index].href;
+                    console.log("For approving subscription via Paypal, first redirect user to");
+                    console.log(approval_url);
+
+                    console.log("Payment token is");
+                    console.log(url.parse(approval_url, true).query.token);
+                    // See billing_agreements/execute.js to see example for executing agreement 
+                    // after you have payment token
+                }
+            }
         }
-    })
-})
-
-// 1.) Create a new checkout session
-// 2.) Insert payment into database
-// 3.) Return session url to pay back to client
-// 4.) Once payment session is complete (does not necessarily mean paid) - update payment ids in database
-// 5.) Once invoice payment is successful - activate sub an set expiry date
-
-router.post("/webhook", async (request, response) => {
-    const sig = request.headers['stripe-signature'];
-    let event;
-  
-    try {
-        event = stripe.webhooks.constructEvent(request.rawBody, sig, endpointSecret);
-    } catch (err) {
-        console.log(`Webhook Error: ${err.message}`)
-        response.status(400).send(`Webhook Error: ${err.message}`);
-        return;
-    }
-
-    data = event.data;
-    eventType = event.type;
-
-    switch (eventType) {
-        case 'checkout.session.completed':
-            // * Update subscription with stripe ids - do not activate yet
-            const csc_stripePaymentId = data.object.id
-            const csc_subId = data.object.subscription
-            const csc_customerId = data.object.customer
-
-            await prisma.subscription.update({
-                where: {
-                    stripePaymentId: csc_stripePaymentId
-                },
-                data: {
-                    stripeSubscriptionId: csc_subId,
-                    stripeCustomerId: csc_customerId,
-                }
-            })
-
-            break;
-
-        case 'invoice.paid':
-            // * Activate customer subscription and create invoice log
-            const ip_subId = data.object.subscription
-            const ip_invoiceId = data.object.id
-            const ip_invoicePDF = data.object.invoice_pdf
-
-            await prisma.invoice.create({
-                data: {
-                    stripeInvoiceId: ip_invoiceId,
-                    stripeSubscriptionId: ip_subId,
-                    stripeInvoicePdfUrl: ip_invoicePDF,
-                    status: eventType
-                }
-            })
-
-            // check if subscription is trial
-            const periodEnds = new Date(data.object.lines.data[0].period.end * 1000)
-
-            // get total days until period ends
-            const daysUntilPeriodEnds = Math.floor((periodEnds - Date.now()) / (1000 * 60 * 60 * 24))
-
-            if(daysUntilPeriodEnds > 31) {
-                // update user to say they've used their trial period if they have
-                const u = await prisma.subscription.findUnique({
-                    where: {
-                        stripeSubscriptionId: ip_subId
-                    },
-                    include: {
-                        user: true
-                    }
-                })
-                const userid = u.user.authid
-                await prisma.user.update({
-                    where: {
-                        authid: userid
-                    },
-                    data: {
-                        trialActivated: true
-                    }
-                })
-            }
-
-            // Update subscription status to active
-            await prisma.subscription.update({
-                where: {
-                    stripeSubscriptionId: ip_subId
-                },
-                data: {
-                    status: "active",
-                    planExpiresAt: periodEnds
-                }
-            })
-
-            break;
-
-        case 'invoice.payment_failed':
-            // * Remove subscription
-
-            // ! Notify customers that payment failed
-            // ! Send email to customer
-
-            const ipf_subId = data.object.subscription
-            const ipf_invoiceId = data.object.id
-
-            await prisma.invoice.create({
-                data: {
-                    stripeInvoiceId: ipf_invoiceId,
-                    stripeSubscriptionId: ipf_subId,
-                    status: eventType
-                }
-            })
-
-            await prisma.subscription.update({
-                where: {
-                    stripeSubscriptionId: ipf_subId
-                },
-                data: {
-                    status: "payment_failed",
-                }
-            })
-
-            break;
-
-        case 'customer.subscription.deleted':
-            // * Subscription ended (no renewal)
-            const csd_subId = data.object.id
-            await prisma.subscription.update({
-                where: {
-                    stripeSubscriptionId: csd_subId
-                },
-                data: {
-                    status: "inactive",
-                }
-            })
-
-        case 'customer.subscription.updated':
-            // * Subscription updated
-            const csu_subId = data.object.id
-            const updatedPlan = await getSub(csu_subId)
-
-            // check if plan has changed
-            const sub = await prisma.subscription.findUnique({
-                where: {
-                    stripeSubscriptionId: csu_subId
-                }
-            })
-
-            // if plan has changed then update it in the db
-            if(sub.plan != updatedPlan){
-                await prisma.subscription.update({
-                    where: {
-                        stripeSubscriptionId: csu_subId
-                    },
-                    data: {
-                        plan: updatedPlan,
-                    }
-                })
-            }
-
-        default:
-            // Unhandled event type
-    }
-
-    /// inactive, active, payment_failed, cancelled
-  
-    response.json({"status": "ok"})
+    });
 });
 
-router.get("/:paymentid", async (req, res) => {
-    const paymentid = req.params.paymentid
-    if(!paymentid || paymentid.length < 1 || paymentid == "undefined"){
-        res.status(404).json({
-            "status": "error",
-            "data": {
-                message: "Payment session not found."
-            }
-        })
-        return;
-    }
 
-
-    const payment = await prisma.subscription.findUnique({
-        where: {
-            stripePaymentId: paymentid
-        }
-    })
-
-    const stripePayment = await getPayment(paymentid)
-
-    if(!payment || !stripePayment){
-        res.status(404).json({
-            "status": "error",
-            "data": {
-                message: "Payment session not found."
-            }
-        })
-        return;
-    }
-
-    // check if updated at is less than 15 minutes ago
-    // const now = new Date()
-    // const fifteenMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000) //! acc 5 mins not 15
-
-    // if(payment.updatedAt < fifteenMinutesAgo){
-    //     res.status(404).json({
-    //         "status": "error",
-    //         "data": {
-    //             message: "Payment session has expired for affiliate checking."
-    //         }
-    //     })
-    //     return;
-    // }
-    
-    res.json({status: "ok", data: {payment: payment, stripePayment: stripePayment}})
-})
-
-
-async function getSub(subid){
-    const subscription = await stripe.subscriptions.retrieve(subid);
-    if(!subscription){
-        return null;
-    }
-
-    const productid = subscription.plan?.product;
-    
-    // see which key this is for in the plans object
-    const _plan = plans[environment]
-    for (const [key, value] of Object.entries(_plan)) {
-        if(value.product == productid){
-            return key;
-        }
-    }
-}
-
-async function getPayment(paymentid){
-    let payment = await stripe.checkout.sessions.retrieve(paymentid);
-    if(!payment){
-        return null;
-    }
-
-    const invoiceId = payment.invoice;
-    const invoice = await stripe.invoices.retrieve(invoiceId);
-    let code = null
-    if(invoice) {
-        code = invoice.discount?.coupon.name
-    }
-    if(code){
-        payment.discount_code = code
-    }
-
-    return payment;
-}
 
 module.exports = router;

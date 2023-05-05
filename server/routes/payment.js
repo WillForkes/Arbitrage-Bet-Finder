@@ -5,10 +5,12 @@ var express = require('express');
 let { checkUser } = require('../middleware/checkUser');
 var router = express.Router();
 const paypal = require('paypal-rest-sdk');
+const axios = require('axios');
 
 // PayPal Setup
 const clientId = (process.env.NODE_ENV == "development") ? process.env.PAYPAL_CLIENT_ID_SANDBOX : process.env.PAYPAL_CLIENT_ID_LIVE;
 const clientSecret = (process.env.NODE_ENV == "development") ? process.env.PAYPAL_SECRET_SANDBOX : process.env.PAYPAL_SECRET_LIVE;
+const paypalBaseURL = (process.env.NODE_ENV == "development") ? "https://api-m.sandbox.paypal.com/" : "https://api.paypal.com";
 
 paypal.configure({
     mode: 'sandbox', // Replace with 'live' when you're ready to go live
@@ -62,29 +64,37 @@ router.post('/create-subscription', async (req, res) => {
         },
     };
 
-    paypal.billingAgreement.create(billingAgreementAttributes, function (error, billingAgreement) {
-        if (error) {
-            console.log(error);
-            throw error;
-        } else {
-            console.log("Create Billing Agreement Response");
-            //console.log(billingAgreement);
-            for (var index = 0; index < billingAgreement.links.length; index++) {
-                if (billingAgreement.links[index].rel === 'approval_url') {
-                    var approval_url = billingAgreement.links[index].href;
-                    console.log("For approving subscription via Paypal, first redirect user to");
-                    console.log(approval_url);
-
-                    console.log("Payment token is");
-                    console.log(url.parse(approval_url, true).query.token);
-                    // See billing_agreements/execute.js to see example for executing agreement 
-                    // after you have payment token
-                }
-            }
+    axios.post(paypalBaseURL + "/v1/billing/subscriptions", billingAgreementAttributes, {
+        headers: {
+            'Content-Type': 'application/json',
+        }, auth: {
+            username: clientId,
+            password: clientSecret
         }
-    });
+    })
+
 });
 
+async function getPayPalAuth() {
+    //create basic authentication token header from client id and secret
+    var auth = 'Basic ' + Buffer.from(clientId + ':' + clientSecret).toString('base64');
+    var headers = {
+        'Accept': '*/*', 
+        'Accept-Language': 'en_US',
+        'Content-Type':'application/x-www-form-urlencoded',
+        'Authorization': auth
+    }
 
+    axios.post(paypalBaseURL + "/v1/oauth2/token", "grant_type=client_credentials", {
+        headers: headers
+    }).then(function (response) {
+        console.log(response.data);
+        return response.data;
+    }).catch(function (error) {
+        console.log(error.response.data);
+    });
+}
+
+const ee = getPayPalAuth();
 
 module.exports = router;

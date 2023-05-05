@@ -20,12 +20,10 @@ model User {
   email              String? // used only for email notis
   smsNotifications   Boolean        @default(false)
   emailNotifications Boolean        @default(false)
-  apikey             String?        @unique
   banned             Boolean        @default(false)
   staff              Boolean        @default(false)
   trialActivated     Boolean        @default(false)
   promotions         Boolean        @default(true)
-  afilliateCode      String?        @unique
   placedBets         PlacedBets[]
   subscription       Subscription[]
 }
@@ -56,10 +54,8 @@ model Subscription {
   id                   Int       @id @default(autoincrement())
   userId               String
   plan                 String
-  planExpiresAt        DateTime?
-  stripePaymentId      String?   @unique
-  stripeSubscriptionId String?   @unique
-  stripeCustomerId     String?
+  planExpiresAt        DateTime
+  paypalSubscriptionId String    @unique
   status               String    @default("inactive") // inactive, active, paused, payment_failed, cancelled
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
@@ -69,13 +65,12 @@ model Subscription {
 
 model Invoice {
   id                   Int          @id @default(autoincrement())
-  stripeSubscriptionId String
-  stripeInvoiceId      String
-  stripeInvoicePdfUrl  String?
+  paypalSubscriptionId String
+  link                 String
   status               String
   createdAt            DateTime     @default(now())
   updatedAt            DateTime     @updatedAt
-  subscription         Subscription @relation(fields: [stripeSubscriptionId], references: [stripeSubscriptionId])
+  subscription         Subscription @relation(fields: [paypalSubscriptionId], references: [paypalSubscriptionId])
 }
 
 model SignupDeal {

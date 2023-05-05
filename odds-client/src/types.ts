@@ -43,7 +43,6 @@ export type User = {
         whitelist: string;
         createdAt: string;
         updatedAt: string;
-        apikey: string;
         banned: boolean;
         trialActivated: boolean;
         staff: boolean;

@@ -10,7 +10,7 @@ const axios = require('axios');
 // PayPal Setup
 const clientId = (process.env.NODE_ENV == "development") ? process.env.PAYPAL_CLIENT_ID_SANDBOX : process.env.PAYPAL_CLIENT_ID_LIVE;
 const clientSecret = (process.env.NODE_ENV == "development") ? process.env.PAYPAL_SECRET_SANDBOX : process.env.PAYPAL_SECRET_LIVE;
-const paypalBaseURL = (process.env.NODE_ENV == "development") ? "https://api-m.sandbox.paypal.com/" : "https://api.paypal.com";
+const paypalBaseURL = (process.env.NODE_ENV == "development") ? "https://api-m.sandbox.paypal.com" : "https://api.paypal.com";
 
 paypal.configure({
     mode: 'sandbox', // Replace with 'live' when you're ready to go live
@@ -30,50 +30,123 @@ const plans = {
 
 }
 
-//////////////////// ! FUNCTIONS ////////////////////
-async function getSubscriptionPaypal(id) {
-    paypal.billingPlan.get(id, function (error, billingPlan) {
-        if (error) {
-            console.log(error.response);
-            throw error;
-        } else {
-            return billingPlan;
-        }
-    });
-}
-
-
-
 //////////////////// ! PAYPAL ////////////////////
 router.post('/create-subscription', async (req, res) => {
     const plan = req.body.plan; // Get the plan ID from the request body
     const planId = plans[process.env.NODE_ENV][plan]
 
+    const authToken = await getPayPalAuth();
     const now = new Date();
     const tenSecondsLater = new Date(now.getTime() + 10 * 1000);
     const isoFormat = tenSecondsLater.toISOString();
     var billingAgreementAttributes = {
-        "name": "Arbster",
-        "description": "Agreement for Fast Speed Plan",
-        "start_date": isoFormat,
-        "plan": {
-            "id": planId
-        },
-        "payer": {
-            "payment_method": "paypal"
-        },
+        "plan_id": planId,
+        "start_time": isoFormat,
+        "application_context": {
+            "brand_name": "Arbster",
+            "locale": "en-US",
+            "user_action": "SUBSCRIBE_NOW",
+            "payment_method": {
+                "payer_selected": "PAYPAL",
+                "payee_preferred": "IMMEDIATE_PAYMENT_REQUIRED"
+            },
+            "return_url": (process.env.NODE_ENV == "development") ? "http://localhost:3001/subscription/success" : "https://arbster.co.uk/subscription/success",
+            "cancel_url": (process.env.NODE_ENV == "development") ? "http://localhost:3001/subscription/failure" : "https://arbster.co.uk/subscription/failure"
+        }
     };
 
-    axios.post(paypalBaseURL + "/v1/billing/subscriptions", billingAgreementAttributes, {
-        headers: {
-            'Content-Type': 'application/json',
-        }, auth: {
-            username: clientId,
-            password: clientSecret
+    try{
+        const ppresp = await axios.post(paypalBaseURL + "/v1/billing/subscriptions", billingAgreementAttributes, {
+            headers: {
+                "Authorization": "Bearer " + authToken
+            }
+        })
+        res.json(ppresp.data);
+    } catch(err) {
+        res.json({status: "error", message: err.response.data});
+    }
+});
+
+router.get("/get-subscription/:id", async (req, res) => {
+    const id = req.params.id;
+    const authToken = await getPayPalAuth();
+    const urisuf = "/v1/billing/subscriptions/" + id
+    try{
+        const ppresp = await axios.get(paypalBaseURL + urisuf, {
+            headers: {
+                "Authorization": "Bearer " + authToken,
+                'Content-Type': 'application/json'
+            }
+        })
+        res.json({status: "ok", "data":ppresp.data});
+    } catch(err) {
+        res.json({status: "error", message: err.response.data});
+    }
+})
+
+router.post("/complete", checkUser, async (req, res) => {
+    const subId = req.body.subscriptionId;
+    const authToken = await getPayPalAuth();
+
+    // * Check if subscription exists
+    const sub = await prisma.subscriptions.findUnique({
+        where: {
+            paypalSubscriptionId: subId
         }
     })
+    if(sub) {
+        res.json({status: "ok", data: {message: "Subscription already exists!"}});
+    }
 
-});
+    // * Get the subscription details from PayPal then put it into the database
+    let ppresp
+    try{
+        ppresp = await axios.get(paypalBaseURL + "/v1/billing/subscriptions/" + subId, {
+            headers: {
+                "Authorization": "Bearer " + authToken,
+                'Content-Type': 'application/json'
+            }
+        })
+    } catch(err) {
+        res.json({status: "error", message: err.response.data});
+        return;
+    }
+
+    // * Update the user's subscription status
+    const expiresAt = new Date(ppresp.data.billing_info.next_billing_time);
+    const status = ppresp.data.status.toLowerCase();
+
+    await prisma.subscriptions.create({
+        data: {
+            paypalSubscriptionId: subId,
+            expiresAt: expiresAt,
+            status: status,
+            userId: req.user.id
+        }
+    })
+    
+    //...
+
+    res.json({status: "ok", data: {}})
+})
+
+router.post("/cancel-subscription", checkUser, async (req, res) => {
+    const authToken = await getPayPalAuth();
+    const urisuf = "/v1/billing/subscriptions/" + id + "/cancel"
+
+    try{
+        const ppresp = await axios.get(paypalBaseURL + urisuf, {
+            headers: {
+                "Authorization": "Bearer " + authToken,
+                'Content-Type': 'application/json'
+            }
+        })
+        res.json({status: "ok", "data": ppresp.data});
+    } catch(err) {
+        res.json({status: "error", message: err.response.data});
+    }
+})
+
 
 async function getPayPalAuth() {
     //create basic authentication token header from client id and secret
@@ -85,16 +158,14 @@ async function getPayPalAuth() {
         'Authorization': auth
     }
 
-    axios.post(paypalBaseURL + "/v1/oauth2/token", "grant_type=client_credentials", {
+    const resp = await axios.post(paypalBaseURL + "/v1/oauth2/token", "grant_type=client_credentials", {
         headers: headers
-    }).then(function (response) {
-        console.log(response.data);
-        return response.data;
-    }).catch(function (error) {
-        console.log(error.response.data);
-    });
+    })
+
+    if(resp.status != 200) return false
+
+    return resp.data.access_token;
 }
 
-const ee = getPayPalAuth();
 
 module.exports = router;

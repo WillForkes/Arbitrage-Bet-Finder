@@ -59,18 +59,6 @@ CREATE TABLE "Subscription" (
 );
 
 -- CreateTable
-CREATE TABLE "Invoice" (
-    "id" SERIAL NOT NULL,
-    "paypalSubscriptionId" TEXT NOT NULL,
-    "link" TEXT NOT NULL,
-    "status" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Invoice_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "SignupDeal" (
     "id" SERIAL NOT NULL,
     "deal" TEXT NOT NULL,
@@ -101,6 +89,3 @@ ALTER TABLE "PlacedBets" ADD CONSTRAINT "PlacedBets_userId_fkey" FOREIGN KEY ("u
 
 -- AddForeignKey
 ALTER TABLE "Subscription" ADD CONSTRAINT "Subscription_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("authid") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Invoice" ADD CONSTRAINT "Invoice_paypalSubscriptionId_fkey" FOREIGN KEY ("paypalSubscriptionId") REFERENCES "Subscription"("paypalSubscriptionId") ON DELETE RESTRICT ON UPDATE CASCADE;

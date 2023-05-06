@@ -83,7 +83,7 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
 
   async function gotoPDF(invoice: Invoice) {
     try {
-      window.location.assign(invoice.stripeInvoicePdfUrl);
+      window.location.assign("");
     } catch (e: unknown) {
       alertContext?.setAlert({ msg: "Error getting pdf", error: true });
     }

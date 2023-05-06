@@ -29,7 +29,6 @@ const plans = {
     }
 
 }
-
 //////////////////// ! PAYPAL ////////////////////
 router.post('/create-subscription', async (req, res) => {
     const plan = req.body.plan; // Get the plan ID from the request body
@@ -59,11 +58,13 @@ router.post('/create-subscription', async (req, res) => {
         const ppresp = await axios.post(paypalBaseURL + "/v1/billing/subscriptions", billingAgreementAttributes, {
             headers: {
                 "Authorization": "Bearer " + authToken
-            }
+            },
+        
         })
-        res.json(ppresp.data);
+        console.log(ppresp.data);
+        res.json({ status: "ok", data: ppresp.data});
     } catch(err) {
-        res.json({status: "error", message: err.response.data});
+        res.json({status: "error", message: err.response});
     }
 });
 

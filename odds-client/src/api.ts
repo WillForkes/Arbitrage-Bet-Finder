@@ -34,6 +34,10 @@ export async function createPayment(plan: Plan, ref: string, trial: boolean = fa
     return await sendApiRequest("POST", "payment/create?ref=" + ref, true, {plan: plan, trial: trial, withBuyItNowDiscount: withBuyItNowDiscount})
 }
 
+export async function createPaypalPayment(plan: Plan, trial: boolean = false, withBuyItNowDiscount: boolean = false): Promise<any> {
+    return await sendApiRequest("POST", "payment/create-subscription", true, {plan: plan, trial: trial, withBuyItNowDiscount: withBuyItNowDiscount})
+}
+
 export async function deleteTrackedBet(betId: number): Promise<any> {
     return await sendApiRequest("DELETE", `tracker/${betId}`, true)
 }

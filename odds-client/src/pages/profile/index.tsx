@@ -13,7 +13,7 @@ export default function Profile() {
 
   // Get invoice data
   const { data: invoicesData, error: invoiceError } = useSWR(
-    "/profile/invoices",
+    "/payment/get-invoices",
     getter
   );
   const invoices: Invoice[] = invoicesData?.invoices;

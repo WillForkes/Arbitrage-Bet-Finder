@@ -21,7 +21,9 @@ paypal.configure({
 const plans = {
     development: {
         starter: "P-0V898368738325322MRJ5WCY",
-        pro: "P-9GY62972LS0576048MRJ5WSA"
+        starter_trial: "P-1U892179YC897811XMRLJNZQ",
+        pro: "P-9GY62972LS0576048MRJ5WSA",
+        pro_trial: "P-94M92089Y3220752VMRLJNKY"
     },
     live: {
         starter: "P-5FP73547Y4167462XMRJJATY",
@@ -106,7 +108,7 @@ router.post("/complete", checkUser, async (req, res) => {
         ppresp = await axios.get(paypalBaseURL + "/v1/billing/subscriptions/" + subId, {
             headers: {
                 "Authorization": "Bearer " + authToken,
-                'Content-Type': 'application/json'
+                "Content-Type": "application/json"
             }
         })
     } catch(err) {
@@ -183,6 +185,75 @@ router.get("/get-invoices", checkUser, async (req, res) => {
     
 
     res.json({status: "ok", data: {}})
+})
+
+router.post("/webhook", async (req, res) => {
+    const event_type = req.body.event_type;
+    const data = req.body.resource;
+    const subId = data.id;
+
+    switch(event_type) {
+        case "BILLING.SUBSCRIPTION.UPDATED":
+            // * Update the user's subscription status
+            const nextExpirey = new Date(data.billing_info.next_billing_time);
+            const status = data.status.toLowerCase();
+
+            await prisma.subscription.update({
+                where: {
+                    paypalSubscriptionId: subId
+                },
+                data: {
+                    planExpiresAt: nextExpirey,
+                    status: status
+                }
+            })
+
+        case "BILLING.SUBSCRIPTION.CANCELLED":
+            // * Update the user's subscription status            
+            await prisma.subscription.update({
+                where: {
+                    paypalSubscriptionId: subId
+                },
+                data: {
+                    status: "cancelled"
+                }
+            })
+
+        case "BILLING.SUBSCRIPTION.EXPIRED":
+            // * Update the user's subscription status            
+            await prisma.subscription.update({
+                where: {
+                    paypalSubscriptionId: subId
+                },
+                data: {
+                    status: "expired"
+                }
+            })
+
+        case "BILLING.SUBSCRIPTION.PAYMENT.FAILED":
+            // * Update the user's subscription status            
+            await prisma.subscription.update({
+                where: {
+                    paypalSubscriptionId: subId
+                },
+                data: {
+                    status: "payment_failed"
+                }
+            })
+
+        case "BILLING.SUBSCRIPTION.SUSPENDED":
+            // * Update the user's subscription status            
+            await prisma.subscription.update({
+                where: {
+                    paypalSubscriptionId: subId
+                },
+                data: {
+                    status: "payment_failed"
+                }
+            })
+            
+    }
+
 })
 
 async function getPayPalAuth() {

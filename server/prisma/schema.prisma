@@ -60,17 +60,6 @@ model Subscription {
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
   user                 User      @relation(fields: [userId], references: [authid])
-  invoices             Invoice[]
-}
-
-model Invoice {
-  id                   Int          @id @default(autoincrement())
-  paypalSubscriptionId String
-  link                 String
-  status               String
-  createdAt            DateTime     @default(now())
-  updatedAt            DateTime     @updatedAt
-  subscription         Subscription @relation(fields: [paypalSubscriptionId], references: [paypalSubscriptionId])
 }
 
 model SignupDeal {

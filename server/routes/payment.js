@@ -49,8 +49,8 @@ router.post('/create-subscription', async (req, res) => {
                 "payer_selected": "PAYPAL",
                 "payee_preferred": "IMMEDIATE_PAYMENT_REQUIRED"
             },
-            "return_url": (process.env.NODE_ENV == "development") ? "http://localhost:3001/subscription/success" : "https://arbster.co.uk/subscription/success",
-            "cancel_url": (process.env.NODE_ENV == "development") ? "http://localhost:3001/subscription/failure" : "https://arbster.co.uk/subscription/failure"
+            "return_url": (process.env.NODE_ENV == "development") ? "http://localhost:3000/payment/complete" : "https://api.arbster.com/payment/complete",
+            "cancel_url": (process.env.NODE_ENV == "development") ? "http://localhost:3001/subscription/failure" : "https://arbster.com/subscription/failure"
         }
     };
 
@@ -85,55 +85,56 @@ router.get("/get-subscription/:id", async (req, res) => {
     }
 })
 
-router.post("/complete", checkUser, async (req, res) => {
-    const subId = req.body.subscriptionId;
-    const authToken = await getPayPalAuth();
-
-    // * Check if subscription exists
-    const sub = await prisma.subscription.findUnique({
-        where: {
-            paypalSubscriptionId: subId
-        }
-    })
-    if(sub) {
-        res.json({status: "ok", data: {message: "Subscription already exists!"}});
-        return;
-    }
-
-    // * Get the subscription details from PayPal then put it into the database
-    let ppresp
-    try{
-        ppresp = await axios.get(paypalBaseURL + "/v1/billing/subscriptions/" + subId, {
-            headers: {
-                "Authorization": "Bearer " + authToken,
-                'Content-Type': 'application/json'
+router.get("/complete", checkUser, async (req, res) => {
+    try {
+        const subId = req.body.subscriptionId;
+        const authToken = await getPayPalAuth();
+    
+        // * Check if subscription exists
+        const sub = await prisma.subscription.findUnique({
+            where: {
+                paypalSubscriptionId: subId
             }
         })
-    } catch(err) {
-        res.json({status: "error", message: err.response.data});
-        return;
-    }
-
-    // * Update the user's subscription status
-    const expiresAt = new Date(ppresp.data.billing_info.next_billing_time);
-    const status = ppresp.data.status.toLowerCase();
-
-    // get plan name from plans object
-    const planName = Object.keys(plans[process.env.NODE_ENV]).find(key => plans[process.env.NODE_ENV][key] === ppresp.data.plan_id);
-
-    const userSub = await prisma.subscription.create({
-        data: {
-            paypalSubscriptionId: subId,
-            planExpiresAt: expiresAt,
-            status: status,
-            userId: req.user.authid,
-            plan: planName
+        if(sub) {
+            res.json({status: "ok", data: {message: "Subscription already exists!"}});
+            return;
         }
-    })
     
-    //...
-
-    res.json({status: "ok", data: {subscription: userSub}})
+        // * Get the subscription details from PayPal then put it into the database
+        let ppresp
+        try{
+            ppresp = await axios.get(paypalBaseURL + "/v1/billing/subscriptions/" + subId, {
+                headers: {
+                    "Authorization": "Bearer " + authToken,
+                    'Content-Type': 'application/json'
+                }
+            })
+        } catch(err) {
+            res.json({status: "error", message: err.response.data});
+            return;
+        }
+    
+        // * Update the user's subscription status
+        const expiresAt = new Date(ppresp.data.billing_info.next_billing_time);
+        const status = ppresp.data.status.toLowerCase();
+    
+        // get plan name from plans object
+        const planName = Object.keys(plans[process.env.NODE_ENV]).find(key => plans[process.env.NODE_ENV][key] === ppresp.data.plan_id);
+    
+        await prisma.subscription.create({
+            data: {
+                paypalSubscriptionId: subId,
+                planExpiresAt: expiresAt,
+                status: status,
+                userId: req.user.authid,
+                plan: planName
+            }
+        })
+        res.redirect((process.env.NODE_ENV == "development") ? "http://localhost:3001/subscription/success" : "https://arbster.com/subscription/success")
+    } catch(e) {
+        res.redirect((process.env.NODE_ENV == "development") ? "http://localhost:3000/payment/create" : "https://api.arbster.com/payment/create")
+    }
 })
 
 router.post("/cancel-subscription", checkUser, async (req, res) => {
@@ -186,24 +187,26 @@ router.get("/get-invoices", checkUser, async (req, res) => {
             }
         }
     })
-
-    if(user.subscription) {
+    console.log(user.subscription);
+    if(user.subscription != []) {
         // get invoice links from paypal
-        const s = user.subscription[0];
+
+        const s = user.subscription;
+        
         let ppresp
         try{
             // 2023 jan first
             const start_time = new Date(1672531200000).toISOString();
             // 1 month from now
             const end_time = new Date(Date.now() + 2629800000).toISOString();
-            ppresp = await axios.get(paypalBaseURL + "/v1/billing/subscriptions/" + s.paypalSubscriptionId + "/transactions?start_time=" + start_time + "&end_time=" + end_time, {
+            await axios.get(paypalBaseURL + "/v1/billing/subscriptions/" + s.paypalSubscriptionId + "/transactions?start_time=" + start_time + "&end_time=" + end_time, {
                 headers: {
                     "Authorization": "Bearer " + authToken,
                     'Content-Type': 'application/json'
                 }
             })
         } catch(err) {
-            res.status(500).json({status: "error", message: err.response.data});
+            res.status(500).json({status: "error", message: err.response ? err.response.data: err});
             return;
         }
 

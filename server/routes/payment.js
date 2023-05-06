@@ -89,13 +89,14 @@ router.get("/get-subscription/:id", async (req, res) => {
 
 router.get("/complete", checkUser, async (req, res) => {
     try {
-        const subId = req.body.subscriptionId;
+        const subId = req.query.subscription_id;
         const authToken = await getPayPalAuth();
     
         // * Check if subscription exists
-        const sub = await prisma.subscription.findUnique({
+        const sub = await prisma.subscription.findFirst({
             where: {
-                paypalSubscriptionId: subId
+                userId: req.user.authid,
+                status: "active"
             }
         })
         if(sub) {
@@ -133,8 +134,9 @@ router.get("/complete", checkUser, async (req, res) => {
                 plan: planName
             }
         })
-        res.redirect((process.env.NODE_ENV == "development") ? "http://localhost:3001/subscription/success" : "https://arbster.com/subscription/success")
+        res.redirect((process.env.NODE_ENV == "development") ? "http://localhost:3001/subscription/success?subid=" + subId : "https://arbster.com/subscription/success?subid=" + subId)
     } catch(e) {
+        console.log(e)
         res.redirect((process.env.NODE_ENV == "development") ? "http://localhost:3000/payment/create" : "https://api.arbster.com/payment/create")
     }
 })

@@ -31,7 +31,7 @@ export default function Profile() {
             <title>Arbster | Profile</title>
             <meta name="description" content="Edit and view your profile on Arbster" />
         </Head>
-      {data && invoices ? (
+      {data ? (
         <ProfileLoader
           user={user}
           invoices={invoices}

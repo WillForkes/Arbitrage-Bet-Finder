@@ -96,6 +96,7 @@ router.post("/complete", checkUser, async (req, res) => {
     })
     if(sub) {
         res.json({status: "ok", data: {message: "Subscription already exists!"}});
+        return;
     }
 
     // * Get the subscription details from PayPal then put it into the database
@@ -116,7 +117,7 @@ router.post("/complete", checkUser, async (req, res) => {
     const expiresAt = new Date(ppresp.data.billing_info.next_billing_time);
     const status = ppresp.data.status.toLowerCase();
 
-    await prisma.subscriptions.create({
+    const userSub = await prisma.subscriptions.create({
         data: {
             paypalSubscriptionId: subId,
             expiresAt: expiresAt,
@@ -127,26 +128,84 @@ router.post("/complete", checkUser, async (req, res) => {
     
     //...
 
-    res.json({status: "ok", data: {}})
+    res.json({status: "ok", data: {subscription: userSub}})
 })
 
 router.post("/cancel-subscription", checkUser, async (req, res) => {
     const authToken = await getPayPalAuth();
-    const urisuf = "/v1/billing/subscriptions/" + id + "/cancel"
 
-    try{
+    // get subid
+    const sub = await prisma.subscriptions.findUnique({
+        where: {
+            userId: req.user.id
+        }
+    })
+
+    const urisuf = "/v1/billing/subscriptions/" + sub.paypalSubscriptionId + "/cancel"
+
+    try {
         const ppresp = await axios.get(paypalBaseURL + urisuf, {
             headers: {
                 "Authorization": "Bearer " + authToken,
                 'Content-Type': 'application/json'
             }
         })
-        res.json({status: "ok", "data": ppresp.data});
+
+        await prisma.subscriptions.update({
+            where: {
+                id: sub.id
+            },
+            data: {
+                status: "cancelled"
+            }
+        })
+        
+        res.json({status: "ok", "data": {response: ppresp.data}});
     } catch(err) {
-        res.json({status: "error", message: err.response.data});
+        res.status(500).json({status: "error", message: err.response.data});
     }
 })
 
+
+router.get("/get-invoices", checkUser, async (req, res) => {
+    const authToken = await getPayPalAuth();
+    const user = await prisma.users.findUnique({
+        where: {
+            id: req.user.id
+        },
+        include: {
+            subscription: {
+                where: {
+                    status: "active"
+                }
+            }
+        }
+    })
+
+    if(user.subscription) {
+        // get invoice links from paypal
+        let ppresp
+        try{
+            ppresp = await axios.get(paypalBaseURL + "/v1/billing/subscriptions/" + user.subscription.paypalSubscriptionId + "/transactions", {
+                headers: {
+                    "Authorization": "Bearer " + authToken,
+                    'Content-Type': 'application/json'
+                }
+            })
+        } catch(err) {
+            res.status(500).json({status: "error", message: err.response.data});
+            return;
+        }
+
+        res.json({status: "ok", data: {
+            transactions: [...ppresp.data.transactions],
+            link: ppresp.data.links.find(link => link.rel == "self").href
+        }})
+
+    } else {
+        res.status(200).json({status: "ok", data: {message: "No active subscription found!"}});
+    }
+})
 
 async function getPayPalAuth() {
     //create basic authentication token header from client id and secret

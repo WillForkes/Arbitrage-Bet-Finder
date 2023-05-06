@@ -129,9 +129,15 @@ router.get("/invoices", checkUser, async function(req, res, next) {
     })
     
     // ! ... get invoices links
+    let toSend = []
+    for(let i = 0; i < invoices.length; i++){
+        if(invoices.subscription.userId == req.user.authid){
+            toSend.push(invoices[i])
+        }
+    }
 
     res.status(200).json({"status": "ok", "data": {
-        "invoices": []
+        "invoices": toSend
     }})
 })
 

@@ -4,7 +4,7 @@ declare global {
   }
 }
 
-import { createPayment, createPaypalPayment, createPortal } from "@/api";
+import { createPayment, createPaypalPayment } from "@/api";
 import { Plan } from "@/types";
 import React, { useContext, useState } from "react";
 import { Badge, Tooltip } from "flowbite-react";
@@ -24,26 +24,20 @@ export default function Pricing() {
     withBuyItNowDiscount: boolean = false
   ) {
     try {
-      // rewardful
-      const refId =
-        (window.Rewardful && window.Rewardful.referral) ||
-        "checkout_" + new Date().getTime();
-
-      // if user already has plan, get portal link instead
-      if (user?.dbuser.plan != "free") {
-        const portalRes = await createPortal();
-        window.location.assign(portalRes.url);
-      } else {
+        // if user already has plan, get portal link instead
+        if(trial) {
+            plan = plan + "_trial"
+        }
+        
         var response = await createPaypalPayment(
-          plan as Plan,
-          trial,
-          withBuyItNowDiscount
+            plan as Plan,
+            trial,
+            withBuyItNowDiscount
         );
         console.log(response.links[0].href);
         window.location.assign(response.links[0].href);
-      }
     } catch (e) {
-      console.error(e);
+        console.error(e);
     }
   }
 
@@ -61,13 +55,13 @@ export default function Pricing() {
 
   function canActivateTrial() {
     if (user?.dbuser.trialActivated == false && user?.dbuser.plan != "free") {
-      return false; // user bought for the discounted price
+        return false; // user bought for the discounted price
     }
 
     if (user?.dbuser.trialActivated == false || !user) {
-      return true;
+        return true;
     } else {
-      return false;
+        return false;
     }
   }
 

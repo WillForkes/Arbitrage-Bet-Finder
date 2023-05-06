@@ -89,7 +89,7 @@ router.post("/complete", checkUser, async (req, res) => {
     const authToken = await getPayPalAuth();
 
     // * Check if subscription exists
-    const sub = await prisma.subscriptions.findUnique({
+    const sub = await prisma.subscription.findUnique({
         where: {
             paypalSubscriptionId: subId
         }
@@ -117,12 +117,16 @@ router.post("/complete", checkUser, async (req, res) => {
     const expiresAt = new Date(ppresp.data.billing_info.next_billing_time);
     const status = ppresp.data.status.toLowerCase();
 
-    const userSub = await prisma.subscriptions.create({
+    // get plan name from plans object
+    const planName = Object.keys(plans[process.env.NODE_ENV]).find(key => plans[process.env.NODE_ENV][key] === ppresp.data.plan_id);
+
+    const userSub = await prisma.subscription.create({
         data: {
             paypalSubscriptionId: subId,
-            expiresAt: expiresAt,
+            planExpiresAt: expiresAt,
             status: status,
-            userId: req.user.id
+            userId: req.user.authid,
+            plan: planName
         }
     })
     
@@ -169,9 +173,9 @@ router.post("/cancel-subscription", checkUser, async (req, res) => {
 
 router.get("/get-invoices", checkUser, async (req, res) => {
     const authToken = await getPayPalAuth();
-    const user = await prisma.users.findUnique({
+    const user = await prisma.user.findUnique({
         where: {
-            id: req.user.id
+            authid: req.user.authid
         },
         include: {
             subscription: {
@@ -184,9 +188,14 @@ router.get("/get-invoices", checkUser, async (req, res) => {
 
     if(user.subscription) {
         // get invoice links from paypal
+        const s = user.subscription[0];
         let ppresp
         try{
-            ppresp = await axios.get(paypalBaseURL + "/v1/billing/subscriptions/" + user.subscription.paypalSubscriptionId + "/transactions", {
+            // 2023 jan first
+            const start_time = new Date(1672531200000).toISOString();
+            // 1 month from now
+            const end_time = new Date(Date.now() + 2629800000).toISOString();
+            ppresp = await axios.get(paypalBaseURL + "/v1/billing/subscriptions/" + s.paypalSubscriptionId + "/transactions?start_time=" + start_time + "&end_time=" + end_time, {
                 headers: {
                     "Authorization": "Bearer " + authToken,
                     'Content-Type': 'application/json'
@@ -199,7 +208,7 @@ router.get("/get-invoices", checkUser, async (req, res) => {
 
         res.json({status: "ok", data: {
             transactions: [...ppresp.data.transactions],
-            link: ppresp.data.links.find(link => link.rel == "self").href
+            link: ppresp.data.links.find(link => link.rel == "SELF").href
         }})
 
     } else {

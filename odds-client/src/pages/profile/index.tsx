@@ -16,7 +16,7 @@ export default function Profile() {
     "/payment/get-invoices",
     getter
   );
-  const invoices: Invoice[] = invoicesData?.invoices;
+  const invoices: Invoice[] = invoicesData?.transactions;
 
   // Get bookmaker data
   const { data: booksData, error: bookError } = useSWR(

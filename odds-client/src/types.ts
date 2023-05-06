@@ -11,18 +11,23 @@ export type Region = {
 
 export type Invoice = {
     id: number;
-    stripeSubscriptionId: string;
-    stripeInvoiceId: string;
-    stripeInvoicePdfUrl: string;
     status: string;
-    plan: string;
-    billing_reason: string;
-    amount_paid: number;
-    createdAt: string;
-    updatedAt: string;
-    subscription: {
-        plan: string;
-    }
+    amount_with_breakdown: {
+        gross_amount: {
+            currency_code: string;
+            value: string;
+        },
+        fee_amount: {
+            currency_code: string;
+            value: string;
+        }
+    },
+    payer_name: {
+        given_name: string;
+        surname: string;
+    },
+    payer_email: string;
+    time: string;
 }
 
 export type User = {

@@ -49,8 +49,8 @@ router.post('/create-subscription', async (req, res) => {
                 "payer_selected": "PAYPAL",
                 "payee_preferred": "IMMEDIATE_PAYMENT_REQUIRED"
             },
-            "return_url": (process.env.NODE_ENV == "development") ? "http://localhost:3001/subscription/success" : "https://arbster.co.uk/subscription/success",
-            "cancel_url": (process.env.NODE_ENV == "development") ? "http://localhost:3001/subscription/failure" : "https://arbster.co.uk/subscription/failure"
+            "return_url": (process.env.NODE_ENV == "development") ? "http://localhost:3001/subscription/success" : "https://arbster.com/subscription/success",
+            "cancel_url": (process.env.NODE_ENV == "development") ? "http://localhost:3001/subscription/failure" : "https://arbster.com/subscription/failure"
         }
     };
 
@@ -61,7 +61,7 @@ router.post('/create-subscription', async (req, res) => {
             },
         
         })
-        console.log(ppresp.data);
+
         res.json({ status: "ok", data: ppresp.data});
     } catch(err) {
         res.json({status: "error", message: err.response});
@@ -174,47 +174,15 @@ router.post("/cancel-subscription", checkUser, async (req, res) => {
 
 router.get("/get-invoices", checkUser, async (req, res) => {
     const authToken = await getPayPalAuth();
-    const user = await prisma.user.findUnique({
+    const subscription = await prisma.subscription.findMany({
         where: {
-            authid: req.user.authid
-        },
-        include: {
-            subscription: {
-                where: {
-                    status: "active"
-                }
-            }
+            userId: req.user.id
         }
     })
 
-    if(user.subscription) {
-        // get invoice links from paypal
-        const s = user.subscription[0];
-        let ppresp
-        try{
-            // 2023 jan first
-            const start_time = new Date(1672531200000).toISOString();
-            // 1 month from now
-            const end_time = new Date(Date.now() + 2629800000).toISOString();
-            ppresp = await axios.get(paypalBaseURL + "/v1/billing/subscriptions/" + s.paypalSubscriptionId + "/transactions?start_time=" + start_time + "&end_time=" + end_time, {
-                headers: {
-                    "Authorization": "Bearer " + authToken,
-                    'Content-Type': 'application/json'
-                }
-            })
-        } catch(err) {
-            res.status(500).json({status: "error", message: err.response.data});
-            return;
-        }
+    
 
-        res.json({status: "ok", data: {
-            transactions: [...ppresp.data.transactions],
-            link: ppresp.data.links.find(link => link.rel == "SELF").href
-        }})
-
-    } else {
-        res.status(200).json({status: "ok", data: {message: "No active subscription found!"}});
-    }
+    res.json({status: "ok", data: {}})
 })
 
 async function getPayPalAuth() {

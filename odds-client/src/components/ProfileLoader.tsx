@@ -241,17 +241,17 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                         </div>
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
-                            {invoice.billing_reason}
+                            {invoice.status}
                           </p>
                           <p className="truncate text-sm text-gray-500 dark:text-gray-400">
-                            ID: {invoice.stripeInvoiceId}
+                            ID: {invoice.id}
                           </p>
                           <p className="truncate text-sm text-gray-500 dark:text-gray-400">
-                            {new Date(invoice.createdAt).toDateString()}
+                            {new Date(invoice.time).toDateString()}
                           </p>
                           <p className="truncate text-sm text-gray-500 dark:text-gray-400">
                             {/* If starter - 29.99, if pro, 49.99, if plus 99.99 */}
-                            {invoice.amount_paid / 100}
+                            ${invoice.amount_with_breakdown.gross_amount.value}
                           </p>
                         </div>
                         <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">

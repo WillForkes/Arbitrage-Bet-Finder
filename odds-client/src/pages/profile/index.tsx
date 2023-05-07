@@ -27,11 +27,14 @@ export default function Profile() {
 
   return (
     <div>
-        <Head>
-            <title>Arbster | Profile</title>
-            <meta name="description" content="Edit and view your profile on Arbster" />
-        </Head>
-      {data && invoices ? (
+      <Head>
+        <title>Arbster | Profile</title>
+        <meta
+          name="description"
+          content="Edit and view your profile on Arbster"
+        />
+      </Head>
+      {data ? (
         <ProfileLoader
           user={user}
           invoices={invoices}

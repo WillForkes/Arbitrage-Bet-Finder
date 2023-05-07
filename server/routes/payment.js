@@ -133,7 +133,7 @@ router.get("/complete", checkUser, async (req, res) => {
         })
         res.redirect((process.env.NODE_ENV == "development") ? "http://localhost:3001/subscription/success" : "https://arbster.com/subscription/success")
     } catch(e) {
-        res.redirect((process.env.NODE_ENV == "development") ? "http://localhost:3000/payment/create" : "https://api.arbster.com/payment/create")
+        res.redirect((process.env.NODE_ENV == "development") ? "http://localhost:3001/subscription/failure" : "https://arbster.com/subscription/failure")
     }
 })
 

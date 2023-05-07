@@ -11,10 +11,10 @@ import Head from "next/head";
 export default function SuccessSubscriptionPage() {
     // Get session_id query param
     const router = useRouter()
-    const { session_id } = router.query
-    const { data, error } = useSWR("/payment/" + session_id, getter);
+    const { subid } = router.query
+    const { data, error } = useSWR("/payment/get-subscription/" + subid, getter);
 
-    if(error || !data || data?.payment.status=="inactive" || data?.stripePayment.status != "complete") {
+    if(error || !data || data?.status!="ACTIVE") {
         return (
             <div className="flex justify-center items-center h-screen dark:bg-gray-900">
                 <h2 className="text-2xl font-semibold">Locating order...</h2>
@@ -28,7 +28,7 @@ export default function SuccessSubscriptionPage() {
         <Script id="grow_affiliate_succcess_tracking">
             {`
                 tdconv('init', '2353477', {'element': 'iframe' });
-                tdconv('track', 'sale', {'transactionId':'${data.stripePayment.id}', 'ordervalue':[${data.stripePayment.amount_total / 1000}], 'voucher':'[${data.stripePayment.discount_code}]', 'currency':'GBP', 'event':436265});
+                tdconv('track', 'sale', {'transactionId':'${data.id}', 'ordervalue':[${data.billing_info.last_payment.amount.value}], 'voucher':'[]', 'currency':'GBP', 'event':436265});
             `}
         </Script>
       <section className="bg-white dark:bg-gray-900">

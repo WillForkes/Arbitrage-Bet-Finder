@@ -229,13 +229,13 @@ export default function ProfileLoader({
                   }}
                   className="inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900"
                 >
-                  {subscriptionStatus.status == "CANCELLED"
+                  {subscriptionStatus?.status == "CANCELLED"
                     ? "Renew"
                     : "Cancel"}
                 </button>
               </div>
               <section>
-                <p>Status: {subscriptionStatus.status}</p>
+                <p>Status: {subscriptionStatus?.status}</p>
                 <p>
                   Plan expires:{" "}
                   {new Date(user.dbuser.planExpiresAt).toDateString()}

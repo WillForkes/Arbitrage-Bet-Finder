@@ -49,10 +49,12 @@ export default function ProfileLoader({
     phone: user.dbuser.phone,
   });
   const [whiteList, setWhitelist] = useState(
-    JSON.parse(user.dbuser.whitelist).map((x: string) => ({
-      label: x,
-      value: x,
-    }))
+    user.dbuser.whitelist != null
+      ? JSON.parse(user.dbuser.whitelist).map((x: string) => ({
+          label: x,
+          value: x,
+        }))
+      : []
   );
 
   const alertContext = useContext(AlertContext);
@@ -83,6 +85,7 @@ export default function ProfileLoader({
       await updateWhitelist(whiteList);
       alertContext?.setAlert({ msg: "Whitelist updated", error: false });
     } catch (e) {
+      console.log(e);
       alertContext?.setAlert({ msg: "Error updating user", error: true });
     }
   }

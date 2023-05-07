@@ -52,7 +52,11 @@ export async function updateProfileA(region: string): Promise<any> {
 }
 
 export async function updateWhitelist(whiteList: [{value: string, label: string, disabled: boolean}]): Promise<any> {
-    var x = whiteList.map((x) => x.label)
+    if (whiteList != null) {
+        var x = whiteList.map((x) => x.label)
+    } else {
+        x = [];
+    }
     return await sendApiRequest("POST", "profile/whitelist", true, {add: x})
 }
 

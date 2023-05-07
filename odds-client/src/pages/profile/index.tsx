@@ -18,10 +18,13 @@ export default function Profile() {
   );
   const invoices: Invoice[] = invoicesData?.transactions;
 
-  const { data: subscriptionStatus, error: subscriptionError } = useSWR(
+  let { data: subscriptionStatus, error: subscriptionError } = useSWR(
     "/payment/get-subscription-status",
     getter
   );
+  if(subscriptionStatus?.message) {
+    subscriptionStatus = null; 
+  }
 
   // Get bookmaker data
   const { data: booksData, error: bookError } = useSWR(

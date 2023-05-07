@@ -221,26 +221,34 @@ export default function ProfileLoader({
             <Card>
               <div className="mb-4 flex items-center justify-between">
                 <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
-                  Latest invoices
+                  Billing History
                 </h5>
-                <button
-                  onClick={() => {
-                    cancelSub();
-                  }}
-                  className="inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900"
-                >
-                  {subscriptionStatus?.status == "CANCELLED"
-                    ? "Renew"
-                    : "Cancel"}
-                </button>
+                {subscriptionStatus?.status == "ACTIVE" ? (
+                  <button
+                    onClick={() => {
+                      cancelSub();
+                    }}
+                    className="inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900"
+                  >
+                    Cancel Subscription
+                  </button>
+                ) : (
+                  // Text saying their sub will expire on x date
+                  <div className="flex">
+                    <h3 className="mr-2">Your subscription will expire on</h3>
+                    <h3 className="font-bold">
+                      {new Date(user.dbuser.planExpiresAt).toDateString()}
+                    </h3>
+                  </div>
+                )}
               </div>
-              <section>
+              {/* <section>
                 <p>Status: {subscriptionStatus?.status}</p>
                 <p>
                   Plan expires:{" "}
                   {new Date(user.dbuser.planExpiresAt).toDateString()}
                 </p>
-              </section>
+              </section> */}
               <div className="flow-root">
                 <ul className="divide-y divide-gray-200 dark:divide-gray-700">
                   {/* foreach invoice */}
@@ -257,7 +265,7 @@ export default function ProfileLoader({
                             </div>
                             <div className="min-w-0 flex-1">
                               <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
-                                {invoice?.status}
+                                {invoice?.status} - {invoice?.payer_email}
                               </p>
                               <p className="truncate text-sm text-gray-500 dark:text-gray-400">
                                 ID: {invoice?.id}
@@ -274,7 +282,7 @@ export default function ProfileLoader({
                                 }
                               </p>
                             </div>
-                            <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                            {/* <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
                               <button
                                 onClick={() => {
                                   gotoPDF(invoice);
@@ -283,7 +291,7 @@ export default function ProfileLoader({
                               >
                                 Download Invoice PDF
                               </button>
-                            </div>
+                            </div> */}
                           </div>
                         </li>
                       ))

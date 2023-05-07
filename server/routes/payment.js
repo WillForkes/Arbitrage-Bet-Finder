@@ -20,7 +20,7 @@ const plans = {
         pro_trial: "P-94M92089Y3220752VMRLJNKY",
         pro_with_discount: "P-6SP65091DM374502MMRL5K7Q"
     },
-    live: {
+    production: {
         starter: "P-5FP73547Y4167462XMRJJATY",
         starter_trial: "P-4BA73176LG562201BMRL5WRQ",
         starter_with_discount: "P-1C2878491P542290VMRL5XYY",

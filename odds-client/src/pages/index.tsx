@@ -11,26 +11,35 @@ import FreeTrial from "@/components/Home/FreeTrial";
 import Stats from "@/components/Home/Stats";
 import WhatIs from "@/components/Home/WhatIs";
 import Blog from "@/components/Home/Blog";
+import Calculator from "@/components/Home/Calculator";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   return (
     <>
-        <Head>
-            <title>Arbster - Sports Betting Tools</title>
-            <meta name="description" content="Discover advanced online sports betting tools at Arbster, including a powerful arbitrage finder and more for maximizing your betting profits." />
-        </Head>
+      <Head>
+        <title>Arbster - Sports Betting Tools</title>
+        <meta
+          name="description"
+          content="Discover advanced online sports betting tools at Arbster, including a powerful arbitrage finder and more for maximizing your betting profits."
+        />
+      </Head>
 
-        <Hero />
-        <Stats/>
-        <WhatIs />
-        <Features />
-
-        <Blog />
-        <Pricing />
-        <Tline />
-        <Testimonials />
-        <FreeTrial />
+      <Hero />
+      <Stats />
+      <WhatIs />
+      <Features />
+      {/* if development, show */}
+      {process.env.NODE_ENV === "development" ? (
+      <Calculator />
+      ) : (
+        <></>
+      )}
+      <Blog />
+      <Pricing />
+      <Tline />
+      <Testimonials />
+      <FreeTrial />
     </>
   );
 }

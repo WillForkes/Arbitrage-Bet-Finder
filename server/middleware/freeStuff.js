@@ -29,17 +29,13 @@ let freeStuff = async (req, res, next) => {
         if(!user){
             // create user
             // generate api key
-            const apikey = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-            const afilliateCode = makeid(8)
             let newUser
     
             try {
                 newUser = await prisma.user.create({
                     data: {
                         email: req.oidc.user.email,
-                        afilliateCode: afilliateCode,
                         authid: req.oidc.user.sub,
-                        apikey: apikey
                     }
                 })
             } catch {

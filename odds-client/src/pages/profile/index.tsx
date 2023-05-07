@@ -13,10 +13,18 @@ export default function Profile() {
 
   // Get invoice data
   const { data: invoicesData, error: invoiceError } = useSWR(
-    "/profile/invoices",
+    "/payment/get-invoices",
     getter
   );
-  const invoices: Invoice[] = invoicesData?.invoices;
+  const invoices: Invoice[] = invoicesData?.transactions;
+
+  let { data: subscriptionStatus, error: subscriptionError } = useSWR(
+    "/payment/get-subscription-status",
+    getter
+  );
+  if(subscriptionStatus?.message) {
+    subscriptionStatus = null; 
+  }
 
   // Get bookmaker data
   const { data: booksData, error: bookError } = useSWR(
@@ -27,15 +35,19 @@ export default function Profile() {
 
   return (
     <div>
-        <Head>
-            <title>Arbster | Profile</title>
-            <meta name="description" content="Edit and view your profile on Arbster" />
-        </Head>
-      {data && invoices ? (
+      <Head>
+        <title>Arbster | Profile</title>
+        <meta
+          name="description"
+          content="Edit and view your profile on Arbster"
+        />
+      </Head>
+      {data ? (
         <ProfileLoader
           user={user}
           invoices={invoices}
           bookMakers={books}
+          subscriptionStatus={subscriptionStatus}
           key={user.auth0.sid}
         />
       ) : (

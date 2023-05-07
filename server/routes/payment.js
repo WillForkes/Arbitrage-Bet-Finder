@@ -4,440 +4,394 @@ const prisma = new PrismaClient()
 var express = require('express');
 let { checkUser } = require('../middleware/checkUser');
 var router = express.Router();
-const Stripe = require('stripe');
+const axios = require('axios');
 
-const environment = process.env.NODE_ENV || 'development';
-let stripe;
-let endpointSecret;
-
-if(process.env.NODE_ENV == 'development') {
-    stripe = Stripe(process.env.STRIPE_TEST_SECRET);
-    endpointSecret = process.env.STRIPE_TEST_SIGNING_SECRET;
-} else {
-    stripe = Stripe(process.env.STRIPE_LIVE_SECRET);
-    endpointSecret = process.env.STRIPE_LIVE_SIGNING_SECRET;
-}
+// PayPal Setup
+const clientId = (process.env.NODE_ENV == "development") ? process.env.PAYPAL_CLIENT_ID_SANDBOX : process.env.PAYPAL_CLIENT_ID_LIVE;
+const clientSecret = (process.env.NODE_ENV == "development") ? process.env.PAYPAL_SECRET_SANDBOX : process.env.PAYPAL_SECRET_LIVE;
+const paypalBaseURL = (process.env.NODE_ENV == "development") ? "https://api-m.sandbox.paypal.com" : "https://api.paypal.com";
 
 const plans = {
     development: {
-        starter: {
-            product: "prod_NVYfBet3viHe4o",
-            // UNTIL SALE ENDS price: "price_1MkXYIIHDYxT34IbkE19iCXo",
-            price: "price_1N35rGIHDYxT34IbrLDiQ1XO"
-        },
-        pro: {
-            product: "prod_NVqC83Czr0Jdd8",
-            //UNTIL SALE ENDS price: "price_1MkoVfIHDYxT34Ib6l0gtszK"
-            price: "price_1MkoVfIHDYxT34Ib6l0gtszK"
-
-        },
-        plus: {
-            product: "prod_NVqDJv7gq5PcDY",
-            price: "price_1MkoWdIHDYxT34IbBmT9Sy8a"
-        }
+        starter: "P-0V898368738325322MRJ5WCY",
+        starter_trial: "P-1U892179YC897811XMRLJNZQ",
+        starter_with_discount: "P-4E5986921H750141XMRL5KHQ",
+        pro: "P-9GY62972LS0576048MRJ5WSA",
+        pro_trial: "P-94M92089Y3220752VMRLJNKY",
+        pro_with_discount: "P-6SP65091DM374502MMRL5K7Q"
     },
-    production: {
-        starter: {
-            product: "prod_Na2rmk2tCbxeNT",
-            // UNTIL SALE ENDS price: "price_1MoslhIHDYxT34Ib0J6WfI17",
-            price: "price_1N35u3IHDYxT34Ib0fubvzQO"
-        },
-        pro: {
-            product: "prod_Na2sQ1ihM9ZPru",
-            price: "price_1N35tTIHDYxT34IbEswCHRGv"
-            // UNTIL SALE ENDS price: "price_1Mosn2IHDYxT34IbYB1EtElA"
-        },
-        plus: {
-            product: "prod_Na2uAK0JaQGa47",
-            price: "price_1MosoaIHDYxT34Ib7dw5npCF"
-        }
+    live: {
+        starter: "P-5FP73547Y4167462XMRJJATY",
+        starter_trial: "P-4BA73176LG562201BMRL5WRQ",
+        starter_with_discount: "P-1C2878491P542290VMRL5XYY",
+        pro: "P-3SR57382CD0013426MRJJAEI",
+        pro_trial: "P-5Y016605FE382453SMRL5WEQ",
+        pro_with_discount: "P-3YL60239NM359004BMRL5ZZQ"
     }
+
 }
+//////////////////// ! PAYPAL ////////////////////
+router.post('/create-subscription', async (req, res) => {
+    const plan = req.body.plan; // Get the plan ID from the request body
+    const planId = plans[process.env.NODE_ENV][plan]
 
-
-// * Get profile data
-router.post('/create', checkUser, async (req, res) => {
-    const ref = req.query.ref ? req.query.ref : new Date().getTime().toString()
-    const trial = req.body.trial ? req.body.trial : false
-    const withBuyItNowDiscount = req.body.withBuyItNowDiscount ? req.body.withBuyItNowDiscount : false
-    let user = req.user
-    
-    if(!req.body.plan){
-        res.status(500).json({"error": "Error creating payment link. No plan supplied."})
-        return
-    }
-    if(user.plan != "free" && user.plan != "trial"){
-        res.status(500).json({"error": "Error creating payment link. User already has a plan."})
-        return
-    }
-
-    const plan = req.body.plan
-    const productid = plans[environment][plan].product
-    const priceid = plans[environment][plan].price
-
-    if(!productid || !priceid){
-        res.status(500).json({"error": "Error creating payment link. Invalid plan selected."})
-        return;
-    }
-
-    let sessionObj = {
-        mode: 'subscription',
-        line_items: [
-            {
-                price: priceid,
-                quantity: 1,
+    const authToken = await getPayPalAuth();
+    const now = new Date();
+    const tenSecondsLater = new Date(now.getTime() + 10 * 1000);
+    const isoFormat = tenSecondsLater.toISOString();
+    var billingAgreementAttributes = {
+        "plan_id": planId,
+        "start_time": isoFormat,
+        "application_context": {
+            "brand_name": "Arbster",
+            "locale": "en-US",
+            "user_action": "SUBSCRIBE_NOW",
+            "payment_method": {
+                "payer_selected": "PAYPAL",
+                "payee_preferred": "IMMEDIATE_PAYMENT_REQUIRED"
             },
-        ],
-        // {CHECKOUT_SESSION_ID} is a string literal; do not change it!
-        // the actual Session ID is returned in the query parameter when your customer
-        // is redirected to the success page.
-        success_url: (environment== "development") ? 
-        "http://localhost:3001/subscription/success?session_id={CHECKOUT_SESSION_ID}" :
-        "https://arbster.com/subscription/success?session_id={CHECKOUT_SESSION_ID}",
-        cancel_url: (environment == "development") ? 
-        "http://localhost:3001/subscription/failure" :
-        "https://arbster.com/subscription/failure",
-        client_reference_id: ref
-    }
-
-    if(withBuyItNowDiscount) {
-        sessionObj.discounts = [
-            {
-                coupon: withBuyItNowDiscount ? "BUYITNOW" : null
-            }
-        ]
-    } else {
-        sessionObj.allow_promotion_codes = true
-    }
-
-    if(trial == true) {
-        sessionObj.subscription_data = {
-            trial_period_days: 5,
+            "return_url": (process.env.NODE_ENV == "development") ? "http://localhost:3000/payment/complete" : "https://api.arbster.com/payment/complete",
+            "cancel_url": (process.env.NODE_ENV == "development") ? "http://localhost:3001/pricing" : "https://arbster.com/pricing"
         }
+    };
+
+    try{
+        const ppresp = await axios.post(paypalBaseURL + "/v1/billing/subscriptions", billingAgreementAttributes, {
+            headers: {
+                "Authorization": "Bearer " + authToken
+            },
+        
+        })
+
+        res.json({ status: "ok", data: ppresp.data});
+    } catch(err) {
+        res.json({status: "error", message: err.response.data});
     }
-
-
-    const session = await stripe.checkout.sessions.create(sessionObj);
-    const dbpayment = await prisma.subscription.create({
-        data: {
-            userId: user.authid,
-            stripePaymentId: session.id,
-            plan: plan,
-            planExpiresAt: new Date() // * this gets updated after payment is successful
-        }
-    })
-
-    if(!dbpayment){
-        res.status(500).json({"error": "Error inserting payment into database!"})
-        return;
-    }
-
-    res.json({
-        "status":"ok",
-        "data": {
-            "url": session.url,
-            "object": session
-        }
-    })
 });
 
+router.get("/get-subscription/:id", async (req, res) => {
+    const id = req.params.id;
+    const authToken = await getPayPalAuth();
+    const urisuf = "/v1/billing/subscriptions/" + id
+    try{
+        const ppresp = await axios.get(paypalBaseURL + urisuf, {
+            headers: {
+                "Authorization": "Bearer " + authToken,
+                'Content-Type': 'application/json'
+            }
+        })
+        res.json({status: "ok", "data":ppresp.data});
+    } catch(err) {
+        res.status(400).json({status: "error", message: err.response.data});
+    }
+})
 
-router.get("/portal", checkUser, async (req, res) => {
-    let user = req.user
-    
-    // get subscriptions on user with status "active"
-    const dbuser = await prisma.user.findUnique({
+router.get("/get-subscription-status", checkUser, async (req, res) => {
+    const authToken = await getPayPalAuth();
+    const sub = await prisma.subscription.findMany({
         where: {
-            authid: user.authid
+            userId: req.user.id,
+            status: "active"
+        }
+    })
+
+    if(sub.length == 0) {
+        res.json({status: "ok", data: {message: "No active subscription found!"}});
+        return;
+    }
+
+    const urisuf = "/v1/billing/subscriptions/" + sub[0].paypalSubscriptionId;
+    try{
+        const ppresp = await axios.get(paypalBaseURL + urisuf, {
+            headers: {
+                "Authorization": "Bearer " + authToken,
+                'Content-Type': 'application/json'
+            }
+        })
+        res.json({status: "ok", "data":ppresp.data});
+    } catch(err) {
+        res.status(400).json({status: "error", message: err.response});
+    }
+})
+
+
+router.get("/complete", checkUser, async (req, res) => {
+    try {
+        const subId = req.query.subscription_id;
+        const authToken = await getPayPalAuth();
+    
+        // * Check if subscription exists
+        const sub = await prisma.subscription.findFirst({
+            where: {
+                userId: req.user.authid,
+                status: "active"
+            }
+        })
+        if(sub) {
+            res.json({status: "ok", data: {message: "Subscription already exists!"}});
+            return;
+        }
+    
+        // * Get the subscription details from PayPal then put it into the database
+        let ppresp
+        try{
+            ppresp = await axios.get(paypalBaseURL + "/v1/billing/subscriptions/" + subId, {
+                headers: {
+                    "Authorization": "Bearer " + authToken,
+                    'Content-Type': 'application/json'
+                }
+            })
+        } catch(err) {
+            res.json({status: "error", message: err.response.data});
+            return;
+        }
+    
+        // * Update the user's subscription status
+        const expiresAt = new Date(ppresp.data.billing_info.next_billing_time);
+        const status = ppresp.data.status.toLowerCase();
+    
+        // get plan name from plans object
+        let planName = Object.keys(plans[process.env.NODE_ENV]).find(key => plans[process.env.NODE_ENV][key] === ppresp.data.plan_id);
+        
+        // if plan name contains _, split and take first 
+        if(planName.includes("_")) {
+            planName = planName.split("_")[0];
+        }
+
+        await prisma.subscription.create({
+            data: {
+                paypalSubscriptionId: subId,
+                planExpiresAt: expiresAt,
+                status: status,
+                userId: req.user.authid,
+                plan: planName
+            }
+        })
+        res.redirect((process.env.NODE_ENV == "development") ? "http://localhost:3001/subscription/success?subid=" + subId : "https://arbster.com/subscription/success?subid=" + subId)
+    } catch(e) {
+        res.redirect((process.env.NODE_ENV == "development") ? "http://localhost:3001/subscription/failure" : "https://arbster.com/subscription/failure")
+    }
+})
+
+router.post("/cancel-subscription", checkUser, async (req, res) => {
+    const authToken = await getPayPalAuth();
+
+    // get subid
+    const u = await prisma.user.findFirst({
+        where: {
+            authid: req.user.authid
         },
         include: {
             subscription: {
                 where: {
-                    stripeCustomerId: {
-                        not: null
-                    }
+                    status: "active"
                 }
             }
         }
     })
 
-    if(!dbuser){
-        res.status(500).json({"error": "Error getting user from database!"})
-        return;
-    }
-    if(!dbuser.subscription[0]){
-        res.status(500).json({"error": "User has not subscribed to any plans in the past."})
+    if(u.subscription.length == 0) {
+        res.status(400).json({status: "error", message: "No active subscription found."});
         return;
     }
 
-    const sub = dbuser.subscription[0]
-    const returnUrl = process.env.NODE_ENV == "development" ? "http://localhost:3001/profile" : "https://arbster.com/profile";
-    const customerId = sub.stripeCustomerId;
+    const sub = u.subscription[0];
 
-    const portalSession = await stripe.billingPortal.sessions.create({
-        customer: customerId,
-        return_url: returnUrl,
-    });
-
-    res.json({
-        "status": "ok", 
-        "data": {
-            "url": portalSession.url
-        }
-    })
-})
-
-// 1.) Create a new checkout session
-// 2.) Insert payment into database
-// 3.) Return session url to pay back to client
-// 4.) Once payment session is complete (does not necessarily mean paid) - update payment ids in database
-// 5.) Once invoice payment is successful - activate sub an set expiry date
-
-router.post("/webhook", async (request, response) => {
-    const sig = request.headers['stripe-signature'];
-    let event;
-  
     try {
-        event = stripe.webhooks.constructEvent(request.rawBody, sig, endpointSecret);
-    } catch (err) {
-        console.log(`Webhook Error: ${err.message}`)
-        response.status(400).send(`Webhook Error: ${err.message}`);
-        return;
-    }
-
-    data = event.data;
-    eventType = event.type;
-
-    switch (eventType) {
-        case 'checkout.session.completed':
-            // * Update subscription with stripe ids - do not activate yet
-            const csc_stripePaymentId = data.object.id
-            const csc_subId = data.object.subscription
-            const csc_customerId = data.object.customer
-
-            await prisma.subscription.update({
-                where: {
-                    stripePaymentId: csc_stripePaymentId
-                },
-                data: {
-                    stripeSubscriptionId: csc_subId,
-                    stripeCustomerId: csc_customerId,
-                }
-            })
-
-            break;
-
-        case 'invoice.paid':
-            // * Activate customer subscription and create invoice log
-            const ip_subId = data.object.subscription
-            const ip_invoiceId = data.object.id
-            const ip_invoicePDF = data.object.invoice_pdf
-
-            await prisma.invoice.create({
-                data: {
-                    stripeInvoiceId: ip_invoiceId,
-                    stripeSubscriptionId: ip_subId,
-                    stripeInvoicePdfUrl: ip_invoicePDF,
-                    status: eventType
-                }
-            })
-
-            // check if subscription is trial
-            const periodEnds = new Date(data.object.lines.data[0].period.end * 1000)
-
-            // get total days until period ends
-            const daysUntilPeriodEnds = Math.floor((periodEnds - Date.now()) / (1000 * 60 * 60 * 24))
-
-            if(daysUntilPeriodEnds > 31) {
-                // update user to say they've used their trial period if they have
-                const u = await prisma.subscription.findUnique({
-                    where: {
-                        stripeSubscriptionId: ip_subId
-                    },
-                    include: {
-                        user: true
-                    }
-                })
-                const userid = u.user.authid
-                await prisma.user.update({
-                    where: {
-                        authid: userid
-                    },
-                    data: {
-                        trialActivated: true
-                    }
-                })
-            }
-
-            // Update subscription status to active
-            await prisma.subscription.update({
-                where: {
-                    stripeSubscriptionId: ip_subId
-                },
-                data: {
-                    status: "active",
-                    planExpiresAt: periodEnds
-                }
-            })
-
-            break;
-
-        case 'invoice.payment_failed':
-            // * Remove subscription
-
-            // ! Notify customers that payment failed
-            // ! Send email to customer
-
-            const ipf_subId = data.object.subscription
-            const ipf_invoiceId = data.object.id
-
-            await prisma.invoice.create({
-                data: {
-                    stripeInvoiceId: ipf_invoiceId,
-                    stripeSubscriptionId: ipf_subId,
-                    status: eventType
-                }
-            })
-
-            await prisma.subscription.update({
-                where: {
-                    stripeSubscriptionId: ipf_subId
-                },
-                data: {
-                    status: "payment_failed",
-                }
-            })
-
-            break;
-
-        case 'customer.subscription.deleted':
-            // * Subscription ended (no renewal)
-            const csd_subId = data.object.id
-            await prisma.subscription.update({
-                where: {
-                    stripeSubscriptionId: csd_subId
-                },
-                data: {
-                    status: "inactive",
-                }
-            })
-
-        case 'customer.subscription.updated':
-            // * Subscription updated
-            const csu_subId = data.object.id
-            const updatedPlan = await getSub(csu_subId)
-
-            // check if plan has changed
-            const sub = await prisma.subscription.findUnique({
-                where: {
-                    stripeSubscriptionId: csu_subId
-                }
-            })
-
-            // if plan has changed then update it in the db
-            if(sub.plan != updatedPlan){
-                await prisma.subscription.update({
-                    where: {
-                        stripeSubscriptionId: csu_subId
-                    },
-                    data: {
-                        plan: updatedPlan,
-                    }
-                })
-            }
-
-        default:
-            // Unhandled event type
-    }
-
-    /// inactive, active, payment_failed, cancelled
-  
-    response.json({"status": "ok"})
-});
-
-router.get("/:paymentid", async (req, res) => {
-    const paymentid = req.params.paymentid
-    if(!paymentid || paymentid.length < 1 || paymentid == "undefined"){
-        res.status(404).json({
-            "status": "error",
-            "data": {
-                message: "Payment session not found."
+        const ppresp = await axios.post(paypalBaseURL + "/v1/billing/subscriptions/" + sub.paypalSubscriptionId + "/cancel", {"reason": "Unknown reason."}, {
+            headers: {
+                "Authorization": "Bearer " + authToken,
+                'Content-Type': 'application/json'
             }
         })
-        return;
+        
+        res.json({status: "ok", "data": {response: ppresp.data}});
+    } catch(err) {
+        console.log(err);
+        res.status(500).json({status: "error", message: err?.response?.data});
     }
-
-
-    const payment = await prisma.subscription.findUnique({
-        where: {
-            stripePaymentId: paymentid
-        }
-    })
-
-    const stripePayment = await getPayment(paymentid)
-
-    if(!payment || !stripePayment){
-        res.status(404).json({
-            "status": "error",
-            "data": {
-                message: "Payment session not found."
-            }
-        })
-        return;
-    }
-
-    // check if updated at is less than 15 minutes ago
-    // const now = new Date()
-    // const fifteenMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000) //! acc 5 mins not 15
-
-    // if(payment.updatedAt < fifteenMinutesAgo){
-    //     res.status(404).json({
-    //         "status": "error",
-    //         "data": {
-    //             message: "Payment session has expired for affiliate checking."
-    //         }
-    //     })
-    //     return;
-    // }
-    
-    res.json({status: "ok", data: {payment: payment, stripePayment: stripePayment}})
 })
 
 
-async function getSub(subid){
-    const subscription = await stripe.subscriptions.retrieve(subid);
-    if(!subscription){
-        return null;
+router.get("/get-invoices", checkUser, async (req, res) => {
+    const authToken = await getPayPalAuth();
+    const user = await prisma.user.findUnique({
+        where: {
+            authid: req.user.authid
+        },
+        select: {
+            subscription: true
+        }
+    })
+
+    if (user.subscription.length == 0) {
+        res.json({status: "ok", data: []})
+        return;
     }
 
-    const productid = subscription.plan?.product;
-    
-    // see which key this is for in the plans object
-    const _plan = plans[environment]
-    for (const [key, value] of Object.entries(_plan)) {
-        if(value.product == productid){
-            return key;
+    let transactions = []
+    for(const subscription of user.subscription) {
+        try {
+            const urisuf = "/v1/billing/subscriptions/" + subscription.paypalSubscriptionId + `/transactions?start_time=${new Date(1683394957 *1000).toISOString()}&end_time=${(new Date()).toISOString()}`
+
+            const ppresp = await axios.get(paypalBaseURL + urisuf, {
+                headers: {
+                    "Authorization": "Bearer " + authToken,
+                    'Content-Type': 'application/json'
+                }
+            })
+            transactions.push(ppresp.data.transactions)
+        } catch(e) {
+            console.log(e.response)
         }
     }
+
+    // flatten transactions arra
+    transactions = transactions.flat()
+    res.json({status: "ok", data:{transactions: transactions}})
+})
+
+router.post("/webhook", async (req, res) => {
+    // * Verify the webhook
+    console.log(req.body);
+    const verified = await verifyPayPalSignature(req.body, req.headers);
+    if(!verified) {
+        res.status(400).json({status: "error", message: "Invalid signature."});
+        return;
+    }
+
+    const event_type = req.body.event_type;
+    const data = req.body.resource;
+    const subId = data.id;
+
+    switch(event_type) {
+
+        case "BILLING.SUBSCRIPTION.ACTIVATED":
+            // * Update the user's subscription status to active and set expiresAt because their sub was activated
+            const bsaexpire = new Date(data.billing_info.next_billing_time);
+            await prisma.subscription.update({
+                where: {
+                    paypalSubscriptionId: subId
+                },
+                data: {
+                    planExpiresAt: bsaexpire,
+                    status: "active"
+                }
+            })
+            break;
+
+        case "PAYMENT.SALE.COMPLETED":
+            // * User renewed their subscription
+            const renewalSubId = data.billing_agreement_id;
+            // 1 month from now
+            const nextExpirey = new Date(new Date().setMonth(new Date().getMonth() + 1));
+            const status = req.body.status.toLowerCase();
+
+            await prisma.subscription.update({
+                where: {
+                    paypalSubscriptionId: renewalSubId
+                },
+                data: {
+                    planExpiresAt: nextExpirey,
+                    status: status
+                }
+            })
+            break;
+
+        case "BILLING.SUBSCRIPTION.EXPIRED":
+            // * Users sub expired (did not renew)         
+            await prisma.subscription.update({
+                where: {
+                    paypalSubscriptionId: subId
+                },
+                data: {
+                    status: "expired"
+                }
+            })
+            break;
+
+        case "BILLING.SUBSCRIPTION.PAYMENT.FAILED":
+            // * Card declined or something          
+            await prisma.subscription.update({
+                where: {
+                    paypalSubscriptionId: subId
+                },
+                data: {
+                    status: "payment_failed"
+                }
+            })
+            break;
+
+        case "BILLING.SUBSCRIPTION.SUSPENDED":
+            // * Sub was suspended for some reason           
+            await prisma.subscription.update({
+                where: {
+                    paypalSubscriptionId: subId
+                },
+                data: {
+                    status: "suspended"
+                }
+            })
+            break;
+        
+        default:
+            console.log("Unknown event type: " + event_type)
+
+    }
+
+    res.json({status: "ok"})
+
+})
+
+async function verifyPayPalSignature(webhook, headers) {
+    let ppresp
+    const authToken = await getPayPalAuth();
+    try {
+        const urisuf = "/v1/notifications/verify-webhook-signature"
+        const postData = {
+            "transmission_id": headers["paypal-transmission-id"],
+            "transmission_time": headers["paypal-transmission-time"],
+            "cert_url": headers["paypal-cert-url"],
+            "auth_algo": headers["paypal-auth-algo"],
+            "transmission_sig": headers["paypal-transmission-sig"],
+            "webhook_id": (process.env.NODE_ENV == "development") ? "6CJ16387VH2468339" : "3M6121814F8120531",
+            "webhook_event": webhook
+        }
+        ppresp = await axios.post(paypalBaseURL + urisuf, postData, {
+            headers: {
+                "Authorization": "Bearer " + authToken,
+                'Content-Type': 'application/json'
+            }
+        })
+    } catch(e) {
+        console.log("Error verifying PayPal signature: " + e)
+    }
+
+    if(ppresp.status != 200) return false
+
+    if(ppresp.data.verification_status != "SUCCESS") return false
+
+    return true
+
+}
+async function getPayPalAuth() {
+    //create basic authentication token header from client id and secret
+    var auth = 'Basic ' + Buffer.from(clientId + ':' + clientSecret).toString('base64');
+    var headers = {
+        'Accept': '*/*', 
+        'Accept-Language': 'en_US',
+        'Content-Type':'application/x-www-form-urlencoded',
+        'Authorization': auth
+    }
+
+    const resp = await axios.post(paypalBaseURL + "/v1/oauth2/token", "grant_type=client_credentials", {
+        headers: headers
+    })
+
+    if(resp.status != 200) return false
+
+    return resp.data.access_token;
 }
 
-async function getPayment(paymentid){
-    let payment = await stripe.checkout.sessions.retrieve(paymentid);
-    if(!payment){
-        return null;
-    }
-
-    const invoiceId = payment.invoice;
-    const invoice = await stripe.invoices.retrieve(invoiceId);
-    let code = null
-    if(invoice) {
-        code = invoice.discount?.coupon.name
-    }
-    if(code){
-        payment.discount_code = code
-    }
-
-    return payment;
-}
 
 module.exports = router;

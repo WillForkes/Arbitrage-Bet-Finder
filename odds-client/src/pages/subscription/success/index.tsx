@@ -3,36 +3,41 @@ import Image from "next/image";
 import { Accordion } from "flowbite-react";
 import Link from "next/link";
 import Script from "next/script";
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 import { Spinner } from "flowbite-react";
-import { getOrderFromStripePaymentID, getter } from "@/api"
+import { getOrderFromStripePaymentID, getter } from "@/api";
 import useSWR from "swr";
 import Head from "next/head";
 export default function SuccessSubscriptionPage() {
-    // Get session_id query param
-    const router = useRouter()
-    const { subid } = router.query
-    const { data, error } = useSWR("/payment/get-subscription/" + subid, getter);
+  // Get session_id query param
+  const router = useRouter();
+  const { subid } = router.query;
+  const { data, error } = useSWR("/payment/get-subscription/" + subid, getter);
 
-    if(error || !data || data?.status!="ACTIVE") {
-        return (
-            <div className="flex justify-center items-center h-screen dark:bg-gray-900">
-                <h2 className="text-2xl font-semibold">Locating order...</h2>
-                <Spinner />
-            </div>
-        )
-    }
-
+  if (error || !data || data?.status != "ACTIVE") {
     return (
-    <>
-        <Script id="grow_affiliate_succcess_tracking">
-            {`
-                tdconv('init', '2353477', {'element': 'iframe' });
-                tdconv('track', 'sale', {'transactionId':'${data.id}', 'ordervalue':[${data.billing_info.last_payment.amount.value}], 'voucher':'[]', 'currency':'GBP', 'event':436265});
-            `}
-        </Script>
-      <section className="bg-white dark:bg-gray-900">
+      <div className="flex justify-center items-center h-screen dark:bg-gray-900">
+        <h2 className="text-2xl font-semibold">Locating order...</h2>
+        <Spinner />
+      </div>
+    );
+  }
 
+  return (
+    <>
+      <Script id="grow_affiliate_succcess_tracking">
+        {`
+                tdconv('init', '2353477', {'element': 'iframe' });
+                tdconv('track', 'sale', {'transactionId':'${
+                  data.id
+                }', 'ordervalue':[${
+          typeof data.billing_info.last_payment?.amount != null
+            ? data.billing_info.last_payment?.amount.value
+            : 0
+        }], 'voucher':'[]', 'currency':'GBP', 'event':436265});
+            `}
+      </Script>
+      <section className="bg-white dark:bg-gray-900">
         <div className="mx-auto py-64 relative p-4 w-full max-w-md h-full md:h-auto">
           <div className="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
             <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900 p-2 flex items-center justify-center mx-auto mb-3.5">
@@ -61,9 +66,7 @@ export default function SuccessSubscriptionPage() {
             </Link>
           </div>
         </div>
-
       </section>
     </>
   );
 }
-

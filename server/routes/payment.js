@@ -87,6 +87,27 @@ router.get("/get-subscription/:id", async (req, res) => {
     }
 })
 
+router.get("/get-subscription-status", checkUser, async (req, res) => {
+    const authToken = await getPayPalAuth();
+    const sub = await prisma.subscription.findMany({
+        where: {
+            userId: req.user.id
+        }
+    })
+    const urisuf = "/v1/billing/subscriptions/" + sub[0].paypalSubscriptionId;
+    try{
+        const ppresp = await axios.get(paypalBaseURL + urisuf, {
+            headers: {
+                "Authorization": "Bearer " + authToken,
+                'Content-Type': 'application/json'
+            }
+        })
+        res.json({status: "ok", "data":ppresp.data});
+    } catch(err) {
+        res.status(400).json({status: "error", message: err.response});
+    }
+})
+
 router.get("/complete", checkUser, async (req, res) => {
     try {
         const subId = req.query.subscription_id;
@@ -141,18 +162,17 @@ router.get("/complete", checkUser, async (req, res) => {
 })
 
 router.post("/cancel-subscription", checkUser, async (req, res) => {
-    console.log(req)
     const authToken = await getPayPalAuth();
 
     // get subid
-    const sub = await prisma.subscriptions.findMany({
+    const sub = await prisma.subscription.findMany({
         where: {
             userId: req.user.id
         }
     })
-
+    console.log(sub[0].paypalSubscriptionId)
     try {
-        const ppresp = await axios.get(paypalBaseURL + "/v1/billing/subscriptions/" + sub.paypalSubscriptionId + "/cancel", {
+        const ppresp = await axios.post(paypalBaseURL + "/v1/billing/subscriptions/" + sub[0].paypalSubscriptionId + "/suspend",{'reason': "not using anymore"}, {
             headers: {
                 "Authorization": "Bearer " + authToken,
                 'Content-Type': 'application/json'
@@ -170,7 +190,8 @@ router.post("/cancel-subscription", checkUser, async (req, res) => {
         
         res.json({status: "ok", "data": {response: ppresp.data}});
     } catch(err) {
-        res.status(500).json({status: "error", message: err.response.data});
+        console.log(err);
+        res.status(500).json({status: "error", message: err?.response?.data});
     }
 })
 
@@ -204,6 +225,7 @@ router.get("/get-invoices", checkUser, async (req, res) => {
             })
             transactions.push(ppresp.data.transactions)
         } catch(e) {
+            console.log("hi" + e);
             console.log(e.response)
         }
     }

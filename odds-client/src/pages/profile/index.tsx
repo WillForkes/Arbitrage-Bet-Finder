@@ -18,6 +18,11 @@ export default function Profile() {
   );
   const invoices: Invoice[] = invoicesData?.transactions;
 
+  const { data: subscriptionStatus, error: subscriptionError } = useSWR(
+    "/payment/get-subscription-status",
+    getter
+  );
+
   // Get bookmaker data
   const { data: booksData, error: bookError } = useSWR(
     "/scraper/bookmakers",
@@ -39,6 +44,7 @@ export default function Profile() {
           user={user}
           invoices={invoices}
           bookMakers={books}
+          subscriptionStatus={subscriptionStatus}
           key={user.auth0.sid}
         />
       ) : (

@@ -16,6 +16,7 @@ import {
 import Image from "next/image";
 import Logo from "../../public/arbster.png";
 import {
+  cancelPayment,
   createPortal,
   getter,
   updateNotificationsA,
@@ -30,9 +31,15 @@ interface props {
   user: User;
   invoices: Invoice[];
   bookMakers: { id: number; bookName: string }[];
+  subscriptionStatus: { id: string; expireDate: string; status: string };
 }
 
-export default function ProfileLoader({ user, invoices, bookMakers }: props) {
+export default function ProfileLoader({
+  user,
+  invoices,
+  bookMakers,
+  subscriptionStatus,
+}: props) {
   const [editProfile, setEditProfile] = useState(false);
   const [region, setRegion] = useState<string>(user.dbuser.region);
   const [notifications, setNotifications] = useState({
@@ -49,10 +56,9 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
   );
 
   const alertContext = useContext(AlertContext);
-  async function gotoBillingPortal() {
+  async function cancelSub() {
     try {
-      var response = await createPortal();
-      window.location.assign(response.url);
+      await cancelPayment();
     } catch (e) {
       console.error(e);
     }
@@ -88,7 +94,7 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
       alertContext?.setAlert({ msg: "Error getting pdf", error: true });
     }
   }
-
+  console.log(invoices);
   return (
     <>
       <Tabs.Group
@@ -219,54 +225,69 @@ export default function ProfileLoader({ user, invoices, bookMakers }: props) {
                 </h5>
                 <button
                   onClick={() => {
-                    gotoBillingPortal();
+                    cancelSub();
                   }}
-                  className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
+                  className="inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900"
                 >
-                  Goto Billing Portal
+                  {subscriptionStatus.status == "CANCELLED"
+                    ? "Renew"
+                    : "Cancel"}
                 </button>
               </div>
+              <section>
+                <p>Status: {subscriptionStatus.status}</p>
+                <p>
+                  Plan expires:{" "}
+                  {new Date(user.dbuser.planExpiresAt).toDateString()}
+                </p>
+              </section>
               <div className="flow-root">
                 <ul className="divide-y divide-gray-200 dark:divide-gray-700">
                   {/* foreach invoice */}
-                  {invoices?.map((invoice: Invoice) => (
-                    <li key={invoice.id} className="py-3 sm:py-4">
-                      <div className="flex items-center space-x-4">
-                        <div className="shrink-0">
-                          <Image
-                            src={Logo}
-                            className="h-8 w-8 rounded-full"
-                            alt="Arbster logo"
-                          />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
-                            {invoice.status}
-                          </p>
-                          <p className="truncate text-sm text-gray-500 dark:text-gray-400">
-                            ID: {invoice.id}
-                          </p>
-                          <p className="truncate text-sm text-gray-500 dark:text-gray-400">
-                            {new Date(invoice.time).toDateString()}
-                          </p>
-                          <p className="truncate text-sm text-gray-500 dark:text-gray-400">
-                            {/* If starter - 29.99, if pro, 49.99, if plus 99.99 */}
-                            ${invoice.amount_with_breakdown.gross_amount.value}
-                          </p>
-                        </div>
-                        <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                          <button
-                            onClick={() => {
-                              gotoPDF(invoice);
-                            }}
-                            className="text-white bg-gray-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
-                          >
-                            Download Invoice PDF
-                          </button>
-                        </div>
-                      </div>
-                    </li>
-                  ))}
+                  {invoices != null
+                    ? invoices.map((invoice: Invoice) => (
+                        <li key={invoice?.id} className="py-3 sm:py-4">
+                          <div className="flex items-center space-x-4">
+                            <div className="shrink-0">
+                              <Image
+                                src={Logo}
+                                className="h-8 w-8 rounded-full"
+                                alt="Arbster logo"
+                              />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
+                                {invoice?.status}
+                              </p>
+                              <p className="truncate text-sm text-gray-500 dark:text-gray-400">
+                                ID: {invoice?.id}
+                              </p>
+                              <p className="truncate text-sm text-gray-500 dark:text-gray-400">
+                                {new Date(invoice?.time).toDateString()}
+                              </p>
+                              <p className="truncate text-sm text-gray-500 dark:text-gray-400">
+                                {/* If starter - 29.99, if pro, 49.99, if plus 99.99 */}
+                                $
+                                {
+                                  invoice?.amount_with_breakdown.gross_amount
+                                    ?.value
+                                }
+                              </p>
+                            </div>
+                            <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                              <button
+                                onClick={() => {
+                                  gotoPDF(invoice);
+                                }}
+                                className="text-white bg-gray-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
+                              >
+                                Download Invoice PDF
+                              </button>
+                            </div>
+                          </div>
+                        </li>
+                      ))
+                    : null}
                 </ul>
               </div>
             </Card>

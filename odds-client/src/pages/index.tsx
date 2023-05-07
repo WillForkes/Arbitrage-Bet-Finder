@@ -29,7 +29,12 @@ export default function Home() {
       <Stats />
       <WhatIs />
       <Features />
+      {/* if development, show */}
+      {process.env.NODE_ENV === "development" ? (
       <Calculator />
+      ) : (
+        <></>
+      )}
       <Blog />
       <Pricing />
       <Tline />

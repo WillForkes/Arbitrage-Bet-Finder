@@ -4,7 +4,7 @@ declare global {
   }
 }
 
-import { createPayment, createPaypalPayment } from "@/api";
+import { createPaypalPayment } from "@/api";
 import { Plan } from "@/types";
 import React, { useContext, useState } from "react";
 import { Badge, Tooltip } from "flowbite-react";
@@ -27,14 +27,15 @@ export default function Pricing() {
         // if user already has plan, get portal link instead
         if(trial) {
             plan = plan + "_trial"
+        }else if(withBuyItNowDiscount) {
+            plan = plan + "_with_discount"
         }
-        
+
         var response = await createPaypalPayment(
             plan as Plan,
-            trial,
-            withBuyItNowDiscount
+            trial
         );
-        console.log(response.links[0].href);
+
         window.location.assign(response.links[0].href);
     } catch (e) {
         console.error(e);

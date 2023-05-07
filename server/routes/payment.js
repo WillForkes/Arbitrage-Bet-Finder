@@ -4,7 +4,6 @@ const prisma = new PrismaClient()
 var express = require('express');
 let { checkUser } = require('../middleware/checkUser');
 var router = express.Router();
-const paypal = require('paypal-rest-sdk');
 const axios = require('axios');
 
 // PayPal Setup
@@ -12,22 +11,22 @@ const clientId = (process.env.NODE_ENV == "development") ? process.env.PAYPAL_CL
 const clientSecret = (process.env.NODE_ENV == "development") ? process.env.PAYPAL_SECRET_SANDBOX : process.env.PAYPAL_SECRET_LIVE;
 const paypalBaseURL = (process.env.NODE_ENV == "development") ? "https://api-m.sandbox.paypal.com" : "https://api.paypal.com";
 
-paypal.configure({
-    mode: 'sandbox', // Replace with 'live' when you're ready to go live
-    client_id: clientId,
-    client_secret: clientSecret
-});
-
 const plans = {
     development: {
         starter: "P-0V898368738325322MRJ5WCY",
         starter_trial: "P-1U892179YC897811XMRLJNZQ",
+        starter_with_discount: "P-4E5986921H750141XMRL5KHQ",
         pro: "P-9GY62972LS0576048MRJ5WSA",
-        pro_trial: "P-94M92089Y3220752VMRLJNKY"
+        pro_trial: "P-94M92089Y3220752VMRLJNKY",
+        pro_with_discount: "P-6SP65091DM374502MMRL5K7Q"
     },
     live: {
         starter: "P-5FP73547Y4167462XMRJJATY",
-        pro: "P-3SR57382CD0013426MRJJAEI"
+        starter_trial: "P-4BA73176LG562201BMRL5WRQ",
+        starter_with_discount: "P-1C2878491P542290VMRL5XYY",
+        pro: "P-3SR57382CD0013426MRJJAEI",
+        pro_trial: "P-5Y016605FE382453SMRL5WEQ",
+        pro_with_discount: "P-3YL60239NM359004BMRL5ZZQ"
     }
 
 }
@@ -52,7 +51,7 @@ router.post('/create-subscription', async (req, res) => {
                 "payee_preferred": "IMMEDIATE_PAYMENT_REQUIRED"
             },
             "return_url": (process.env.NODE_ENV == "development") ? "http://localhost:3000/payment/complete" : "https://api.arbster.com/payment/complete",
-            "cancel_url": (process.env.NODE_ENV == "development") ? "http://localhost:3001/profile" : "https://arbster.com/profile"
+            "cancel_url": (process.env.NODE_ENV == "development") ? "http://localhost:3001/pricing" : "https://arbster.com/pricing"
         }
     };
 
@@ -66,7 +65,7 @@ router.post('/create-subscription', async (req, res) => {
 
         res.json({ status: "ok", data: ppresp.data});
     } catch(err) {
-        res.json({status: "error", message: err.response});
+        res.json({status: "error", message: err.response.data});
     }
 });
 
@@ -83,7 +82,7 @@ router.get("/get-subscription/:id", async (req, res) => {
         })
         res.json({status: "ok", "data":ppresp.data});
     } catch(err) {
-        res.json({status: "error", message: err.response.data});
+        res.status(400).json({status: "error", message: err.response.data});
     }
 })
 
@@ -91,9 +90,16 @@ router.get("/get-subscription-status", checkUser, async (req, res) => {
     const authToken = await getPayPalAuth();
     const sub = await prisma.subscription.findMany({
         where: {
-            userId: req.user.id
+            userId: req.user.id,
+            status: "active"
         }
     })
+
+    if(sub.length == 0) {
+        res.json({status: "ok", data: {message: "No active subscription found!"}});
+        return;
+    }
+
     const urisuf = "/v1/billing/subscriptions/" + sub[0].paypalSubscriptionId;
     try{
         const ppresp = await axios.get(paypalBaseURL + urisuf, {
@@ -107,6 +113,7 @@ router.get("/get-subscription-status", checkUser, async (req, res) => {
         res.status(400).json({status: "error", message: err.response});
     }
 })
+
 
 router.get("/complete", checkUser, async (req, res) => {
     try {
@@ -144,8 +151,13 @@ router.get("/complete", checkUser, async (req, res) => {
         const status = ppresp.data.status.toLowerCase();
     
         // get plan name from plans object
-        const planName = Object.keys(plans[process.env.NODE_ENV]).find(key => plans[process.env.NODE_ENV][key] === ppresp.data.plan_id);
-    
+        let planName = Object.keys(plans[process.env.NODE_ENV]).find(key => plans[process.env.NODE_ENV][key] === ppresp.data.plan_id);
+        
+        // if plan name contains _, split and take first 
+        if(planName.includes("_")) {
+            planName = planName.split("_")[0];
+        }
+
         await prisma.subscription.create({
             data: {
                 paypalSubscriptionId: subId,
@@ -165,26 +177,31 @@ router.post("/cancel-subscription", checkUser, async (req, res) => {
     const authToken = await getPayPalAuth();
 
     // get subid
-    const sub = await prisma.subscription.findMany({
+    const u = await prisma.user.findFirst({
         where: {
-            userId: req.user.id
+            authid: req.user.authid
+        },
+        include: {
+            subscription: {
+                where: {
+                    status: "active"
+                }
+            }
         }
     })
-    console.log(sub[0].paypalSubscriptionId)
+
+    if(u.subscription.length == 0) {
+        res.status(400).json({status: "error", message: "No active subscription found."});
+        return;
+    }
+
+    const sub = u.subscription[0];
+
     try {
-        const ppresp = await axios.post(paypalBaseURL + "/v1/billing/subscriptions/" + sub[0].paypalSubscriptionId + "/suspend",{'reason': "not using anymore"}, {
+        const ppresp = await axios.post(paypalBaseURL + "/v1/billing/subscriptions/" + sub.paypalSubscriptionId + "/cancel", {"reason": "Unknown reason."}, {
             headers: {
                 "Authorization": "Bearer " + authToken,
                 'Content-Type': 'application/json'
-            }
-        })
-
-        await prisma.subscriptions.update({
-            where: {
-                id: sub.id
-            },
-            data: {
-                status: "cancelled"
             }
         })
         
@@ -225,7 +242,6 @@ router.get("/get-invoices", checkUser, async (req, res) => {
             })
             transactions.push(ppresp.data.transactions)
         } catch(e) {
-            console.log("hi" + e);
             console.log(e.response)
         }
     }
@@ -236,13 +252,36 @@ router.get("/get-invoices", checkUser, async (req, res) => {
 })
 
 router.post("/webhook", async (req, res) => {
+    // * Verify the webhook
+    console.log(req.body);
+    const verified = await verifyPayPalSignature(req.body, req.headers);
+    if(!verified) {
+        res.status(400).json({status: "error", message: "Invalid signature."});
+        return;
+    }
+
     const event_type = req.body.event_type;
     const data = req.body.resource;
     const subId = data.id;
 
     switch(event_type) {
+
+        case "BILLING.SUBSCRIPTION.ACTIVATED":
+            // * Update the user's subscription status to active and set expiresAt because their sub was activated
+            const bsaexpire = new Date(data.billing_info.next_billing_time);
+            await prisma.subscription.update({
+                where: {
+                    paypalSubscriptionId: subId
+                },
+                data: {
+                    planExpiresAt: bsaexpire,
+                    status: "active"
+                }
+            })
+            break;
+
         case "PAYMENT.SALE.COMPLETED":
-            // * Update the user's subscription status
+            // * User renewed their subscription
             const renewalSubId = data.billing_agreement_id;
             // 1 month from now
             const nextExpirey = new Date(new Date().setMonth(new Date().getMonth() + 1));
@@ -259,20 +298,8 @@ router.post("/webhook", async (req, res) => {
             })
             break;
 
-        case "BILLING.SUBSCRIPTION.CANCELLED":
-            // * Update the user's subscription status            
-            await prisma.subscription.update({
-                where: {
-                    paypalSubscriptionId: subId
-                },
-                data: {
-                    status: "cancelled"
-                }
-            })
-            break;
-
         case "BILLING.SUBSCRIPTION.EXPIRED":
-            // * Update the user's subscription status            
+            // * Users sub expired (did not renew)         
             await prisma.subscription.update({
                 where: {
                     paypalSubscriptionId: subId
@@ -284,7 +311,7 @@ router.post("/webhook", async (req, res) => {
             break;
 
         case "BILLING.SUBSCRIPTION.PAYMENT.FAILED":
-            // * Update the user's subscription status            
+            // * Card declined or something          
             await prisma.subscription.update({
                 where: {
                     paypalSubscriptionId: subId
@@ -296,7 +323,7 @@ router.post("/webhook", async (req, res) => {
             break;
 
         case "BILLING.SUBSCRIPTION.SUSPENDED":
-            // * Update the user's subscription status            
+            // * Sub was suspended for some reason           
             await prisma.subscription.update({
                 where: {
                     paypalSubscriptionId: subId
@@ -317,27 +344,34 @@ router.post("/webhook", async (req, res) => {
 })
 
 async function verifyPayPalSignature(webhook, headers) {
+    let ppresp
+    const authToken = await getPayPalAuth();
     try {
         const urisuf = "/v1/notifications/verify-webhook-signature"
         const postData = {
-            "transmission_id": headers["PAYPAL-TRANSMISSION-ID"],
-            "transmission_time": headers["PAYPAL-TRANSMISSION-TIME"],
-            "cert_url": headers["PAYPAL-CERT-URL"],
-            "auth_algo": headers["PAYPAL-AUTH-ALGO"],
-            "transmission_sig": headers["PAYPAL-TRANSMISSION-SIG"],
-            "webhook_id": "", // ! DO THIS
+            "transmission_id": headers["paypal-transmission-id"],
+            "transmission_time": headers["paypal-transmission-time"],
+            "cert_url": headers["paypal-cert-url"],
+            "auth_algo": headers["paypal-auth-algo"],
+            "transmission_sig": headers["paypal-transmission-sig"],
+            "webhook_id": (process.env.NODE_ENV == "development") ? "6CJ16387VH2468339" : "3M6121814F8120531",
             "webhook_event": webhook
         }
-        const ppresp = await axios.post(paypalBaseURL + urisuf, postData, {
+        ppresp = await axios.post(paypalBaseURL + urisuf, postData, {
             headers: {
                 "Authorization": "Bearer " + authToken,
                 'Content-Type': 'application/json'
             }
         })
-        transactions.push(ppresp.data.transactions)
     } catch(e) {
         console.log("Error verifying PayPal signature: " + e)
     }
+
+    if(ppresp.status != 200) return false
+
+    if(ppresp.data.verification_status != "SUCCESS") return false
+
+    return true
 
 }
 async function getPayPalAuth() {

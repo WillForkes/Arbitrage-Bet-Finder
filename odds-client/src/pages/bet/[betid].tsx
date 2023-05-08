@@ -13,7 +13,7 @@ import Head from "next/head";
 export default function BetPage() {
   const router = useRouter();
   const [modal, setModal] = useState(false);
-  const [simModal, setSimModal] = useState(false)
+  const [simModal, setSimModal] = useState(false);
   const [bankroll, setBankroll] = useState<null | number>(null);
   const [evm, setEV] = useState(false);
   const [modalBetId, setModalBetId] = useState(0);
@@ -27,19 +27,19 @@ export default function BetPage() {
   let bet = data?.bet;
   if (error || !bet) {
     return (
-    <section className="bg-white dark:bg-gray-900 page-offset-x py-8 bg-gray-900">
+      <section className=" dark:bg-gray-900 page-offset-x py-8 bg-gray-900">
         <div className="mx-auto max-w-screen-full p-32 text-center mb-8 lg:mb-12">
-            <h2 className="text-md font-bold dark:text-white mb-2">
-                This bet does not exist or may have expired. Please try again soon.
-            </h2>
-            <Spinner aria-label="Default status example" />
+          <h2 className="text-md font-bold dark:text-white mb-2">
+            This bet does not exist or may have expired. Please try again soon.
+          </h2>
+          <Spinner aria-label="Default status example" />
         </div>
-    </section>
-  );
+      </section>
+    );
   }
 
   try {
-    console.log(bet)
+    console.log(bet);
     bet.data = JSON.parse(bet.data);
     setModalBetId(bet.id);
   } catch (e) {
@@ -68,7 +68,7 @@ export default function BetPage() {
     return rec;
     //return (kmultiplier * 100).toFixed(0);
   }
-  
+
   return (
     <>
       {bet.type == "arbitrage" ? (
@@ -82,11 +82,15 @@ export default function BetPage() {
         />
       )}
       <section className="bg-white dark:bg-gray-900">
-      <Head>
-            <title>Arbster | Viewing Bet</title>
-            <meta name="description" content="Detailed bet viewing page" />
+        <Head>
+          <title>Arbster | Viewing Bet</title>
+          <meta name="description" content="Detailed bet viewing page" />
         </Head>
-        <SimulateModal isVisible={simModal} id={bet.id} closeModal={closeSimModal} />
+        <SimulateModal
+          isVisible={simModal}
+          id={bet.id}
+          closeModal={closeSimModal}
+        />
         <div className="mx-auto max-w-screen-md py-12">
           <Card>
             {bet ? (
@@ -105,7 +109,9 @@ export default function BetPage() {
                     </span>
                   ) : (
                     <span className="bg-primary-100 text-primary-800 text-xs font-extrabold px-2 py-0.5 rounded dark:bg-green-600 dark:text-green-300">
-                      +{(((1 / bet.data.total_implied_odds) - 1) * 100).toFixed(2)}%
+                      +
+                      {((1 / bet.data.total_implied_odds - 1) * 100).toFixed(2)}
+                      %
                     </span>
                   )}
                 </div>
@@ -158,96 +164,99 @@ export default function BetPage() {
                 ) : null}
 
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead>
-                        <tr>
-                            <th className="text-left font-bold leading-none text-gray-900 dark:text-white">
-                                Bookmakers
-                            </th>
-                            <th className="text-left font-bold leading-none text-gray-900 dark:text-white">
-                                Odds
-                            </th>
-                            <th className="text-left font-bold leading-none text-gray-900 dark:text-white">
-                                Outcome
-                            </th>
-                        </tr>
-                    </thead>
-                <tbody>
-                    {bet.type === "arbitrage"
-                    ? Object.keys(bet.data.best_outcome_odds).map((key, index) => (
-                        <tr key={index}>
+                  <thead>
+                    <tr>
+                      <th className="text-left font-bold leading-none text-gray-900 dark:text-white">
+                        Bookmakers
+                      </th>
+                      <th className="text-left font-bold leading-none text-gray-900 dark:text-white">
+                        Odds
+                      </th>
+                      <th className="text-left font-bold leading-none text-gray-900 dark:text-white">
+                        Outcome
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {bet.type === "arbitrage" ? (
+                      Object.keys(bet.data.best_outcome_odds).map(
+                        (key, index) => (
+                          <tr key={index}>
                             <td className="py-2 flex items-center">
-                                <div className="flex-shrink-0">
-                                    <div className="relative py-1">
-                                        <img
-                                            className="rounded-md"
-                                            src={getBookmakerLogo(bet.data.best_outcome_odds[key][0])}
-                                            alt="Bookmaker Logo"
-                                            width={25}
-                                            height={25}
-                                        />
-                                    </div>
+                              <div className="flex-shrink-0">
+                                <div className="relative py-1">
+                                  <img
+                                    className="rounded-md"
+                                    src={getBookmakerLogo(
+                                      bet.data.best_outcome_odds[key][0]
+                                    )}
+                                    alt="Bookmaker Logo"
+                                    width={25}
+                                    height={25}
+                                  />
                                 </div>
-                            
-                                <div className="min-w-0 flex-1">
-                                    <span className="text-sm font-medium text-gray-900 dark:text-white truncate ml-2">
-                                        {bet.data.best_outcome_odds[key][0]}
-                                    </span>
-                                </div>
+                              </div>
+
+                              <div className="min-w-0 flex-1">
+                                <span className="text-sm font-medium text-gray-900 dark:text-white truncate ml-2">
+                                  {bet.data.best_outcome_odds[key][0]}
+                                </span>
+                              </div>
                             </td>
                             <td className="py-2">
-                            <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                              <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
                                 {bet.data.best_outcome_odds[key][1]}
-                            </span>
+                              </span>
                             </td>
                             <td className="py-2">
-                            {bet.data.best_outcome_odds[key].length > 2 ? (
+                              {bet.data.best_outcome_odds[key].length > 2 ? (
                                 <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                {key} {bet.data.best_outcome_odds[key][2]}
+                                  {key} {bet.data.best_outcome_odds[key][2]}
                                 </span>
-                            ) : (
+                              ) : (
                                 <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                {key}
+                                  {key}
                                 </span>
-                            )}
+                              )}
                             </td>
-                        </tr>
-                        ))
-                    : (
-                        <tr>
-                            <td className="py-2 flex items-center">
-                                <div className="flex-shrink-0">
-                                    <div className="relative py-1">
-                                        <img
-                                            className="rounded-md"
-                                            src={getBookmakerLogo(bet.data.bookmaker)}
-                                            alt="Bookmaker Logo"
-                                            width={25}
-                                            height={25}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                    <span className="text-sm font-medium text-gray-900 dark:text-white truncate ml-2">
-                                        {bet.data.bookmaker}
-                                    </span>
-                                </div>
-                                </td>
-                                <td className="py-2">
-                                <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                    {bet.data.odds}
-                                </span>
-                                </td>
-                                <td className="py-2">
-                                <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                    {bet.data.team}
-                                </span>
-                            </td>
-                        </tr>
-                        )}
-                </tbody>
+                          </tr>
+                        )
+                      )
+                    ) : (
+                      <tr>
+                        <td className="py-2 flex items-center">
+                          <div className="flex-shrink-0">
+                            <div className="relative py-1">
+                              <img
+                                className="rounded-md"
+                                src={getBookmakerLogo(bet.data.bookmaker)}
+                                alt="Bookmaker Logo"
+                                width={25}
+                                height={25}
+                              />
+                            </div>
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <span className="text-sm font-medium text-gray-900 dark:text-white truncate ml-2">
+                              {bet.data.bookmaker}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="py-2">
+                          <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                            {bet.data.odds}
+                          </span>
+                        </td>
+                        <td className="py-2">
+                          <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                            {bet.data.team}
+                          </span>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
                 </table>
-                
-                <div className="py-4"></div>
+
                 <dl>
                   <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
                     Details
@@ -276,25 +285,28 @@ export default function BetPage() {
                 </dl>
 
                 <div className="flex mb-4 mx-auto flex-wrap gap-2">
-                    <Badge>
-                    Disclaimer:
-We strive to provide accurate and up-to-date odds, but please note that bookmakers may change their odds without prior notice.
-It is your responsibility to independently verify the real-time odds with the bookmakers before placing bets based on our displayed odds.
-We are not liable for any losses incurred due to discrepancies between our displayed odds and the actual odds offered by bookmakers.    
-                    </Badge>
+                  <Badge>
+                    Disclaimer: We strive to provide accurate and up-to-date
+                    odds, but please note that bookmakers may change their odds
+                    without prior notice. It is your responsibility to
+                    independently verify the real-time odds with the bookmakers
+                    before placing bets based on our displayed odds. We are not
+                    liable for any losses incurred due to discrepancies between
+                    our displayed odds and the actual odds offered by
+                    bookmakers.
+                  </Badge>
                 </div>
 
                 <div className="flex items-center space-x-4">
-                    {bet.type == "ev" ? (
-                        <button
-                        onClick={() => setSimModal(true)}
-                        className=" mr-4 text-white inline-flex items-center bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800"
-                        >
-                            Simulate EV Bet     
-                        </button>
-                    ) : (null)
-                    }
-                    
+                  {bet.type == "ev" ? (
+                    <button
+                      onClick={() => setSimModal(true)}
+                      className=" mr-4 text-white inline-flex items-center bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800"
+                    >
+                      Simulate EV Bet
+                    </button>
+                  ) : null}
+
                   {bet.type == "arbitrage" || evm == true ? (
                     <button
                       onClick={() => setModal(true)}
@@ -328,7 +340,6 @@ We are not liable for any losses incurred due to discrepancies between our displ
                       >
                         +
                       </button>
-                      
                     </div>
                   )}
                 </div>

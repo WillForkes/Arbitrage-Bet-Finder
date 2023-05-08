@@ -3,7 +3,7 @@ import useSWR from "swr";
 import { getter } from "@/api";
 import { Card, Spinner } from "flowbite-react";
 import { useRouter } from "next/router";
-import { EV, User } from "@/types";
+import { User } from "@/types";
 
 export default function UserPage() {
   const router = useRouter();
@@ -17,7 +17,7 @@ export default function UserPage() {
   let user: User["dbuser"] = data?.user;
   if (error || !user) {
     return (
-      <section className="bg-white dark:bg-gray-900 page-offset-x py-8 bg-gray-900">
+      <section className=" dark:bg-gray-900 page-offset-x py-8 bg-gray-900">
         <div className="mx-auto max-w-screen-full p-32 text-center mb-8 lg:mb-12">
           <h2 className="text-md font-bold dark:text-white mb-2">
             This user doesn't exist
@@ -30,7 +30,7 @@ export default function UserPage() {
 
   return (
     <>
-      <Card className="bg-white dark:bg-gray-900 page-offset-x py-8 bg-gray-900">
+      <Card className=" dark:bg-gray-900 page-offset-x py-8 bg-gray-900">
         <div className="max-w-screen-md mx-auto">
           <h1 className="text-2xl font-bold mb-4">User Details</h1>
           <div className="flex flex-col gap-4">

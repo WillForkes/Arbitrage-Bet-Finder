@@ -118,28 +118,6 @@ router.get('/', checkUser, async (req, res) => {
         }});
 });
 
-router.get("/invoices", checkUser, async function(req, res, next) {
-    const invoices = await prisma.invoice.findMany({
-        include: {
-            subscription: true
-        },
-        orderBy: {
-            createdAt: "desc"
-        }
-    })
-    
-    // ! ... get invoices links
-    let toSend = []
-    for(let i = 0; i < invoices.length; i++){
-        if(invoices.subscription.userId == req.user.authid){
-            toSend.push(invoices[i])
-        }
-    }
-
-    res.status(200).json({"status": "ok", "data": {
-        "invoices": toSend
-    }})
-})
 
 router.post("/startTrial", checkUser, async function(req, res, next) {
     if(req.user.trialActivated == true){

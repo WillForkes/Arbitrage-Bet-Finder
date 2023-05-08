@@ -55,6 +55,9 @@ export type User = {
         region: string;
         subscription: {
             id: number;
+            paypalSubscriptionId: number;
+            createdAt: number;
+            updatedAt: number;
             plan: string;
             planExpiresAt: string;
         }[],

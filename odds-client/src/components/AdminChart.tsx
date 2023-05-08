@@ -76,8 +76,8 @@ function AdminChart({
           </p>
         </div>
         <div className="bg-gray-800 p-4 rounded-lg shadow dark:text-white">
-          <h2 className="text-lg font-bold mb-4">Bitches</h2>
-          <p className="text-2xl font-bold">None :/</p>
+          <h2 className="text-lg font-bold mb-4">Another Stat</h2>
+          <p className="text-2xl font-bold">0</p>
         </div>
       </div>
     </div>

@@ -9,12 +9,17 @@ import { User } from "@/types";
 import Auth from "@/components/Auth";
 import Link from "next/link";
 import Head from "next/head";
+import AdminChart from "@/components/AdminChart";
 
 export default function Admin() {
   const { data, error } = useSWR("/admin/user/allUsers", getter, {
     refreshInterval: 10000,
   });
   const users = data?.users;
+  const siteInfo = {
+    totalBets: data?.totalBets,
+    totalPlacedBets: data?.totalBetsPlaced,
+  };
   const user: { user: User | null; auth: boolean | null } =
     useContext(UserContext);
 
@@ -28,6 +33,7 @@ export default function Admin() {
         />
       </Head>
       <div className="px-4 mx-auto max-w-screen-2xl lg:px-4">
+        <AdminChart d={users} siteInfo={siteInfo} />
         <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
           <div className="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4">
             <div className="mx-auto max-w-screen-md mb-8 lg:mb-12">

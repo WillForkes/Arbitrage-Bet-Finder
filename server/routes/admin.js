@@ -146,6 +146,15 @@ router.get("/user/allUsers", [checkUser, checkStaff], async function(req, res, n
     }
 })
 
+router.get("/user/:id", [checkUser, checkStaff], async function(req, res, next) {
+    try {
+        const user = await prisma.user.findUnique({where: {authid: req.params.id}, include: {subscription: true, placedBets: true, }})
+        res.status(200).json({"status": "ok", "data": {"user": user}});
+    } catch(e) {
+        res.status(400).json({"status": "error", "error":e});
+    }
+})
+
 router.get("/user/allSubs", [checkUser, checkStaff], async function(req, res, next) {
     try {
         const subscriptions = await prisma.subscription.findMany()

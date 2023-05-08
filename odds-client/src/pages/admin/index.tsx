@@ -58,7 +58,9 @@ export default function Admin() {
                   >
                     <div className="font-semibold md:hidden mb-1">Email:</div>
                     <div className="text-gray-800 dark:text-gray-300">
-                      {user.email}
+                      <Link href={`admin/user/${user.authid}`}>
+                        {user.email}
+                      </Link>
                     </div>
                     <div className="font-semibold md:hidden mb-1">
                       Created At:

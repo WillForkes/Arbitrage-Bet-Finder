@@ -135,6 +135,23 @@ router.post("/user/extendSubscription", [checkUser, checkStaff], async function(
     res.status(200).json({"status": "ok", "data": {"subscription": newSubscription}});
 })
 
+router.get("/user/allUsers", [checkUser, checkStaff], async function(req, res, next) {
+    try {
+        const users = await prisma.user.findMany({include: {subscription: true}})
+        res.status(200).json({"status": "ok", "data": {"users": users}});
+    } catch(e) {
+        res.status(400).json({"status": "error", "error":e});
+    }
+})
+
+router.get("/user/allSubs", [checkUser, checkStaff], async function(req, res, next) {
+    try {
+        const subscriptions = await prisma.subscription.findMany()
+        res.json({"status": "ok", "data": {"subscriptions": subscriptions}})
+    } catch(e) {
+        res.status(400).json({"status": "error", "error":e});
+    }
+})
 
 
 module.exports = router;

@@ -44,6 +44,7 @@ export type User = {
     dbuser: {
         authid: string;
         plan: string;
+        email:string;
         planExpiresAt: string;
         whitelist: string;
         createdAt: string;
@@ -56,7 +57,7 @@ export type User = {
             id: number;
             plan: string;
             planExpiresAt: string;
-        },
+        }[],
         smsNotifications: boolean,
         emailNotifications: boolean,
         phone: string

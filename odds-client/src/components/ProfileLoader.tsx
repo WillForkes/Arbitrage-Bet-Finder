@@ -61,8 +61,12 @@ export default function ProfileLoader({
   async function cancelSub() {
     try {
       await cancelPayment();
-    } catch (e) {
-      console.error(e);
+      alertContext?.setAlert({
+        msg: "Canceled Subscriptioin",
+        error: false,
+      });
+    } catch (e: any) {
+      alertContext?.setAlert({ msg: e.toString(), error: true });
     }
   }
 

@@ -3,7 +3,7 @@ import useSWR from "swr";
 import { getter } from "@/api";
 import { Card, Spinner } from "flowbite-react";
 import { useRouter } from "next/router";
-import { EV, User } from "@/types";
+import { User } from "@/types";
 
 export default function UserPage() {
   const router = useRouter();

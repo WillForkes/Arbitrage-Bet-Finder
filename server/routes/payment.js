@@ -240,7 +240,12 @@ router.get("/get-invoices", checkUser, async (req, res) => {
                     'Content-Type': 'application/json'
                 }
             })
-            transactions.push(ppresp.data.transactions)
+            console.log(user)
+            if (ppresp.data.transactions != null) {
+                transactions.push(ppresp.data.transactions)
+            } else {
+                transactions.push([{ payer_email: "PAYPAL", time: subscription.createdAt, id: subscription.paypalSubscriptionId, status: subscription.status.toUpperCase(), amount_with_breakdown: {gross_amount: {value: 0}}}])
+            }
         } catch(e) {
             console.log(e.response)
         }

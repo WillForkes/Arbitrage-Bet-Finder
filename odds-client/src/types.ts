@@ -44,6 +44,7 @@ export type User = {
     dbuser: {
         authid: string;
         plan: string;
+        email:string;
         planExpiresAt: string;
         whitelist: string;
         createdAt: string;
@@ -54,9 +55,12 @@ export type User = {
         region: string;
         subscription: {
             id: number;
+            paypalSubscriptionId: number;
+            createdAt: number;
+            updatedAt: number;
             plan: string;
             planExpiresAt: string;
-        },
+        }[],
         smsNotifications: boolean,
         emailNotifications: boolean,
         phone: string

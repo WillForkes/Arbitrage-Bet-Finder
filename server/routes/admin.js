@@ -135,6 +135,34 @@ router.post("/user/extendSubscription", [checkUser, checkStaff], async function(
     res.status(200).json({"status": "ok", "data": {"subscription": newSubscription}});
 })
 
+router.get("/user/allUsers", [checkUser, checkStaff], async function(req, res, next) {
+    try {
+        const users = await prisma.user.findMany({include: {subscription: true}})
+        const totalBetsPlaced = await prisma.placedBets.count();
+        const totalBets = await prisma.bet.count();
+        res.status(200).json({"status": "ok", "data": {"users": users, totalBets: totalBets, totalBetsPlaced: totalBetsPlaced}});
+    } catch(e) {
+        res.status(400).json({"status": "error", "error":e});
+    }
+})
+
+router.get("/user/:id", [checkUser, checkStaff], async function(req, res, next) {
+    try {
+        const user = await prisma.user.findUnique({where: {authid: req.params.id}, include: {subscription: true, placedBets: true, }})
+        res.status(200).json({"status": "ok", "data": {"user": user}});
+    } catch(e) {
+        res.status(400).json({"status": "error", "error":e});
+    }
+})
+
+router.get("/user/allSubs", [checkUser, checkStaff], async function(req, res, next) {
+    try {
+        const subscriptions = await prisma.subscription.findMany()
+        res.json({"status": "ok", "data": {"subscriptions": subscriptions}})
+    } catch(e) {
+        res.status(400).json({"status": "error", "error":e});
+    }
+})
 
 
 module.exports = router;

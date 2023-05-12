@@ -49,18 +49,24 @@ export default function ProfileLoader({
     phone: user.dbuser.phone,
   });
   const [whiteList, setWhitelist] = useState(
-    JSON.parse(user.dbuser.whitelist).map((x: string) => ({
-      label: x,
-      value: x,
-    }))
+    user.dbuser.whitelist != null
+      ? JSON.parse(user.dbuser.whitelist).map((x: string) => ({
+          label: x,
+          value: x,
+        }))
+      : []
   );
 
   const alertContext = useContext(AlertContext);
   async function cancelSub() {
     try {
       await cancelPayment();
-    } catch (e) {
-      console.error(e);
+      alertContext?.setAlert({
+        msg: "Canceled Subscriptioin",
+        error: false,
+      });
+    } catch (e: any) {
+      alertContext?.setAlert({ msg: e.toString(), error: true });
     }
   }
 
@@ -83,6 +89,7 @@ export default function ProfileLoader({
       await updateWhitelist(whiteList);
       alertContext?.setAlert({ msg: "Whitelist updated", error: false });
     } catch (e) {
+      console.log(e);
       alertContext?.setAlert({ msg: "Error updating user", error: true });
     }
   }
@@ -224,22 +231,23 @@ export default function ProfileLoader({
                   Billing History
                 </h5>
                 {subscriptionStatus?.status == "ACTIVE" ? (
-                    <button
+                  <button
                     onClick={() => {
-                        cancelSub();
+                      cancelSub();
                     }}
                     className="inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900"
-                    >
-                        Cancel Subscription
-                    </button>
+                  >
+                    Cancel Subscription
+                  </button>
                 ) : (
-                    // Text saying their sub will expire on x date
-                    <div className="flex">
-                        <h3 className="mr-2">Your subscription will expire on</h3> 
-                        <h3 className="font-bold">{new Date(user.dbuser.planExpiresAt).toDateString()}</h3>
-                    </div>
+                  // Text saying their sub will expire on x date
+                  <div className="flex">
+                    <h3 className="mr-2">Your subscription will expire on</h3>
+                    <h3 className="font-bold">
+                      {new Date(user.dbuser.planExpiresAt).toDateString()}
+                    </h3>
+                  </div>
                 )}
-                
               </div>
               {/* <section>
                 <p>Status: {subscriptionStatus?.status}</p>

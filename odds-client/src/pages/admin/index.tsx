@@ -67,9 +67,10 @@ export default function Admin() {
                     </div>
                     <div className="font-semibold md:hidden mb-1">Plan:</div>
                     <div className="text-gray-800 dark:text-gray-300">
-                      {user.subscription.length > 0
+                      {user.subscription.length > 0 &&
+                      user.subscription[0].status == "active"
                         ? user.subscription[0].plan
-                        : "No Subscription"}
+                        : "No Subscription/Inactive"}
                     </div>
                     <div className="font-semibold md:hidden mb-1">Region:</div>
                     <div className="text-gray-800 dark:text-gray-300">

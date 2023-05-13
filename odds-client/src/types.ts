@@ -60,6 +60,7 @@ export type User = {
             createdAt: number;
             updatedAt: number;
             plan: string;
+            status: string;
             planExpiresAt: string;
         }[],
         smsNotifications: boolean,

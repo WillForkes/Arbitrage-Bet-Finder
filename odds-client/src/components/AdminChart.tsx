@@ -15,12 +15,37 @@ function AdminChart({
   function countSubscribedUsers(data: User["dbuser"][]) {
     let count = 0;
     data.forEach((user: User["dbuser"]) => {
-      if (user.subscription && user.subscription.length > 0) {
+      if (
+        user.subscription &&
+        user.subscription.length > 0 &&
+        user.subscription[0].status
+      ) {
         count++;
       }
     });
 
     return count;
+  }
+
+  function churn(data: User["dbuser"][]) {
+    let count = 0;
+    let unsubscribed = 0;
+    data.forEach((user: User["dbuser"]) => {
+      if (
+        user.subscription &&
+        user.subscription.length > 0 &&
+        user.subscription[0].status == "active"
+      ) {
+        count++;
+      } else if (
+        user.subscription &&
+        user.subscription.length > 0 &&
+        user.subscription[0].status != "active"
+      ) {
+        unsubscribed++;
+      }
+    });
+    return ((unsubscribed / unsubscribed + count) * 100).toFixed(2);
   }
 
   function countSubscribedUsersToday(
@@ -76,8 +101,8 @@ function AdminChart({
           </p>
         </div>
         <div className="bg-gray-800 p-4 rounded-lg shadow dark:text-white">
-          <h2 className="text-lg font-bold mb-4">Another Stat</h2>
-          <p className="text-2xl font-bold">0</p>
+          <h2 className="text-lg font-bold mb-4">Churn Rate</h2>
+          <p className="text-2xl font-bold">{d ? churn(d) : "pp"}%</p>
         </div>
       </div>
     </div>

@@ -45,7 +45,7 @@ function AdminChart({
         unsubscribed++;
       }
     });
-    return ((unsubscribed / unsubscribed + count) * 100).toFixed(2);
+    return ((unsubscribed / (unsubscribed + count)) * 100).toFixed(2);
   }
 
   function countSubscribedUsersToday(

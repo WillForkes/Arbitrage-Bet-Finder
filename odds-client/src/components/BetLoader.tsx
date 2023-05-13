@@ -179,14 +179,14 @@ export default function BetLoader({ bets, showBets }: props) {
                       >
                         <div className="flex mx-auto flex-wrap gap-2">
                             {bet.data?.live == true ? (
-                            <div>
-                                <Badge>IN PLAY</Badge>
-                            </div>
+                                <div>
+                                    <Badge>IN PLAY</Badge>
+                                </div>
                             ) : null}
 
                             {exchanges.map((ex) => (
                                 <div key={ex}>
-                                    {JSON.stringify(bet.data.best_outcome_odds).toLowerCase().includes(ex) ? (
+                                    {JSON.stringify(bet.data?.best_outcome_odds)?.toLowerCase().includes(ex) ? (
                                         <Badge className="flex" color="purple">USES EXCHANGE(s)</Badge>
                                     ) : null}
                                 </div>

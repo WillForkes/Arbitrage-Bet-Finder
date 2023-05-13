@@ -51,11 +51,12 @@ export type User = {
         updatedAt: string;
         banned: boolean;
         trialActivated: boolean;
+        cancelDealActivated: boolean;
         staff: boolean;
         region: string;
         subscription: {
             id: number;
-            paypalSubscriptionId: number;
+            paypalSubscriptionId: string;
             createdAt: number;
             updatedAt: number;
             plan: string;

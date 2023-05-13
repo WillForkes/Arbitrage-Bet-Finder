@@ -39,7 +39,6 @@ export default function BetPage() {
   }
 
   try {
-    console.log(bet);
     bet.data = JSON.parse(bet.data);
     setModalBetId(bet.id);
   } catch (e) {

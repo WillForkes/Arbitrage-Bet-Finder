@@ -1,6 +1,7 @@
 import { Badge, Card } from "flowbite-react";
 import React, { useState } from "react";
-
+import Link from "next/link";
+import { Spinner } from "flowbite-react";
 const Calculator = () => {
   const [months, setMonths] = useState(3);
   const [avgProfitPerBet, setAvgProfitPerBet] = useState(4);
@@ -20,7 +21,7 @@ const Calculator = () => {
   return (
     <section className="bg-white dark:bg-gray-900 pb-4">
       <div className="flex flex-wrap items-start justify-between pl-10">
-        <div className="bg-gray-800 p-8 rounded-md shadow-lg lg:w-1/2 md:w-full mr-4">
+        <div className="bg-gray-800 p-8 rounded-md shadow-lg lg:w-1/2 md:w-full mr-4 md:mb-4">
           <span className="font-bold tracking-wider uppercase dark:text-primary-700">
             Calculate your potential profits
           </span>
@@ -82,21 +83,40 @@ const Calculator = () => {
           >
             Calculate
           </button>
-          {finalProfitPercentage && (
-            <div className="mt-4">
-              <Badge color="green" className="mr-2">
-                <p className="text-lg">
-                  <span className="font-bold">({finalProfitPercentage}%) </span>
-                  <span className="font-bold">+${finalProfit} </span>
-                  <span>Profit in {months} month(s)</span>
-                </p>
-              </Badge>
-            </div>
-          )}
         </div>
 
-        <div className="bg-gray-800 p-8 rounded-md shadow-lg lg:w-1/2 md:w-full mr-8 pl-10">
-          <p className="mb4">Something here</p>
+        <div className="bg-gray-800 p-8 rounded-md shadow-lg lg:w-2/5 md:w-full mr-8 pl-10">
+            <span className="font-bold tracking-wider uppercase dark:text-primary-700">
+            Calculation Results
+            </span>
+            <h2 className="mb-2 text-xl font-bold lg:text-2xl dark:text-white">
+            Profit Calculator
+            </h2>
+            {finalProfitPercentage ? (
+                <div>
+                <div className="mt-4">
+                    <span className="flex mb-4">Profit percentage:<div className="ml-4 mt-1"><Badge color="green">{finalProfitPercentage}%</Badge></div></span>
+                    <span className="flex mb-4">Total profit (USD):<div className="ml-4 mt-1"><Badge color="green">${finalProfit}</Badge></div></span>
+                    <span className="flex mb-4">Timespan:<div className="ml-4 mt-1"><Badge>{perDay} Month(s)</Badge></div></span>
+                </div>
+
+                <Link href="/#pricing"
+                className="float-left mt-4 text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
+                >
+                What are you waiting for? Start your free trial now!
+                </Link>
+                </div>
+            ) : (
+                <div className="mx-auto text-center mt-8 lg:mt-12">
+                    <h2 className="text-md font-bold dark:text-white">
+                        Waiting for calculation...
+                    </h2>
+
+                    <Spinner aria-label="Default status example" />
+                </div>
+            )}
+
+            
         </div>
       </div>
     </section>

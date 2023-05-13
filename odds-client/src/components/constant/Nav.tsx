@@ -32,7 +32,7 @@ export default function Nav() {
           id="mobile-menu-2"
         >
           <ul className="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-          <li>
+            <li>
               <Link
                 href="/"
                 className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
@@ -48,7 +48,7 @@ export default function Nav() {
                 Pricing
               </Link>
             </li>
-            
+
             <li>
               <Link
                 href="/scraper/bets"
@@ -73,7 +73,7 @@ export default function Nav() {
                 Affiliates
               </Link>
             </li>
-            
+
             <li>
               <Link
                 href="/tracker"
@@ -91,7 +91,7 @@ export default function Nav() {
                 FAQ
               </Link>
             </li>
-            
+
             <li>
               <Link
                 href="/blog"
@@ -100,7 +100,7 @@ export default function Nav() {
                 Information
               </Link>
             </li>
-            
+
             <li>
               <Link
                 href="/contact"
@@ -109,6 +109,16 @@ export default function Nav() {
                 Contact Us
               </Link>
             </li>
+            {user?.dbuser.staff ? (
+              <li>
+                <Link
+                  href="/admin"
+                  className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                >
+                  Admin
+                </Link>
+              </li>
+            ) : null}
           </ul>
         </div>
         <div className="flex items-center justify-end md:hidden">
@@ -151,7 +161,7 @@ export default function Nav() {
                   </Link>
                 </li>
                 <li>
-                {/* <Link
+                  {/* <Link
                     onClick={() => toggleMenu()}
                     href="/scraper/ev"
                     className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white"
@@ -165,7 +175,6 @@ export default function Nav() {
                   >
                     Affiliates
                   </Link>
-                  
                 </li>
                 <li>
                   <Link
@@ -185,6 +194,17 @@ export default function Nav() {
                     FAQ
                   </Link>
                 </li>
+                {user?.dbuser.staff ? (
+                  <li>
+                    <Link
+                      onClick={() => toggleMenu()}
+                      href="/admin"
+                      className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                    >
+                      Admin
+                    </Link>
+                  </li>
+                ) : null}
                 <li>
                   <Link
                     onClick={() => toggleMenu()}
@@ -194,7 +214,6 @@ export default function Nav() {
                     Blog
                   </Link>
                 </li>
-                
               </ul>
             </div>
           )}

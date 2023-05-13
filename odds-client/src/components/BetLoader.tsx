@@ -30,17 +30,10 @@ export default function BetLoader({ bets, showBets }: props) {
   const [regionFilter, setRegionFilter] = useState(
     user ? user.dbuser.region : "UK"
   );
-//   const [pricing, setPricing] = useState(
-//     !ucontext.auth || user?.dbuser.plan == "free"
-//   );
 
   const [paginatedBets, setPaginatedBets] = useState<Bet[]>(
     filterRegion(regionFilter, bets, user ? true : false) as Bet[]
   );
-
-//   function closePricing(): void {
-//     setPricing(false);
-//   }
 
   function closeModal(): void {
     setModal(false);
@@ -51,11 +44,6 @@ export default function BetLoader({ bets, showBets }: props) {
     setPaginatedBets(filterRegion(region, bets, user ? true : false) as Bet[]); // bets with region filter
   }
 
-  //   function updateItems(page: number) {
-  //     const start = (page - 1) * 10;
-  //     const end = start + 10;
-  //     setPaginatedBets(b.slice(start, end));
-  //   }
 
   function searchBetsByMatch(e: any) {
     if (user) {
@@ -68,6 +56,12 @@ export default function BetLoader({ bets, showBets }: props) {
       }
     }
   }
+
+  const exchanges = [
+    "betfair",
+    "matchbook",
+    "smarkets"
+  ];
 
   return (
     <>
@@ -183,11 +177,23 @@ export default function BetLoader({ bets, showBets }: props) {
                         animation="duration-300"
                         content="Click here to view the the details of this bet"
                       >
-                        {bet.data?.live == true ? (
-                          <div className="flex mx-auto flex-wrap gap-2">
-                            <Badge>IN PLAY</Badge>
-                          </div>
-                        ) : null}
+                        <div className="flex mx-auto flex-wrap gap-2">
+                            {bet.data?.live == true ? (
+                                <div>
+                                    <Badge>IN PLAY</Badge>
+                                </div>
+                            ) : null}
+
+                            {exchanges.map((ex) => (
+                                <div key={ex}>
+                                    {JSON.stringify(bet.data?.best_outcome_odds)?.toLowerCase().includes(ex) ? (
+                                        <Badge className="flex" color="purple">USES EXCHANGE(s)</Badge>
+                                    ) : null}
+                                </div>
+                            ))}
+                        </div>
+         
+                            
 
                         <Link href={`/bet/${bet.id}`}>
                           {showBets
@@ -252,6 +258,7 @@ export default function BetLoader({ bets, showBets }: props) {
                                 </div>
                               </div>
                               <div className="min-w-0 flex-1">
+                                
                                 <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                                   {bet.data.best_outcome_odds[key][0]} -{" "}
                                   {bet.data.best_outcome_odds[key][1]}

@@ -99,6 +99,9 @@ router.get('/', checkUser, async (req, res) => {
     let dbuser = await prisma.user.findUnique({
         where: {
             authid: req.oidc.user.sub
+        },
+        include: {
+            subscription: true
         }
     })
 

@@ -1,12 +1,9 @@
-import BetLoader from "@/components/BetLoader";
-import { Bet } from "@/types";
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import useSWR from "swr";
 import { getter } from "@/api";
 import { Spinner } from "flowbite-react";
 import { UserContext } from "@/pages/_app";
 import { User } from "@/types";
-import Auth from "@/components/Auth";
 import Link from "next/link";
 import Head from "next/head";
 import AdminChart from "@/components/AdminChart";

@@ -47,6 +47,10 @@ export async function createPortal(): Promise<any> {
     return await sendApiRequest("GET", "payment/portal", true)
 }
 
+export async function activateCancelDeal(subId: string) : Promise<any> {
+    return await sendApiRequest("POST", "payment/activate-cancel-deal", true, {subscriptionId: subId})
+}
+
 export async function updateProfileA(region: string): Promise<any> {
     return await sendApiRequest("POST", "profile/update", true, {region: region})
 }

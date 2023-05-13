@@ -31,6 +31,63 @@ const plans = {
 
 }
 //////////////////// ! PAYPAL ////////////////////
+router.post("/activate-cancel-deal", checkUser, async (req, res) => {
+    const { subscriptionId } = req.body;
+
+    if(req.user.cancelDealActivated){
+        res.status(403).json({status: "error", error: "You have already activated a deal."})
+        return 
+    }
+    if(!subscriptionId) {
+        res.status(400).json({status: "error", error: "No subscription ID provided."})
+        return
+    }
+
+    const authToken = await getPayPalAuth();
+    
+    // work out sequence number. 1 if no trial, 2 if trial was active. Work this out by taking the expire date of the current subscription and comparing it to the current date. If it's divisible by 30, its no trial, if it's not, it's a trial
+    const subscription = await prisma.subscription.findUnique({
+        where: {
+            paypalSubscriptionId: subscriptionId
+        }    
+    })
+
+    const daysbetween = Math.floor((new Date(subscription.planExpiresAt) - new Date(subscription.createdAt)) / (1000 * 60 * 60 * 24));
+    const sequence = daysbetween % 30 == 0 ? 1 : 2;
+    const updatePrice = subscription.plan == "starter" ? "10.00" : "20.00";
+
+    const updateJson = [{
+        "op": "replace",
+        "path": "/plan/billing_cycles/@sequence==" + sequence + "/pricing_scheme/fixed_price",
+        "value": {
+            "currency_code": "GBP",
+            "value": updatePrice
+        }
+    }]
+
+    const ppresp = await axios.patch(paypalBaseURL + "/v1/billing/subscriptions/" + subscriptionId, updateJson, {
+        headers: {
+            "Authorization": "Bearer " + authToken
+        },
+    })
+
+    await prisma.user.update({
+        where: {
+            authid: req.user.authid
+        },
+        data: {
+            cancelDealActivated: true
+        }
+    })
+    
+
+    if(ppresp.status == 204){
+        res.json({status: "ok", data: {message: "Successfully updated subscription."}});
+    } else {
+        res.json({status: "error", error: "Failed to update subscription."});
+    }
+})
+
 router.post('/create-subscription', async (req, res) => {
     const plan = req.body.plan; // Get the plan ID from the request body
     const planId = plans[process.env.NODE_ENV][plan]
@@ -191,7 +248,7 @@ router.post("/cancel-subscription", checkUser, async (req, res) => {
     })
 
     if(u.subscription.length == 0) {
-        res.status(400).json({status: "error", message: "No active subscription found."});
+        res.status(400).json({status: "error", error: "No active subscription found."});
         return;
     }
 
@@ -207,7 +264,6 @@ router.post("/cancel-subscription", checkUser, async (req, res) => {
         
         res.json({status: "ok", "data": {response: ppresp.data}});
     } catch(err) {
-        console.log(err);
         res.status(500).json({status: "error", message: err?.response?.data});
     }
 })
@@ -240,7 +296,7 @@ router.get("/get-invoices", checkUser, async (req, res) => {
                     'Content-Type': 'application/json'
                 }
             })
-            console.log(user)
+
             if (ppresp.data.transactions != null) {
                 transactions.push(ppresp.data.transactions)
             } else {
@@ -261,7 +317,7 @@ router.post("/webhook", async (req, res) => {
     console.log(req.body);
     const verified = await verifyPayPalSignature(req.body, req.headers);
     if(!verified) {
-        res.status(400).json({status: "error", message: "Invalid signature."});
+        res.status(400).json({status: "error", error: "Invalid signature."});
         return;
     }
 

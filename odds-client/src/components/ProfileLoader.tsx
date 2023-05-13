@@ -14,6 +14,7 @@ import {
   Dropdown,
 } from "flowbite-react";
 import Image from "next/image";
+import CancelModal from "./CancelModal";
 import Logo from "../../public/arbster.png";
 import {
   cancelPayment,
@@ -22,6 +23,7 @@ import {
   updateNotificationsA,
   updateProfileA,
   updateWhitelist,
+  activateCancelDeal
 } from "@/api";
 import ProfileEdit from "./ProfileEdit";
 import { AlertContext } from "@/pages/_app";
@@ -56,8 +58,10 @@ export default function ProfileLoader({
         }))
       : []
   );
+  const [cancelModalVisible, setCancelModalVisible] = useState(false);
 
   const alertContext = useContext(AlertContext);
+
   async function cancelSub() {
     try {
       await cancelPayment();
@@ -89,7 +93,6 @@ export default function ProfileLoader({
       await updateWhitelist(whiteList);
       alertContext?.setAlert({ msg: "Whitelist updated", error: false });
     } catch (e) {
-      console.log(e);
       alertContext?.setAlert({ msg: "Error updating user", error: true });
     }
   }
@@ -101,9 +104,20 @@ export default function ProfileLoader({
       alertContext?.setAlert({ msg: "Error getting pdf", error: true });
     }
   }
-  console.log(invoices);
+
+  async function activateDeal() {
+    try{
+        await activateCancelDeal(user.dbuser.subscription[0].paypalSubscriptionId)
+        alertContext?.setAlert({ msg: "50% Off deal applied!", error: false });
+    }catch(e){
+        alertContext?.setAlert({ msg: "Error activating deal. Please contact support", error: true });
+    }
+  }
+
   return (
     <>
+      <CancelModal isVisible={cancelModalVisible} closeModal={() => {setCancelModalVisible(false)}} cancelSub={cancelSub} cancelDealActivated={user.dbuser.cancelDealActivated} activateDeal={activateDeal}/>
+      
       <Tabs.Group
         className="dark:bg-gray-900 dark:text-white py-4 p-10"
         aria-label="Tabs with icons"
@@ -233,7 +247,7 @@ export default function ProfileLoader({
                 {subscriptionStatus?.status == "ACTIVE" ? (
                   <button
                     onClick={() => {
-                      cancelSub();
+                    setCancelModalVisible(true);
                     }}
                     className="inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900"
                   >
@@ -249,13 +263,7 @@ export default function ProfileLoader({
                   </div>
                 )}
               </div>
-              {/* <section>
-                <p>Status: {subscriptionStatus?.status}</p>
-                <p>
-                  Plan expires:{" "}
-                  {new Date(user.dbuser.planExpiresAt).toDateString()}
-                </p>
-              </section> */}
+              
               <div className="flow-root">
                 <ul className="divide-y divide-gray-200 dark:divide-gray-700">
                   {/* foreach invoice */}

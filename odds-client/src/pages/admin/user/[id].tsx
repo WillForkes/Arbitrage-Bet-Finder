@@ -84,7 +84,7 @@ export default function UserPage() {
                 Banned:
               </label>
               <p className="text-gray-900 dark:text-white">
-                {user.banned ? "BANNED" : "ACTIVE"}
+                {user.banned ? "BANNED" : "NO"}
               </p>
             </div>
             <div className="flex flex-col md:flex-row md:items-center gap-4">

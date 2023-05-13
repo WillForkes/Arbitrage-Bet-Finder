@@ -39,7 +39,6 @@ export default function BetPage() {
   }
 
   try {
-    console.log(bet);
     bet.data = JSON.parse(bet.data);
     setModalBetId(bet.id);
   } catch (e) {
@@ -68,6 +67,12 @@ export default function BetPage() {
     return rec;
     //return (kmultiplier * 100).toFixed(0);
   }
+
+  const exchanges = [
+    "betfair",
+    "matchbook",
+    "smarkets"
+  ];
 
   return (
     <>
@@ -102,7 +107,7 @@ export default function BetPage() {
                   {bet.data.league.replace(/_/g, " ")}
                 </h2>
 
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-2">
                   {bet.type == "ev" ? (
                     <span className="bg-primary-100 text-primary-800 text-xs font-extrabold px-2 py-0.5 rounded dark:bg-green-600 dark:text-green-300">
                       {(bet.data.ev * 100).toFixed(2)}%
@@ -115,7 +120,22 @@ export default function BetPage() {
                     </span>
                   )}
                 </div>
+                <div className="flex mx-auto flex-wrap gap-1 mb-3">
+                    {bet.data?.live == true ? (
+                    <div>
+                        <Badge>IN PLAY</Badge>
+                    </div>
+                    ) : null}
 
+                    {exchanges.map((ex) => (
+                        <div key={ex}>
+                            {JSON.stringify(bet.data.best_outcome_odds).toLowerCase().includes(ex) ? (
+                                <Badge color="purple">USES EXCHANGE(s)</Badge>
+                            ) : null}
+                        </div>
+                    ))}
+                </div>
+                
                 <dl className="flex items-center space-x-6">
                   <div>
                     <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
@@ -163,7 +183,7 @@ export default function BetPage() {
                   </dl>
                 ) : null}
 
-                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 mb-2">
                   <thead>
                     <tr>
                       <th className="text-left font-bold leading-none text-gray-900 dark:text-white">
@@ -173,7 +193,7 @@ export default function BetPage() {
                         Odds
                       </th>
                       <th className="text-left font-bold leading-none text-gray-900 dark:text-white">
-                        Outcome
+                        Outcome (bet on)
                       </th>
                     </tr>
                   </thead>

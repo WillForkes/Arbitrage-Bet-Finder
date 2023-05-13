@@ -21,7 +21,7 @@ const Calculator = () => {
   return (
     <section className="bg-white dark:bg-gray-900 pb-4">
       <div className="flex flex-wrap items-start justify-between pl-10">
-        <div className="bg-gray-800 p-8 rounded-md shadow-lg lg:w-1/2 md:w-full mr-4 md:mb-4">
+        <div className="bg-gray-800 p-6 rounded-md shadow-lg lg:w-1/2 md:w-full mr-7 md:mb-4">
           <span className="font-bold tracking-wider uppercase dark:text-primary-700">
             Calculate your potential profits
           </span>
@@ -85,7 +85,7 @@ const Calculator = () => {
           </button>
         </div>
 
-        <div className="bg-gray-800 p-8 rounded-md shadow-lg lg:w-2/5 md:w-full mr-8 pl-10">
+        <div className="bg-gray-800 p-6 rounded-md shadow-lg lg:w-2/5 md:w-full mr-8">
             <span className="font-bold tracking-wider uppercase dark:text-primary-700">
             Calculation Results
             </span>

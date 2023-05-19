@@ -15,7 +15,7 @@ export default function UserPage() {
 
   const { data: subData, error: subError } = useSWR(
     "/payment/get-subscription/" +
-      (data?.user ? data.user.subscription[0].paypalSubscriptionId : ""),
+      (data?.user ? data.user.subscription[0].paypalSubscriptionId : "d"),
     getter,
     {
       refreshInterval: 10000,
@@ -57,7 +57,8 @@ export default function UserPage() {
               {user.subscription.map((sub) => (
                 <div key={sub.id} className="flex flex-col gap-2">
                   <p className="text-gray-900 dark:text-white">
-                    STATUS: {subData ? subData.status : "LOADING..."}
+                    STATUS:{" "}
+                    {subData && !subError ? subData.status : "LOADING..."}
                   </p>
                   <p className="text-gray-900 dark:text-white">
                     {sub.paypalSubscriptionId}

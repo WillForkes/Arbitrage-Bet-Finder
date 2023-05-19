@@ -15,7 +15,9 @@ export default function UserPage() {
 
   const { data: subData, error: subError } = useSWR(
     "/payment/get-subscription/" +
-      (data?.user ? data.user.subscription[0].paypalSubscriptionId : "d"),
+      (data?.user?.subscription?.length > 0
+        ? data.user?.subscription[0]?.paypalSubscriptionId
+        : "d"),
     getter,
     {
       refreshInterval: 10000,

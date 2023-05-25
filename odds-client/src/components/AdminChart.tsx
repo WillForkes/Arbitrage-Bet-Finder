@@ -53,8 +53,6 @@ function AdminChart({
     lastDay = 86400000
   ) {
     let count = 0;
-    const lastDayMs = new Date().getTime() - lastDay;
-
     data.forEach((user) => {
       if (user.subscription && user.subscription.length > 0) {
         const latestSubscription =
@@ -62,7 +60,7 @@ function AdminChart({
         const planExpiresAtMs = new Date(
           latestSubscription.planExpiresAt
         ).getTime();
-        if (planExpiresAtMs > lastDayMs) {
+        if (planExpiresAtMs > new Date().getTime() - lastDay) {
           count++;
         }
       }

@@ -137,9 +137,19 @@ router.post("/user/extendSubscription", [checkUser, checkStaff], async function(
 
 router.get("/user/allUsers", [checkUser, checkStaff], async function(req, res, next) {
     try {
-        const users = await prisma.user.findMany({include: {subscription: true}})
+        const users = await prisma.user.findMany({include: {subscription: true},
+            orderBy: {
+            subscription: {
+              some: {}
+            }
+          },
+          orderBy: {
+            createdAt: 'desc'
+          }})
         const totalBetsPlaced = await prisma.placedBets.count();
-        const totalBets = await prisma.bet.count();
+        const totalBets = await prisma.bet.count({
+            
+        });
         res.status(200).json({"status": "ok", "data": {"users": users, totalBets: totalBets, totalBetsPlaced: totalBetsPlaced}});
     } catch(e) {
         res.status(400).json({"status": "error", "error":e});

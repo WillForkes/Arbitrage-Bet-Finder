@@ -15,7 +15,6 @@ export default function Onboarding() {
     let [stage3, setStage3] = useState(false);
     const [percentProgress , setPercentProgress] = useState(0)
     const [showTempMsg, setShowTempMsg] = useState(true);
-    const [showModal, setShowModal] = useState(false);
 
     let prog = setupCookies()
     useEffect(()=>{
@@ -46,12 +45,18 @@ export default function Onboarding() {
     function updateStore(stage: number) {
         // update cookie
         let toSet = getCookie('onboarding');
-        toSet = toSet.toString()
-        const onboardingProgress = toSet.split('|');
-        onboardingProgress[stage - 1] = stage + ':1';
-        toSet = onboardingProgress.join('|');
-        setPercentProgress(percentProgress + 33.33)
-        setCookie('onboarding', toSet);
+        if(toSet == undefined) {
+            console.log("Error updating onboarding cookie")
+        } else {
+            toSet = toSet.toString()
+            const onboardingProgress = toSet.split('|');
+            onboardingProgress[stage - 1] = stage + ':1';
+            toSet = onboardingProgress.join('|');
+            setPercentProgress(percentProgress + 33.33)
+            setCookie('onboarding', toSet);
+        }
+
+
     }
     
 

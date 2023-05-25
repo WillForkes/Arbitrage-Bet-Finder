@@ -33,7 +33,7 @@ export default function Bets() {
             <h2 className="text-4xl font-bold lg:text-5xl">
                 Risk free betting
             </h2> */}
-        <Link
+        {/* <Link
           href="/blog/using-arbitrage-and-positive-ev-tool"
           className="inline-flex justify-between items-center py-1 px-1 pr-4 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
           role="alert"
@@ -52,7 +52,7 @@ export default function Bets() {
           >
             <path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"></path>
           </svg>
-        </Link>
+        </Link> */}
       </div>
 
       {data ? (

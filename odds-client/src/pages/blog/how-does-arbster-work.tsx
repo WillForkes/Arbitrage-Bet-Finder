@@ -4,7 +4,7 @@ import Image from "next/image";
 import Logo from "../../../public/arbster.png";
 import Link from "next/link";
 
-export default function blog1() {
+export default function HowDoesArbsterWork() {
     return (
     <>
         <main className="pt-8 pb-16 lg:pt-16 lg:pb-24 bg-white dark:bg-gray-900">

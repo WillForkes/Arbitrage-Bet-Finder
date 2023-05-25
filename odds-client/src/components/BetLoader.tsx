@@ -187,7 +187,7 @@ export default function BetLoader({ bets, showBets }: props) {
                             {exchanges.map((ex) => (
                                 <div key={ex}>
                                     {JSON.stringify(bet.data?.best_outcome_odds)?.toLowerCase().includes(ex) ? (
-                                        <Badge className="flex" color="purple">USES EXCHANGE(s)</Badge>
+                                        <Badge className="flex" color="purple">USES EXCHANGE</Badge>
                                     ) : null}
                                 </div>
                             ))}
@@ -348,8 +348,7 @@ export default function BetLoader({ bets, showBets }: props) {
             {paginatedBets.length === 0 ? (
               <div className="mx-auto max-w-md text-center py-8">
                 <h2 className="text-xl font-bold mb-6 lg:text-2xl dark:text-white">
-                  We couldn&apos;t find any bets in this region. Please consider
-                  whitelisting more bookmakers or try again soon.
+                  We couldn&apos;t find any bets in this region. Check back soon for more!
                 </h2>
                 <Spinner aria-label="Default status example" />
               </div>

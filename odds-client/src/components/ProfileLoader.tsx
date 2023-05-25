@@ -28,6 +28,7 @@ import {
 import ProfileEdit from "./ProfileEdit";
 import { AlertContext } from "@/pages/_app";
 import Select from "react-tailwindcss-select";
+import { HiArrowNarrowRight, HiCalendar, HiCheck, HiInformationCircle, HiEye } from "react-icons/hi";
 
 interface props {
   user: User;
@@ -125,7 +126,7 @@ export default function ProfileLoader({
       >
         <Tabs.Item active={true} title="Profile">
           <div className="mx-auto max-w-screen-xl">
-            <Card>
+            <Card className=" max-w-md mx-auto">
               <div className="relative p-4 bg-white dark:bg-gray-800 sm:p-5`">
                 <dl>
                   <dt className="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
@@ -217,21 +218,14 @@ export default function ProfileLoader({
                       </button>
                     ) : null}
                   </div>
-                  <button
-                    type="button"
-                    className="inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900"
+                  <Link
+                    href="/onboarding"
+                    className="inline-flex items-center text-white bg-orange-500 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-orange-500 dark:hover:bg-orange-600 dark:focus:ring-orange-900"
                   >
-                    <svg
-                      aria-hidden="true"
-                      className="w-5 h-5 mr-1.5 -ml-1"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"></path>
-                    </svg>
-                    Delete
-                  </button>
+                    Onboarding progress
+                    <HiArrowNarrowRight className="ml-2" />
+
+                  </Link>
                 </div>
               </div>
             </Card>

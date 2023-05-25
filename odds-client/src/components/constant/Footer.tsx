@@ -25,11 +25,6 @@ export default function Footer() {
                     Arbitrage Tool
                   </Link>
                 </li>
-                <li>
-                  <Link href="/scraper/ev" className="hover:underline">
-                    EV+ Tool
-                  </Link>
-                </li>
               </ul>
             </div>
             <div>

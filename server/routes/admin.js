@@ -5,6 +5,9 @@ const { checkUser } = require('../middleware/checkUser');
 const { checkStaff } = require('../middleware/checkStaff');
 
 var router = express.Router();
+const clientId = (process.env.NODE_ENV == "development") ? process.env.PAYPAL_CLIENT_ID_SANDBOX : process.env.PAYPAL_CLIENT_ID_LIVE;
+const clientSecret = (process.env.NODE_ENV == "development") ? process.env.PAYPAL_SECRET_SANDBOX : process.env.PAYPAL_SECRET_LIVE;
+const paypalBaseURL = (process.env.NODE_ENV == "development") ? "https://api-m.sandbox.paypal.com" : "https://api.paypal.com";
 
 router.post("/signupDeals/create", [checkUser, checkStaff], async function(req, res, next) {
     const { deal, link, expiresAt } = req.body;
@@ -156,7 +159,26 @@ router.get("/user/allUsers", [checkUser, checkStaff], async function(req, res, n
     }
 })
 
-router.post("/cancel-subscription/:id", checkUser, async (req, res) => {
+async function getPayPalAuth() {
+    //create basic authentication token header from client id and secret
+    var auth = 'Basic ' + Buffer.from(clientId + ':' + clientSecret).toString('base64');
+    var headers = {
+        'Accept': '*/*', 
+        'Accept-Language': 'en_US',
+        'Content-Type':'application/x-www-form-urlencoded',
+        'Authorization': auth
+    }
+
+    const resp = await axios.post(paypalBaseURL + "/v1/oauth2/token", "grant_type=client_credentials", {
+        headers: headers
+    })
+
+    if(resp.status != 200) return false
+
+    return resp.data.access_token;
+}
+
+router.post("/cancel-subscription/:id", [checkUser, checkStaff], async (req, res) => {
     const authToken = await getPayPalAuth();
 
     // get subid

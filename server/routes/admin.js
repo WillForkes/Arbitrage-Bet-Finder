@@ -156,6 +156,47 @@ router.get("/user/allUsers", [checkUser, checkStaff], async function(req, res, n
     }
 })
 
+router.post("/cancel-subscription/:id", checkUser, async (req, res) => {
+    const authToken = await getPayPalAuth();
+
+    // get subid
+    const u = await prisma.user.findFirst({
+        where: {
+            authid: req.params.id
+        },
+        include: {
+            subscription: {
+                where: {
+                    status: "active"
+                }
+            }
+        }
+    })
+
+    const sub = u.subscription[0];
+
+    if(u.subscription.length == 0) {
+        res.status(400).json({status: "error", error: "No active subscription found."});
+        return;
+    }
+
+    
+
+    try {
+        const ppresp = await axios.post(paypalBaseURL + "/v1/billing/subscriptions/" + sub.paypalSubscriptionId + "/cancel", {"reason": "Unknown reason."}, {
+            headers: {
+                "Authorization": "Bearer " + authToken,
+                'Content-Type': 'application/json'
+            }
+        })
+        
+        res.json({status: "ok", "data": {response: ppresp.data}});
+    } catch(err) {
+        res.status(500).json({status: "error", message: err?.response?.data});
+    }
+})
+
+
 router.get("/user/:id", [checkUser, checkStaff], async function(req, res, next) {
     try {
         const user = await prisma.user.findUnique({where: {authid: req.params.id}, include: {subscription: true, placedBets: true, }})

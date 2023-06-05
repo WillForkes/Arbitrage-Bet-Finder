@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import useSWR from "swr";
 import { getter } from "@/api";
 import { Spinner } from "flowbite-react";
@@ -7,8 +7,10 @@ import { User } from "@/types";
 import Link from "next/link";
 import Head from "next/head";
 import AdminChart from "@/components/AdminChart";
+import SignupDealModal from "@/components/SignupDealModal";
 
 export default function Admin() {
+  const [modal, setModal] = useState(false);
   const { data, error } = useSWR("/admin/user/allUsers", getter, {
     refreshInterval: 10000,
   });
@@ -22,6 +24,9 @@ export default function Admin() {
   if (user.user && !user.user?.dbuser.staff) {
     window.location.assign("/");
   }
+  function closeModal() {
+    setModal(false);
+  }
   return (
     <div className="page-offset-x py-8 bg-gray-900">
       <Head>
@@ -33,6 +38,13 @@ export default function Admin() {
       </Head>
       <div className="px-4 mx-auto max-w-screen-2xl lg:px-4">
         <AdminChart d={users} siteInfo={siteInfo} />
+        <SignupDealModal isVisible={modal} closeModal={closeModal} />
+        <button
+          onClick={() => setModal(true)}
+          className="my-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          Add Signup Deal
+        </button>
         <div className="overflow-x-auto">
           {users ? (
             <div className="w-full text-sm text-left text-gray-500 dark:text-gray-400">

@@ -284,12 +284,16 @@ export default function Onboarding() {
                       {deals && !error
                         ? deals.map(
                             (deal: {
+                              id: number;
                               name: string;
                               deal: string;
                               link: string;
                               expiresAt: string;
                             }) => (
-                              <div className="flex items-center space-x-4">
+                              <div
+                                key={deal.id}
+                                className="flex items-center space-x-4"
+                              >
                                 <div className="shrink-0">
                                   <img
                                     className="h-8 w-8 rounded-full"

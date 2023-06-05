@@ -36,7 +36,7 @@ export default function Onboarding() {
   const { data, error } = useSWR("/scraper/signupDeals", getter, {
     refreshInterval: 10000,
   });
-  var deals;
+  var deals = [];
   if (data && !error) {
     deals = data;
     console.log(data);
@@ -281,7 +281,7 @@ export default function Onboarding() {
                 <div className="flow-root">
                   <ul className="divide-y divide-gray-200 dark:divide-gray-700">
                     <li className="py-3 sm:py-4">
-                      {deals && !error
+                      {deals.length > 0 && !error
                         ? deals.map(
                             (deal: {
                               id: number;

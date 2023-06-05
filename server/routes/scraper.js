@@ -302,6 +302,15 @@ router.get("/bet/:id", checkUser, async function(req, res, next){
     res.json({"status": "ok", "data": {"bet":bet}});
 })
 
+router.get("/signupDeals", async function(req, res) {
+    try {
+        const deals = await prisma.signupDeal.findMany();
+        res.json({"status": "ok", "data": deals});
+    } catch(e) {
+        res.json({"status": "error", data: e});
+    }
+})
+
 router.post("/ev/simulate", async function(req, res, next){
     let {betId, bets} = req.body;
 

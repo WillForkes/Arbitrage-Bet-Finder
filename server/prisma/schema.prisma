@@ -11,22 +11,22 @@ datasource db {
 }
 
 model User {
-  authid             String         @id
-  whitelist          String         @default("[]") // whitelisted bookmakers to display
-  createdAt          DateTime       @default(now())
-  updatedAt          DateTime       @updatedAt
-  region             String?        @default("UK")
-  phone              String?
-  email              String? // used only for email notis
-  smsNotifications   Boolean        @default(false)
-  emailNotifications Boolean        @default(false)
-  banned             Boolean        @default(false)
-  staff              Boolean        @default(false)
-  trialActivated     Boolean        @default(false)
-  cancelDealActivated Boolean       @default(false)
-  promotions         Boolean        @default(true)
-  placedBets         PlacedBets[]
-  subscription       Subscription[]
+  authid              String         @id
+  whitelist           String         @default("[]") // whitelisted bookmakers to display
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+  region              String?        @default("UK")
+  phone               String?
+  email               String? // used only for email notis
+  smsNotifications    Boolean        @default(false)
+  emailNotifications  Boolean        @default(false)
+  banned              Boolean        @default(false)
+  staff               Boolean        @default(false)
+  trialActivated      Boolean        @default(false)
+  cancelDealActivated Boolean        @default(false)
+  promotions          Boolean        @default(true)
+  placedBets          PlacedBets[]
+  subscription        Subscription[]
 }
 
 model Bet {
@@ -52,19 +52,20 @@ model PlacedBets {
 }
 
 model Subscription {
-  id                   Int       @id @default(autoincrement())
+  id                   Int      @id @default(autoincrement())
   userId               String
   plan                 String
   planExpiresAt        DateTime
-  paypalSubscriptionId String    @unique
-  status               String    @default("inactive") // inactive, active, paused, payment_failed, cancelled
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @updatedAt
-  user                 User      @relation(fields: [userId], references: [authid])
+  paypalSubscriptionId String   @unique
+  status               String   @default("inactive") // inactive, active, paused, payment_failed, cancelled
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  user                 User     @relation(fields: [userId], references: [authid])
 }
 
 model SignupDeal {
   id        Int      @id @default(autoincrement())
+  name      String
   deal      String
   link      String
   expiresAt DateTime

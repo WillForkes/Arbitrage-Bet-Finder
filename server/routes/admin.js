@@ -11,7 +11,7 @@ const clientSecret = (process.env.NODE_ENV == "development") ? process.env.PAYPA
 const paypalBaseURL = (process.env.NODE_ENV == "development") ? "https://api-m.sandbox.paypal.com" : "https://api.paypal.com";
 
 router.post("/signupDeals/create", [checkUser, checkStaff], async function(req, res, next) {
-    const { deal, link, expiresAt } = req.body;
+    const { name, deal, link, expiresAt } = req.body;
     const user = req.user;
 
     if(!deal || !link || !expiresAt){
@@ -21,6 +21,7 @@ router.post("/signupDeals/create", [checkUser, checkStaff], async function(req, 
 
     const dealObj = await prisma.signupDeal.create({
         data: {
+            name: name,
             deal: deal,
             link: link,
             expiresAt: expiresAt,

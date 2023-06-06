@@ -35,6 +35,10 @@ export async function cancelPayment(): Promise<any> {
     return await sendApiRequest("POST", "payment/cancel-subscription", true)
 }
 
+export async function createSignupDeal(name:string, deal: string, link: string, expiresAt: Date): Promise<any> {
+    return await sendApiRequest("POST", "admin/signupDeals/create", true, {name: name, deal: deal, link: link, expiresAt: expiresAt});
+}
+
 export async function createPaypalPayment(plan: Plan, trial: boolean = false): Promise<any> {
     return await sendApiRequest("POST", "payment/create-subscription", true, {plan: plan, trial: trial})
 }

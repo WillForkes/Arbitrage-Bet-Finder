@@ -264,12 +264,12 @@ router.post("/cancel-subscription", checkUser, async (req, res) => {
         }
     })
 
+    const sub = u.subscription[0];
+
     if(u.subscription.length == 0) {
         res.status(400).json({status: "error", error: "No active subscription found."});
         return;
     }
-
-    const sub = u.subscription[0];
 
     try {
         const ppresp = await axios.post(paypalBaseURL + "/v1/billing/subscriptions/" + sub.paypalSubscriptionId + "/cancel", {"reason": "Unknown reason."}, {

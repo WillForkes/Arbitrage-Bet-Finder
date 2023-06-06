@@ -53,7 +53,8 @@ router.post("/activate-cancel-deal", checkUser, async (req, res) => {
     })
 
     const daysbetween = Math.floor((new Date(subscription.planExpiresAt) - new Date(subscription.createdAt)) / (1000 * 60 * 60 * 24));
-    const sequence = daysbetween % 30 == 0 ? 1 : 2;
+    const idek = daysbetween % 30 == 0 || daysbetween % 31 == 0 || daysbetween % 29 == 0;
+    const sequence = idek ? 1 : 2; // 1 if no trial, 2 if trial was active cuz with trial theres 2 billing sequences (4day trial -> payment)
     const updatePrice = subscription.plan == "starter" ? "10.00" : "20.00";
 
     const updateJson = [{
@@ -91,6 +92,11 @@ router.post("/activate-cancel-deal", checkUser, async (req, res) => {
 router.post('/create-subscription', async (req, res) => {
     const plan = req.body.plan; // Get the plan ID from the request body
     const planId = plans[process.env.NODE_ENV][plan]
+    let isTrial = false;
+
+    if(plan.includes("trial")){
+        isTrial = true;
+    }
 
     const authToken = await getPayPalAuth();
     const now = new Date();
@@ -119,6 +125,17 @@ router.post('/create-subscription', async (req, res) => {
             },
         
         })
+
+        if(isTrial){
+            await prisma.user.update({
+                where: {
+                    authid: req.user.authid
+                },
+                data: {
+                    trialActivated: true
+                }
+            })
+        }
 
         res.json({ status: "ok", data: ppresp.data});
     } catch(err) {

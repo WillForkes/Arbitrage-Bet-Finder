@@ -101,8 +101,8 @@ export default function Onboarding() {
         />
       </Head>
       <section className="bg-white dark:bg-gray-900">
-        <div className="flex h-full w-5/6 mx-auto">
-          <div className="w-1/2 mx-10">
+        <div className="md:flex h-full w-5/6 mx-auto">
+          <div className="md:w-1/2 md:mx-10">
             <Card className="bg-white dark:bg-gray-700">
               <Timeline>
                 <Timeline.Item>
@@ -236,7 +236,7 @@ export default function Onboarding() {
               </span>
             </Card>
           </div>
-          <div className="flex flex-col w-1/2">
+          <div className="flex flex-col md:w-1/2">
             <Card className="bg-white dark:bg-gray-700">
               <div className="flex flex-row">
                 <div className="text-base font-medium mr-2">

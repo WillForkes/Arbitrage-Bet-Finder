@@ -161,7 +161,7 @@ export default function Pricing() {
               BETA RELEASE SALE
             </span>
             <span className="flex mr-2 text-2xl font-semibold fire-glow-animation">
-              Ends 20th May
+              Ends 25th June
             </span>
           </div>
         </div>

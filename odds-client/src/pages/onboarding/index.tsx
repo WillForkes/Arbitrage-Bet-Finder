@@ -300,7 +300,7 @@ export default function Onboarding() {
                                     src={getBookmakerLogo(
                                       deal ? deal.name : ""
                                     )}
-                                    alt="Neil image"
+                                    alt="Bookmaker image"
                                   />
                                 </div>
                                 <div className="min-w-0 flex-1">

@@ -1,4 +1,3 @@
-import { startFreeTrial } from "@/api";
 import { Plan } from "@/types";
 import { useRouter } from "next/router";
 import Image from "next/image";

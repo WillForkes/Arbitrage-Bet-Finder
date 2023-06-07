@@ -32,8 +32,9 @@ export default function Home() {
       <Calculator />
       <Blog />
       <Pricing />
-      <Testimonials />
       <FreeTrial />
+      <Testimonials />
+
     </>
   );
 }

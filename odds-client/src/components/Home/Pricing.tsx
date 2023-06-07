@@ -12,6 +12,7 @@ import { UserContext } from "@/pages/_app";
 import { User } from "@/types";
 import Link from "next/link";
 import { Card } from "flowbite-react";
+import Image from "next/image";
 
 export default function Pricing() {
   const user: User | null = useContext(UserContext).user;
@@ -144,6 +145,12 @@ export default function Pricing() {
     }
   }
 
+    function getFireHTML() {
+        return (
+            <Image src="/fireemoji.png" width={16} height={16} className="ml-1" alt="Fire" />
+        )
+    }
+
   return (
     <section id="pricing" className="bg-white dark:bg-gray-900">
       <div className="py-8 px-4 mx-auto max-w-screen-lg lg:py-16 lg:px-6">
@@ -188,9 +195,10 @@ export default function Pricing() {
                   <s>£29.99</s>
                 </p>
               </div>
+              
               <ul role="list" className="my-7 space-y-5">
                 <li className="flex space-x-3">
-                  {getCheckHTML()}
+                  {getFireHTML()}
 
                   <span className="text-base font-normal leading-tight text-gray-500 dark:text-gray-400">
                     Arbitrage Tool Access
@@ -222,6 +230,13 @@ export default function Pricing() {
 
                   <span className="text-base font-normal leading-tight text-gray-500 dark:text-gray-400">
                     +5 Bonus Entries On Every Giveaway
+                  </span>
+                </li>
+                <li className="flex space-x-3">
+                  {getCheckHTML()}
+
+                  <span className="text-base font-normal leading-tight text-gray-500 dark:text-gray-400">
+                    Free signup deals and offers
                   </span>
                 </li>
                 <li className="flex space-x-3">
@@ -262,7 +277,7 @@ export default function Pricing() {
                   {getCheckHTML(false)}
 
                   <span className="text-base font-normal leading-tight text-gray-500 dark:text-gray-400">
-                    SMS bet notifications
+                    NBA + NFL Prop Markets
                   </span>
                 </li>
               </ul>
@@ -302,7 +317,7 @@ export default function Pricing() {
               </div>
               <ul role="list" className="my-7 space-y-5">
                 <li className="flex space-x-3">
-                  {getCheckHTML()}
+                  {getFireHTML()}
 
                   <span className="text-base font-normal leading-tight text-gray-500 dark:text-gray-400">
                     Arbitrage Tool Access
@@ -334,6 +349,13 @@ export default function Pricing() {
 
                   <span className="text-base font-normal leading-tight text-gray-500 dark:text-gray-400">
                     +5 Bonus Entries On Every Giveaway
+                  </span>
+                </li>
+                <li className="flex space-x-3">
+                  {getCheckHTML()}
+
+                  <span className="text-base font-normal leading-tight text-gray-500 dark:text-gray-400">
+                    Free signup deals and offers
                   </span>
                 </li>
                 <li className="flex space-x-3">
@@ -374,7 +396,7 @@ export default function Pricing() {
                   {getCheckHTML()}
 
                   <span className="text-base font-normal leading-tight text-gray-500 dark:text-gray-400">
-                    SMS bet notifications
+                    NBA + NFL Prop Markets
                   </span>
                 </li>
               </ul>
@@ -390,6 +412,15 @@ export default function Pricing() {
               )}
             </Card>
           </div>
+        </div>
+
+        {/* centered div */}
+        <div className="mt-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+                <h2 className="text-sm font-extrabold text-gray-900 dark:text-gray-400">
+                    Our pricing is simple, transparent and 90% less expensive than competitors. No hidden fees.
+                </h2>
+            </div>
         </div>
       </div>
     </section>

@@ -89,7 +89,7 @@ router.post("/activate-cancel-deal", checkUser, async (req, res) => {
     }
 })
 
-router.post('/create-subscription', async (req, res) => {
+router.post('/create-subscription', checkUser, async (req, res) => {
     const plan = req.body.plan; // Get the plan ID from the request body
     const planId = plans[process.env.NODE_ENV][plan]
     let isTrial = false;

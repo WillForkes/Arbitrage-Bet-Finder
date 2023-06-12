@@ -139,7 +139,7 @@ router.post('/create-subscription', async (req, res) => {
 
         res.json({ status: "ok", data: ppresp.data});
     } catch(err) {
-        res.json({status: "error", message: err.response.data});
+        res.json({status: "error", message: err.toString()});
     }
 });
 

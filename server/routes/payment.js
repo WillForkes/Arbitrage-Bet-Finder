@@ -100,7 +100,7 @@ router.post('/create-subscription', async (req, res) => {
 
     const authToken = await getPayPalAuth();
     const now = new Date();
-    const tenSecondsLater = new Date(now.getTime() + 10 * 1000);
+    const tenSecondsLater = new Date(now.getTime() + 15 * 1000);
     const isoFormat = tenSecondsLater.toISOString();
     var billingAgreementAttributes = {
         "plan_id": planId,
@@ -139,7 +139,7 @@ router.post('/create-subscription', async (req, res) => {
 
         res.json({ status: "ok", data: ppresp.data});
     } catch(err) {
-        res.json({status: "error", message: err.response.data});
+        res.json({status: "error", message: err.toString()});
     }
 });
 
